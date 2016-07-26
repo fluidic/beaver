@@ -2,6 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import './beaver_core_base.dart';
 
@@ -19,8 +20,22 @@ class GetTask extends Task {
   GetTask(this.src, this.dest);
 
   @override
-  Future<Object> execute(Context context) async {
-    throw new UnimplementedError();
+  Future<File> execute(Context context) async {
+    final srcUri = Uri.parse(src);
+    final destFileName = _getSuggestedFilename(srcUri);
+
+    final httpClient = new HttpClient();
+    final request = await httpClient.getUrl(srcUri);
+    final response = await request.close();
+    final file = new File(destFileName);
+    await response.pipe(file.openWrite());
+    httpClient.close();
+
+    return file;
+  }
+
+  String _getSuggestedFilename(Uri src) {
+    //FIXME: dest can be file.
+    return '${dest}/${src.pathSegments.last}';
   }
 }
-
