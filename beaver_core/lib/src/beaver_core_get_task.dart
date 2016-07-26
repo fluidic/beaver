@@ -35,7 +35,9 @@ class GetTask extends Task {
   }
 
   String _getSuggestedFilename(Uri src) {
-    //FIXME: dest can be file.
+    // FIXME: Improve the method.
+    // See https://chromium.googlesource.com/chromium/src/net/+/master/base/filename_util.h#32
+    // FIXME: dest can be a file.
     return '${dest}/${src.pathSegments.last}';
   }
 }
