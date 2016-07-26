@@ -22,12 +22,12 @@ class GetTask extends Task {
   @override
   Future<File> execute(Context context) async {
     final srcUri = Uri.parse(src);
-    final destFileName = _getSuggestedFilename(srcUri);
+    final destFilename = _getSuggestedFilename(srcUri);
 
     final httpClient = new HttpClient();
     final request = await httpClient.getUrl(srcUri);
     final response = await request.close();
-    final file = new File(destFileName);
+    final file = new File(destFilename);
     await response.pipe(file.openWrite());
     httpClient.close();
 
