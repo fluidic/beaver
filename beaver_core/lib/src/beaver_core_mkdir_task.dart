@@ -2,6 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import './beaver_core_base.dart';
 
@@ -17,8 +18,9 @@ class MkdirTask extends Task {
   MkdirTask(this.dir);
 
   @override
-  Future<Object> execute(Context context) async {
-    throw new UnimplementedError();
+  Future<Directory> execute(Context context) async {
+    final directory = new Directory(dir);
+    await directory.create(recursive: true);
+    return directory;
   }
 }
-
