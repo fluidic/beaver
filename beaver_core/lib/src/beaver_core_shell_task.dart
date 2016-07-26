@@ -6,12 +6,12 @@ import 'dart:io';
 
 import './beaver_core_base.dart';
 
-class ShellError extends TaskError {
+class ShellException extends TaskException {
   final String _executable;
 
   final int _exitCode;
 
-  ShellError(this._executable, this._exitCode);
+  ShellException(this._executable, this._exitCode);
 
   @override
   String toString() => '${_executable} exited with ${_exitCode}';
@@ -40,7 +40,7 @@ class ShellTask extends Task {
       context.logger.error(errorMessage);
     }
     if (result.exitCode != 0) {
-      throw new ShellError(executable, result.exitCode);
+      throw new ShellException(executable, result.exitCode);
     }
   }
 }

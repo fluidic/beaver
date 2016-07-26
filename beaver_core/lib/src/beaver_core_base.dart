@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:quiver_collection/collection.dart';
 
-class TaskError extends Error {}
+class TaskException implements Exception {}
 
 abstract class Context {
   Configuration get configuration;

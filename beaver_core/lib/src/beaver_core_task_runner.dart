@@ -14,7 +14,7 @@ class TaskRunner {
   Future<Null> run() async {
     try {
       await task.execute(context);
-    } on TaskError catch (e) {
+    } on TaskException catch (e) {
       context.logger.error(e);
     } catch (e) {
       context.logger.error(e);
