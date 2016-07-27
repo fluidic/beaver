@@ -4,6 +4,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
+
 import './beaver_core_base.dart';
 
 /// Get a file from a URL.
@@ -38,6 +40,6 @@ class GetTask extends Task {
     // FIXME: Improve the method.
     // See https://chromium.googlesource.com/chromium/src/net/+/master/base/filename_util.h#32
     // FIXME: dest can be a file.
-    return '${dest}/${src.pathSegments.last}';
+    return path.join(dest, src.pathSegments.last);
   }
 }

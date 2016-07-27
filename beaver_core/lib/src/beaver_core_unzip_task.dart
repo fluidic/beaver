@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:path/path.dart' as path;
 
 import './beaver_core_base.dart';
 
@@ -45,13 +46,13 @@ class UnzipTask extends Task {
     Archive archive = new ZipDecoder().decodeBytes(bytes);
 
     for (ArchiveFile archiveFile in archive) {
-      final path = '${dest}/${archiveFile.name}';
+      final entry = path.join(dest, archiveFile.name);
 
-      if (_isDirectory(path)) {
-        final dir = new Directory(path);
+      if (_isDirectory(entry)) {
+        final dir = new Directory(entry);
         await dir.create(recursive: true);
       } else {
-        final file = new File(path);
+        final file = new File(entry);
         await file.create(recursive: true);
         await file.writeAsBytes(archiveFile.content);
       }
