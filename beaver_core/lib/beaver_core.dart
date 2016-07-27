@@ -8,6 +8,7 @@ export 'src/beaver_core_bunzip_task.dart';
 export 'src/beaver_core_context.dart';
 export 'src/beaver_core_gcloud_context.dart';
 export 'src/beaver_core_get_task.dart';
+export 'src/beaver_core_git_task.dart';
 export 'src/beaver_core_gunzip_task.dart';
 export 'src/beaver_core_logger.dart';
 export 'src/beaver_core_mkdir_task.dart';

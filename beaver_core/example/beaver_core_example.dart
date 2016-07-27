@@ -16,7 +16,8 @@ class MyTask implements Task {
       new GetTask(
           'https://storage.googleapis.com/dart-archive/channels/stable/release/1.17.1/sdk/dartsdk-linux-x64-release.zip',
           'download'),
-      new UnzipTask('download/dartsdk-linux-x64-release.zip', 'download')
+      new UnzipTask('download/dartsdk-linux-x64-release.zip', 'download'),
+      new GitTask(['clone', 'git@github.com:fluidic/beaver.git'])
     ];
     return Future.forEach(tasks, (task) => task.execute(context));
   }
