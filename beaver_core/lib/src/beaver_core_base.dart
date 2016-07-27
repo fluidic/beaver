@@ -24,21 +24,6 @@ abstract class Logger {
 }
 
 class Configuration extends DelegatingMap<String, Object> {
-  /// Get a string (linux, macos, windows, android, or ios) representing the operating system.
-  String get operatingSystem => Platform.operatingSystem;
-
-  bool get isLinux => Platform.isLinux;
-
-  bool get isMacOS => Platform.isMacOS;
-
-  bool get isWindows => Platform.isWindows;
-
-  String get pathSeparator => Platform.pathSeparator;
-
-  String get localHostname => Platform.localHostname;
-
-  int get numberOfProcessors => Platform.numberOfProcessors;
-
   final Map<String, Object> _map;
 
   Map<String, Object> get delegate => _map;
