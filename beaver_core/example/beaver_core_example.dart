@@ -13,11 +13,7 @@ class MyTask implements Task {
   @override
   Future<Object> execute(Context context) {
     List<Task> tasks = [
-      new MkdirTask('download'),
-      new GetTask(
-          'https://storage.googleapis.com/dart-archive/channels/stable/release/1.17.1/sdk/dartsdk-linux-x64-release.zip',
-          'download'),
-      new UnzipTask('download/dartsdk-linux-x64-release.zip', 'download'),
+      new InstallDartSDKTask(withContentShell: true, withDartium: true),
       new GitTask(['clone', 'git@github.com:fluidic/symbol.git']),
       new PubTask(['get'], processWorkingDir: 'symbol'),
       new PubTask(['run', 'test'], processWorkingDir: 'symbol')
