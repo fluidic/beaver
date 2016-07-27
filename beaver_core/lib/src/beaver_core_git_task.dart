@@ -12,12 +12,14 @@ class GitTask extends Task {
   String get name => "git";
 
   final List<String> args;
+  final String processWorkingDir;
 
-  GitTask(this.args);
+  GitTask(this.args, {String processWorkingDir})
+      : this.processWorkingDir = processWorkingDir;
 
   @override
   Future<Object> execute(Context context) async {
-    final result = await runGit(args);
+    final result = await runGit(args, processWorkingDir: processWorkingDir);
     final infoMessage = result.stdout.toString();
     if (infoMessage.isNotEmpty) {
       context.logger.info(infoMessage);
