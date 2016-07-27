@@ -28,8 +28,9 @@ class GCloudContext implements Context {
   DatastoreDB get db => _db;
 
   static Future<GCloudContext> create(
-      String jsonCredentials, String projectName) async {
-    final conf = new Configuration();
+      String jsonCredentials, String projectName,
+      {Map<String, Object> map: const {}}) async {
+    final conf = new Configuration(map: map);
     final logger = new SimpleLogger();
 
     final credentials =
