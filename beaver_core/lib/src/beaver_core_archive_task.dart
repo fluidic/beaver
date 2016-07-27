@@ -9,6 +9,25 @@ import 'package:path/path.dart' as path;
 
 import './beaver_core_base.dart';
 
+/// Unzip a GZip file.
+class GUnzipTask extends Task {
+  @override
+  String get name => "gunzip";
+
+  /// Archive file to expand.
+  final String src;
+
+  /// Directory where to store the expanded files.
+  final String dest;
+
+  GUnzipTask(this.src, this.dest);
+
+  @override
+  Future<Object> execute(Context context) async {
+    throw new UnimplementedError();
+  }
+}
+
 class UnzipException extends TaskException {
   final String _message;
 
@@ -62,5 +81,43 @@ class UnzipTask extends Task {
   static bool _isDirectory(String path) {
     // FIXME: ArchiveFile.isFile doesn't work. A better way?
     return path.endsWith('/');
+  }
+}
+
+/// Untar a Tar file.
+class UntarTask extends Task {
+  @override
+  String get name => "untar";
+
+  /// Archive file to expand.
+  final String src;
+
+  /// Directory where to store the expanded files.
+  final String dest;
+
+  UntarTask(this.src, this.dest);
+
+  @override
+  Future<Object> execute(Context context) async {
+    throw new UnimplementedError();
+  }
+}
+
+/// Unzip a BZip2 file.
+class BUnzip2Task extends Task {
+  @override
+  String get name => "bunzip2";
+
+  /// Archive file to expand.
+  final String src;
+
+  /// Directory where to store the expanded files.
+  final String dest;
+
+  BUnzip2Task(this.src, this.dest);
+
+  @override
+  Future<Object> execute(Context context) async {
+    throw new UnimplementedError();
   }
 }
