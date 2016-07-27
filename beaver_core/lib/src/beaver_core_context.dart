@@ -14,7 +14,7 @@ class DefaultContext implements Context {
   @override
   Logger get logger => _logger;
 
-  DefaultContext()
-      : _conf = new Configuration(),
+  DefaultContext({Map<String, Object> map : const {}})
+      : _conf = new Configuration(map: map),
         _logger = new SimpleLogger();
 }

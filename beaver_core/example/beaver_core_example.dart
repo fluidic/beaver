@@ -2,6 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 import 'package:beaver_core/beaver_core.dart';
 
 class MyTask implements Task {
@@ -22,7 +23,9 @@ class MyTask implements Task {
 }
 
 main() async {
-  Context context = new DefaultContext();
+  final jsonCredentials = await new File('my-project.json').readAsString();
+  Context context =
+      new DefaultContext(map: {'jsonCredentials': jsonCredentials});
   Task task = new MyTask();
   TaskRunner runner = new TaskRunner(context, task);
   await runner.run();
