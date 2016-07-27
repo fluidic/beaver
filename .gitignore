@@ -20,3 +20,6 @@ doc/api/
 *.iml
 *.ipr
 *.iws
+
+# Mac
+.DS_Store
