@@ -11,4 +11,6 @@ environment:
 #  lib_name: any
 
 dev_dependencies:
+  beaver_core:
+    path: ../beaver_core
   test: '>=0.12.0 <0.13.0'
