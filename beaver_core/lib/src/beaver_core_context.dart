@@ -18,3 +18,4 @@ class DefaultContext implements Context {
       : _conf = new Configuration(map: map),
         _logger = new SimpleLogger();
 }
+

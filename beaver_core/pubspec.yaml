@@ -8,6 +8,8 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
+  gcloud: '>=0.2.0 < 0.3.0'
+  googleapis_auth: '>=0.2.3 < 0.3.0'
   quiver_collection: '>=1.0.0 <1.1.0'
 
 dev_dependencies:

@@ -24,8 +24,7 @@ class MyTask implements Task {
 
 main() async {
   final jsonCredentials = await new File('my-project.json').readAsString();
-  Context context =
-      new DefaultContext(map: {'jsonCredentials': jsonCredentials});
+  Context context = await GCloudContext.create(jsonCredentials, 'my-project');
   Task task = new MyTask();
   TaskRunner runner = new TaskRunner(context, task);
   await runner.run();
