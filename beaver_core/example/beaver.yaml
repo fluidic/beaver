@@ -1,0 +1,4 @@
+gcloud:
+  service_account_credentials_path: /Users/kseo/test-71962def868a.json
+  project_name: test
+

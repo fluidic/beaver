@@ -19,16 +19,15 @@ final task = (Context context) async {
 };
 
 main() async {
-  Map<String, String> envVars = Platform.environment;
-  final jsonCredentialsPath = envVars['SERVICE_ACCOUNT_CREDENTIALS_PATH'];
-  if (strings.isEmpty(jsonCredentialsPath)) {
-    print('SERVICE_ACCOUNT_CREDENTIALS_PATH is not set');
-    return;
-  }
+  Configuration conf = new YamlConfiguration.fromFile('beaver.yaml');
+  final jsonCredentialsPath =
+      conf['gcloud']['service_account_credentials_path'];
+  final projectName = conf['gcloud']['project_name'];
   final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
-  final parts = [new GCloudContextPart(jsonCredentials, 'my-project')];
+  final parts = [new GCloudContextPart(jsonCredentials, projectName)];
   final logger = new ConsoleLogger();
-  Context context = await DefaultContext.create(parts: parts, logger: logger);
+  Context context =
+      await DefaultContext.create(conf, parts: parts, logger: logger);
   TaskRunner runner = new TaskRunner(context, task);
   TaskRunResult result = await runner.run();
   JsonReporter reporter = new JsonReporter(result);

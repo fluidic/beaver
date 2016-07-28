@@ -4,6 +4,7 @@
 library beaver_core;
 
 export 'src/beaver_core_base.dart';
+export 'src/beaver_core_configuration.dart';
 export 'src/beaver_core_context.dart';
 export 'src/beaver_core_download_task.dart';
 export 'src/beaver_core_exception.dart';

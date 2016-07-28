@@ -20,13 +20,9 @@ class DefaultContext implements Context {
   @override
   ContextPart getPart(String name) => _partMap[name];
 
-  static Future<Context> create(
-      {Configuration conf,
-      Logger logger: const NoneLogger(),
+  static Future<Context> create(Configuration conf,
+      {Logger logger: const NoneLogger(),
       Iterable<ContextPart> parts: const []}) async {
-    if (conf == null) {
-      conf = new Configuration();
-    }
     final memoryLogger = new MemoryLogger(logger);
 
     Map<String, ContextPart> partMap = {};

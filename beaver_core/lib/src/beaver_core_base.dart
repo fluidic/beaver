@@ -2,7 +2,6 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'package:quiver_collection/collection.dart';
 
 class TaskException implements Exception {}
 
@@ -31,13 +30,9 @@ abstract class Logger {
   void error(message) => log(LogLevel.ERROR, message);
 }
 
-class Configuration extends DelegatingMap<String, Object> {
-  final Map<String, Object> _map;
-
-  Map<String, Object> get delegate => _map;
-
-  Configuration({Map<String, Object> map: const {}}) : _map = map;
+abstract class Configuration implements Map {
 }
+
 
 abstract class Task {
   String get name;
