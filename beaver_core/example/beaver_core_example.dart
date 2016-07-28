@@ -30,5 +30,7 @@ main() async {
   final logger = new ConsoleLogger();
   Context context = await DefaultContext.create(parts: parts, logger: logger);
   TaskRunner runner = new TaskRunner(context, task);
-  await runner.run();
+  TaskRunResult result = await runner.run();
+  print(result.status);
 }
+

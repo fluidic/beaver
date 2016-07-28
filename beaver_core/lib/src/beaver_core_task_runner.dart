@@ -12,13 +12,30 @@ class TaskRunner {
   TaskRunner(this.context, /* Task|ExecuteFunc */ task)
       : this.task = task is Task ? task : new Task.fromFunc(task);
 
-  Future<Null> run() async {
+  Future<TaskRunResult> run() async {
+    var status = TaskStatus.Success;
+    final logger = context.logger;
     try {
       await task.execute(context);
     } on TaskException catch (e) {
-      context.logger.error(e);
+      logger.error(e);
+      status = TaskStatus.Failure;
     } catch (e) {
-      context.logger.error(e);
+      logger.error(e);
+      status = TaskStatus.Failure;
     }
+
+    return new TaskRunResult._internal(status, logger.toString());
   }
 }
+
+enum TaskStatus { Success, Failure }
+
+class TaskRunResult {
+  final TaskStatus status;
+
+  final String log;
+
+  TaskRunResult._internal(this.status, this.log);
+}
+
