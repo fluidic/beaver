@@ -8,10 +8,10 @@ import 'package:path/path.dart' as path;
 
 import './beaver_core_base.dart';
 
-/// Get a file from a URL.
-class GetTask extends Task {
+/// Download a file from a URL.
+class DownloadTask extends Task {
   @override
-  String get name => "get";
+  String get name => 'download';
 
   /// The URL from which to retrieve a file.
   final String src;
@@ -19,7 +19,7 @@ class GetTask extends Task {
   /// The file or directory where to store the retrieved file(s).
   final String dest;
 
-  GetTask(this.src, this.dest);
+  DownloadTask(this.src, this.dest);
 
   @override
   Future<File> execute(Context context) async {
