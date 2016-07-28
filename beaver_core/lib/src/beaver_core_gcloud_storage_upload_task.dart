@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:io';
 
 import './beaver_core_base.dart';
-import './beaver_core_gcloud_context.dart';
+import './beaver_core_gcloud_context_part.dart';
 
 class GCloudStorageUploadException extends TaskException {
   final _message;
@@ -38,10 +38,12 @@ class GCloudStorageUploadTask extends Task {
           'Source file \'${src}\' does not exist.');
     }
 
-    if (!(context is GCloudContext)) {
-      throw new GCloudStorageUploadException('context is not GCloudContext.');
+    GCloudContextPart part = context.getPart('gcloud') as GCloudContextPart;
+    if (part == null) {
+      throw new GCloudStorageUploadException(
+          'GCloudContextPart is not available.');
     }
-    final storage = (context as GCloudContext).storage;
+    final storage = part.storage;
 
     var bucket;
     if (!await storage.bucketExists(bucketName)) {

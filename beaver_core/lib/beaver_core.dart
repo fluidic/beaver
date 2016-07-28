@@ -6,7 +6,7 @@ library beaver_core;
 export 'src/beaver_core_base.dart';
 export 'src/beaver_core_context.dart';
 export 'src/beaver_core_exception.dart';
-export 'src/beaver_core_gcloud_context.dart';
+export 'src/beaver_core_gcloud_context_part.dart';
 export 'src/beaver_core_gcloud_storage_upload_task.dart';
 export 'src/beaver_core_get_task.dart';
 export 'src/beaver_core_git_task.dart';
