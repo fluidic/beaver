@@ -22,14 +22,12 @@ class DefaultContext implements Context {
 
   static Future<Context> create(
       {Configuration conf,
-      Logger logger,
+      Logger logger: const NoneLogger(),
       Iterable<ContextPart> parts: const []}) async {
     if (conf == null) {
       conf = new Configuration();
     }
-    if (logger == null) {
-      logger = new SimpleLogger();
-    }
+    final memoryLogger = new MemoryLogger(logger);
 
     Map<String, ContextPart> partMap = {};
     final futures = parts.map((ContextPart part) {
@@ -38,7 +36,7 @@ class DefaultContext implements Context {
     });
     await Future.wait(futures);
 
-    return new DefaultContext._internal(conf, logger, partMap);
+    return new DefaultContext._internal(conf, memoryLogger, partMap);
   }
 
   DefaultContext._internal(this._conf, this._logger, this._partMap);

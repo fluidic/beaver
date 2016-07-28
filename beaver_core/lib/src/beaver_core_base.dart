@@ -22,6 +22,8 @@ enum LogLevel { INFO, WARN, ERROR }
 
 // FIXME: Add more methods from https://www.dartdocs.org/documentation/logging
 abstract class Logger {
+  const Logger();
+
   void log(LogLevel level, message);
 
   void info(message) => log(LogLevel.INFO, message);
@@ -60,3 +62,4 @@ class _LambdaTask implements Task {
   @override
   Future<Object> execute(Context context) => _func(context);
 }
+
