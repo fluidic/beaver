@@ -31,6 +31,6 @@ main() async {
   Context context = await DefaultContext.create(parts: parts, logger: logger);
   TaskRunner runner = new TaskRunner(context, task);
   TaskRunResult result = await runner.run();
-  print(result.status);
+  JsonReporter reporter = new JsonReporter(result);
+  print(reporter.toJson());
 }
-

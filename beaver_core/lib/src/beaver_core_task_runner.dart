@@ -31,6 +31,15 @@ class TaskRunner {
 
 enum TaskStatus { Success, Failure }
 
+String taskStatusToString(TaskStatus status) {
+  switch (status) {
+    case TaskStatus.Success:
+      return 'success';
+    case TaskStatus.Failure:
+      return 'failure';
+  }
+}
+
 class TaskRunResult {
   final TaskStatus status;
 
