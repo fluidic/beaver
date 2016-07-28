@@ -2,7 +2,6 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'package:quiver_collection/collection.dart';
 
 class TaskException implements Exception {}
@@ -10,6 +9,13 @@ class TaskException implements Exception {}
 abstract class Context {
   Configuration get configuration;
   Logger get logger;
+  ContextPart getPart(String name);
+}
+
+abstract class ContextPart {
+  String get name;
+  Future<Null> setUp();
+  Future<Null> tearDown();
 }
 
 enum LogLevel { INFO, WARN, ERROR }

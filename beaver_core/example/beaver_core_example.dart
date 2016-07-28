@@ -26,8 +26,8 @@ main() async {
     return;
   }
   final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
-  Context context = await GCloudContext.create(jsonCredentials, 'my-project');
+  final parts = [new GCloudContextPart(jsonCredentials, 'my-project')];
+  Context context = await DefaultContext.create(parts: parts);
   TaskRunner runner = new TaskRunner(context, task);
   await runner.run();
 }
-
