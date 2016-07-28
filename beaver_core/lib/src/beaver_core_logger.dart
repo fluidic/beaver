@@ -10,7 +10,7 @@ class NoneLogger extends Logger {
   void log(LogLevel logLevel, message) {}
 }
 
-class SimpleLogger extends Logger {
+class ConsoleLogger extends Logger {
   @override
   void log(LogLevel logLevel, message) {
     print('${logLevel}: ${message}');
