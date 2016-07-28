@@ -21,7 +21,7 @@ class InstallDartSdkTask extends Task {
       {this.dev: false, this.withDartium: false, this.withContentShell: false});
 
   @override
-  Future<Object> execute(Context context) async {
+  Future<Null> execute(Context context) async {
     if (Platform.isMacOS) {
       final installOptions = [];
       if (dev) {
@@ -42,7 +42,7 @@ class InstallDartSdkTask extends Task {
               installOptions
             ]).toList())
       ];
-      return Future.forEach(tasks, (task) => task.execute(context));
+      await Future.forEach(tasks, (task) => task.execute(context));
     } else {
       // FIXME: Support Linux and Windows
       throw new UnsupportedPlatformException();

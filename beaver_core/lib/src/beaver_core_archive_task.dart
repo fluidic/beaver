@@ -51,7 +51,7 @@ class UnzipTask extends Task {
   UnzipTask(this.src, this.dest);
 
   @override
-  Future<Object> execute(Context context) async {
+  Future<Null> execute(Context context) async {
     final srcFile = new File(src);
     if (!await srcFile.exists()) {
       throw new UnzipException('Source file \'${src}\' does not exist.');

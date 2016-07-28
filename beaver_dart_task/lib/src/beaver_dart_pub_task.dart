@@ -17,7 +17,7 @@ class PubTask extends Task {
       : this.processWorkingDir = processWorkingDir;
 
   @override
-  Future<Object> execute(Context context) async {
+  Future<Null> execute(Context context) async {
     final result = await runPub(args, processWorkingDir: processWorkingDir);
     final infoMessage = result.stdout.toString();
     if (infoMessage.isNotEmpty) {
