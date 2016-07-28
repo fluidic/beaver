@@ -9,7 +9,8 @@ class TaskRunner {
   final Context context;
   final Task task;
 
-  TaskRunner(this.context, this.task);
+  TaskRunner(this.context, /* Task|ExecuteFunc */ task)
+      : this.task = task is Task ? task : new Task.fromFunc(task);
 
   Future<Null> run() async {
     try {
@@ -21,4 +22,3 @@ class TaskRunner {
     }
   }
 }
-

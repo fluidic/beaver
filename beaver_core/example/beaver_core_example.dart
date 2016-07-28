@@ -6,21 +6,15 @@ import 'dart:io';
 import 'package:beaver_core/beaver_core.dart';
 import 'package:quiver_strings/strings.dart' as strings;
 
-class MyTask implements Task {
-  @override
-  String get name => "my_task";
-
-  @override
-  Future<Object> execute(Context context) {
-    List<Task> tasks = [
-      new InstallDartSDKTask(withContentShell: true, withDartium: true),
-      new GitTask(['clone', 'git@github.com:fluidic/symbol.git']),
-      new PubTask(['get'], processWorkingDir: 'symbol'),
-      new PubTask(['run', 'test'], processWorkingDir: 'symbol')
-    ];
-    return Future.forEach(tasks, (task) => task.execute(context));
-  }
-}
+final task = (Context context) async {
+  List<Task> tasks = [
+    new InstallDartSDKTask(withContentShell: true, withDartium: true),
+    new GitTask(['clone', 'git@github.com:fluidic/symbol.git']),
+    new PubTask(['get'], processWorkingDir: 'symbol'),
+    new PubTask(['run', 'test'], processWorkingDir: 'symbol')
+  ];
+  return Future.forEach(tasks, (task) => task.execute(context));
+};
 
 main() async {
   Map<String, String> envVars = Platform.environment;
@@ -31,7 +25,7 @@ main() async {
   }
   final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
   Context context = await GCloudContext.create(jsonCredentials, 'my-project');
-  Task task = new MyTask();
   TaskRunner runner = new TaskRunner(context, task);
   await runner.run();
 }
+
