@@ -4,11 +4,8 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:beaver_core/beaver_core.dart';
 import 'package:quiver_iterables/iterables.dart' show concat;
-
-import './beaver_core_base.dart';
-import './beaver_core_exception.dart';
-import './beaver_core_shell_task.dart';
 
 class InstallDartSdkTask extends Task {
   @override

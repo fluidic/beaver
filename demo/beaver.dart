@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_dart_task/beaver_dart_task.dart';
 import 'package:quiver_strings/strings.dart' as strings;
 
 class MyTask implements Task {
@@ -13,7 +14,7 @@ class MyTask implements Task {
   @override
   Future<Object> execute(Context context) {
     List<Task> tasks = [
-      new InstallDartSDKTask(withContentShell: true, withDartium: true),
+      new InstallDartSdkTask(withContentShell: true, withDartium: true),
       new GitTask(['clone', 'git@github.com:fluidic/beaver.git']),
       new PubTask(['get'], processWorkingDir: 'beaver/demo'),
       new PubTask(['run', 'test'], processWorkingDir: 'beaver/demo')

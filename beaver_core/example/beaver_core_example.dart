@@ -4,6 +4,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_dart_task/beaver_dart_task.dart';
+
 import 'package:quiver_strings/strings.dart' as strings;
 
 final task = (Context context) async {

@@ -3,9 +3,8 @@
 
 import 'dart:async';
 
+import 'package:beaver_core/beaver_core.dart';
 import 'package:pub_wrapper/pub_wrapper.dart';
-
-import './beaver_core_base.dart';
 
 class PubTask extends Task {
   @override
