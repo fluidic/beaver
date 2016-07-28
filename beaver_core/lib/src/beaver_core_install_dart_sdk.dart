@@ -10,7 +10,7 @@ import './beaver_core_base.dart';
 import './beaver_core_exception.dart';
 import './beaver_core_shell_task.dart';
 
-class InstallDartSDKTask extends Task {
+class InstallDartSdkTask extends Task {
   @override
   String get name => 'install_dart_sdk';
 
@@ -20,7 +20,7 @@ class InstallDartSDKTask extends Task {
 
   final bool withContentShell;
 
-  InstallDartSDKTask(
+  InstallDartSdkTask(
       {this.dev: false, this.withDartium: false, this.withContentShell: false});
 
   @override

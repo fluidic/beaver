@@ -8,7 +8,7 @@ import 'package:quiver_strings/strings.dart' as strings;
 
 final task = (Context context) async {
   List<Task> tasks = [
-    new InstallDartSDKTask(withContentShell: true, withDartium: true),
+    new InstallDartSdkTask(withContentShell: true, withDartium: true),
     new GitTask(['clone', 'git@github.com:fluidic/symbol.git']),
     new PubTask(['get'], processWorkingDir: 'symbol'),
     new PubTask(['run', 'test'], processWorkingDir: 'symbol')
