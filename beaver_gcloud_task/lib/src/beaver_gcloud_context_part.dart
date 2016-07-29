@@ -7,10 +7,8 @@ import 'package:gcloud/db.dart';
 import 'package:gcloud/storage.dart';
 import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
 
-class GCloudContextPart implements ContextPart {
-  @override
-  String get name => 'gcloud';
-
+@ContextPartClass('gcloud')
+class GCloudContextPart extends ContextPart {
   Storage _storage;
   DatastoreDB _db;
 

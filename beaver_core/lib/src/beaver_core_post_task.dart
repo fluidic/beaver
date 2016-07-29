@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import './beaver_core_annotation.dart';
 import './beaver_core_base.dart';
 
 class PostTaskResult {
@@ -14,10 +15,8 @@ class PostTaskResult {
 }
 
 /// Post data to the URL.
+@TaskClass('post')
 class PostTask extends Task {
-  @override
-  String get name => "post";
-
   /// The URL that is requested.
   final String url;
 

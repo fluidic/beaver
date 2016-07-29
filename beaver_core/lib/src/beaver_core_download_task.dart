@@ -3,13 +3,12 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
+import './beaver_core_annotation.dart';
 import './beaver_core_base.dart';
 
 /// Download a file from a URL.
+@TaskClass('download')
 class DownloadTask extends Task {
-  @override
-  String get name => 'download';
-
   /// The URL from which to retrieve a file.
   final String src;
 

@@ -1,5 +1,6 @@
 library beaver_core;
 
+export 'src/beaver_core_annotation.dart';
 export 'src/beaver_core_base.dart';
 export 'src/beaver_core_configuration.dart';
 export 'src/beaver_core_context.dart';

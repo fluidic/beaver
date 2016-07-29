@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import './beaver_core_annotation.dart';
 import './beaver_core_base.dart';
 
 class ShellException extends TaskException {
@@ -14,10 +15,8 @@ class ShellException extends TaskException {
   String toString() => '${_executable} exited with ${_exitCode}';
 }
 
+@TaskClass('shell')
 class ShellTask extends Task {
-  @override
-  String get name => "shell";
-
   final String executable;
 
   final List<String> arguments;

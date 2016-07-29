@@ -16,10 +16,8 @@ class GCloudStorageUploadException extends TaskException {
 }
 
 /// Upload a file to Google Cloud Storage.
+@TaskClass('gcloud_storage_upload')
 class GCloudStorageUploadTask extends Task {
-  @override
-  String get name => "gcloud_storage_upload";
-
   /// A file to upload.
   final String src;
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:mirrors';
 
 import './beaver_core_annotation.dart';
 
@@ -11,7 +12,15 @@ abstract class Context {
 }
 
 abstract class ContextPart {
-  String get name;
+  String get name {
+    var name;
+    ClassMirror cm = reflect(this).type;
+    cm.metadata.forEach((metadata) {
+      name = metadata.reflectee.name;
+    });
+    return name;
+  }
+
   Future<Null> setUp(Configuration conf);
   Future<Null> tearDown();
 }
@@ -29,13 +38,9 @@ abstract class Logger {
   void error(message) => log(LogLevel.ERROR, message);
 }
 
-abstract class Configuration implements Map {
-}
-
+abstract class Configuration implements Map {}
 
 abstract class Task {
-  String get name;
-
   const Task();
 
   Future<Object> execute(Context context);
@@ -54,4 +59,3 @@ class _LambdaTask implements Task {
   @override
   Future<Object> execute(Context context) => _func(context);
 }
-

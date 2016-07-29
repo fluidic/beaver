@@ -4,10 +4,8 @@ import 'dart:io' show Platform;
 import 'package:beaver_core/beaver_core.dart';
 import 'package:quiver_iterables/iterables.dart' show concat;
 
+@TaskClass('install_dart_sdk')
 class InstallDartSdkTask extends Task {
-  @override
-  String get name => 'install_dart_sdk';
-
   final bool dev;
 
   final bool withDartium;

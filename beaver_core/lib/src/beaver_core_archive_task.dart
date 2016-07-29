@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as path;
 
+import './beaver_core_annotation.dart';
 import './beaver_core_base.dart';
 
 /// Unzip a GZip file.
+@TaskClass('gunzip')
 class GUnzipTask extends Task {
-  @override
-  String get name => "gunzip";
-
   /// Archive file to expand.
   final String src;
 
@@ -35,10 +34,8 @@ class UnzipException extends TaskException {
 }
 
 /// Unzip a zip file.
+@TaskClass('unzip')
 class UnzipTask extends Task {
-  @override
-  String get name => "unzip";
-
   /// Archive file to expand.
   final String src;
 
@@ -82,10 +79,8 @@ class UnzipTask extends Task {
 }
 
 /// Untar a Tar file.
+@TaskClass('untar')
 class UntarTask extends Task {
-  @override
-  String get name => "untar";
-
   /// Archive file to expand.
   final String src;
 
@@ -101,10 +96,8 @@ class UntarTask extends Task {
 }
 
 /// Unzip a BZip2 file.
+@TaskClass('bunzip2')
 class BUnzip2Task extends Task {
-  @override
-  String get name => "bunzip2";
-
   /// Archive file to expand.
   final String src;
 

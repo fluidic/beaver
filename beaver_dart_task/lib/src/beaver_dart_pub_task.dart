@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:beaver_core/beaver_core.dart';
 import 'package:pub_wrapper/pub_wrapper.dart';
 
+@TaskClass('pub')
 class PubTask extends Task {
-  @override
-  String get name => "pub";
-
   final List<String> args;
   final String processWorkingDir;
 
