@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as path;
 
-import './beaver_core_annotation.dart';
-import './beaver_core_base.dart';
+import './annotation.dart';
+import './base.dart';
 
 /// Unzip a GZip file.
 @TaskClass('gunzip')

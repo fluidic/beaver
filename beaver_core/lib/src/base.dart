@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:mirrors';
 
-import './beaver_core_annotation.dart';
+import './annotation.dart';
 
 class TaskException implements Exception {}
 

@@ -1,19 +1,19 @@
 library beaver_core;
 
-export 'src/beaver_core_annotation.dart';
-export 'src/beaver_core_base.dart';
-export 'src/beaver_core_configuration.dart';
-export 'src/beaver_core_context.dart';
-export 'src/beaver_core_download_task.dart';
-export 'src/beaver_core_exception.dart';
-export 'src/beaver_core_git_task.dart';
-export 'src/beaver_core_html_reporter.dart';
-export 'src/beaver_core_json_reporter.dart';
-export 'src/beaver_core_logger.dart' show NoneLogger, ConsoleLogger;
-export 'src/beaver_core_mkdir_task.dart';
-export 'src/beaver_core_post_task.dart';
-export 'src/beaver_core_run.dart';
-export 'src/beaver_core_shell_task.dart';
-export 'src/beaver_core_task_combinators.dart';
-export 'src/beaver_core_task_runner.dart';
+export 'src/annotation.dart';
+export 'src/base.dart';
+export 'src/configuration.dart';
+export 'src/context.dart';
+export 'src/download_task.dart';
+export 'src/exception.dart';
+export 'src/git_task.dart';
+export 'src/html_reporter.dart';
+export 'src/json_reporter.dart';
+export 'src/logger.dart' show NoneLogger, ConsoleLogger;
+export 'src/mkdir_task.dart';
+export 'src/post_task.dart';
+export 'src/run.dart';
+export 'src/shell_task.dart';
+export 'src/task_combinators.dart';
+export 'src/task_runner.dart';
 

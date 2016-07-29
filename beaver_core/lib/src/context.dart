@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import './beaver_core_base.dart';
-import './beaver_core_logger.dart';
+import './base.dart';
+import './logger.dart';
 
 class DefaultContext implements Context {
   final Configuration _conf;

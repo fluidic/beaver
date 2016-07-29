@@ -1,4 +1,4 @@
-import './beaver_core_base.dart';
+import './base.dart';
 
 class NoneLogger extends Logger {
   const NoneLogger();

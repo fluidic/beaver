@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import './beaver_core_base.dart';
+import './base.dart';
 
 class _ParallelTask implements Task {
   @override

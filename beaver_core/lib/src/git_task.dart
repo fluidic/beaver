@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:git/git.dart';
 
-import './beaver_core_annotation.dart';
-import './beaver_core_base.dart';
+import './annotation.dart';
+import './base.dart';
 
 @TaskClass('git')
 class GitTask extends Task {

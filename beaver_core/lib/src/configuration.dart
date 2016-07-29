@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:quiver_collection/collection.dart';
 import 'package:yaml/yaml.dart';
 
-import './beaver_core_base.dart';
+import './base.dart';
 
 class YamlConfiguration extends DelegatingMap implements Configuration {
   final YamlMap _yamlMap;

@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:mirrors';
 
-import './beaver_core_annotation.dart';
-import './beaver_core_base.dart';
-import './beaver_core_configuration.dart';
-import './beaver_core_context.dart';
-import './beaver_core_json_reporter.dart';
-import './beaver_core_logger.dart';
-import './beaver_core_reflection.dart';
-import './beaver_core_task_runner.dart';
+import './annotation.dart';
+import './base.dart';
+import './configuration.dart';
+import './context.dart';
+import './json_reporter.dart';
+import './logger.dart';
+import './reflection.dart';
+import './task_runner.dart';
 
 Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
   final taskClassMap = {};

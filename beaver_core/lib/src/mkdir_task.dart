@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import './beaver_core_base.dart';
+import './base.dart';
 
 /// Creates a directory. Also non-existent parent directories are created,
 /// when necessary. Does nothing if the directory already exist.

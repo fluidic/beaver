@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import './beaver_core_annotation.dart';
-import './beaver_core_base.dart';
+import './annotation.dart';
+import './base.dart';
 
 class PostTaskResult {
   final int statusCode;

@@ -1,5 +1,5 @@
-import './beaver_core_base.dart';
-import './beaver_core_task_runner.dart';
+import './base.dart';
+import './task_runner.dart';
 
 class HtmlReporter implements Reporter {
   @override

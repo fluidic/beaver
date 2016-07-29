@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:beaver_core/beaver_core.dart';
 import 'package:path/path.dart' as path;
 
-import './beaver_gcloud_context_part.dart';
+import './gcloud_context_part.dart';
 
 class GCloudStorageUploadException extends TaskException {
   final _message;

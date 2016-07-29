@@ -1,4 +1,4 @@
 library beaver_dart_task;
 
-export 'src/beaver_dart_install_sdk.dart';
-export 'src/beaver_dart_pub_task.dart';
+export 'src/install_sdk_task.dart';
+export 'src/pub_task.dart';
