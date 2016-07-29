@@ -14,6 +14,17 @@ class JsonReporter implements Reporter {
 
   JsonReporter(this._result);
 
-  String toJson() => JSON
-      .encode({'status': taskStatusToString(_result.status), 'log': _result.log});
+  String toJson() => JSON.encode(
+      {'status': taskStatusToString(_result.status), 'log': _result.log});
+}
+
+class HtmlReporter implements Reporter {
+  @override
+  String get type => 'html';
+
+  final TaskRunResult _result;
+
+  HtmlReporter(this._result);
+
+  String toHtml() => throw new UnimplementedError();
 }
