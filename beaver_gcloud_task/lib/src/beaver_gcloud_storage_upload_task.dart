@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_core/beaver_core.dart';
 import 'package:path/path.dart' as path;
 
-import './beaver_core_base.dart';
-import './beaver_core_gcloud_context_part.dart';
+import './beaver_gcloud_context_part.dart';
 
 class GCloudStorageUploadException extends TaskException {
   final _message;
@@ -64,3 +64,4 @@ class GCloudStorageUploadTask extends Task {
   static String _getSuggestedObjectName(String filePath) =>
       path.basename(filePath);
 }
+

@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_core/beaver_core.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:gcloud/db.dart';
 import 'package:gcloud/storage.dart';
 import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
-
-import './beaver_core_base.dart';
 
 class GCloudContextPart implements ContextPart {
   @override
@@ -22,19 +21,19 @@ class GCloudContextPart implements ContextPart {
 
   Future<Null> setUp(Configuration conf) async {
     final jsonCredentialsPath =
-        conf['gcloud']['service_account_credentials_path'];
+    conf['gcloud']['service_account_credentials_path'];
     final projectName = conf['gcloud']['project_name'];
     final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
 
     final credentials =
-        new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
+    new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
     final scopes = []
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
     var client = await auth.clientViaServiceAccount(credentials, scopes);
 
     _db =
-        new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
+    new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
     _storage = new Storage(client, projectName);
   }
 
