@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as path;
 
-import './annotation.dart';
-import './base.dart';
+import '../annotation.dart';
+import '../base.dart';
 
 /// Unzip a GZip file.
 @TaskClass('gunzip')

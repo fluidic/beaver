@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import './annotation.dart';
-import './base.dart';
+import '../annotation.dart';
+import '../base.dart';
 
 class ShellException extends TaskException {
   final String _executable;
