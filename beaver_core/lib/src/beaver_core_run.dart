@@ -5,9 +5,9 @@ import './beaver_core_annotation.dart';
 import './beaver_core_base.dart';
 import './beaver_core_configuration.dart';
 import './beaver_core_context.dart';
+import './beaver_core_json_reporter.dart';
 import './beaver_core_logger.dart';
 import './beaver_core_reflection.dart';
-import './beaver_core_reporter.dart';
 import './beaver_core_task_runner.dart';
 
 Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
