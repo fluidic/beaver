@@ -25,7 +25,7 @@ class TaskRunner {
       status = TaskStatus.Failure;
     }
 
-    return new TaskRunResult._internal(status, logger.toString());
+    return new TaskRunResult._internal(context.configuration, status, logger.toString());
   }
 }
 
@@ -41,10 +41,12 @@ String taskStatusToString(TaskStatus status) {
 }
 
 class TaskRunResult {
+  final Configuration configuration;
+
   final TaskStatus status;
 
   final String log;
 
-  TaskRunResult._internal(this.status, this.log);
+  TaskRunResult._internal(this.configuration, this.status, this.log);
 }
 
