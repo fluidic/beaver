@@ -17,4 +17,6 @@ export 'src/beaver_core_post_task.dart';
 export 'src/beaver_core_reporter.dart';
 export 'src/beaver_core_run.dart';
 export 'src/beaver_core_shell_task.dart';
+export 'src/beaver_core_task_combinators.dart';
 export 'src/beaver_core_task_runner.dart';
+
