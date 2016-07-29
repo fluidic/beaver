@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import './beaver_core_annotation.dart';
+
 class TaskException implements Exception {}
 
 abstract class Context {
@@ -43,10 +45,8 @@ abstract class Task {
 
 typedef Future<Object> ExecuteFunc(Context context);
 
+@TaskClass('lambda')
 class _LambdaTask implements Task {
-  @override
-  String get name => 'lambda_task';
-
   final ExecuteFunc _func;
 
   _LambdaTask(this._func);
