@@ -1,0 +1,14 @@
+name: file_helper
+description: A Collection of helper functions for file operation.
+version: 0.1.0
+author: Fluidic Team <dev@fluidic.io>
+#homepage: https://www.example.com
+
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+dependencies:
+  path: '>=1.3.9 <1.4.0'
+
+dev_dependencies:
+  test: '>=0.12.0 <0.13.0'
