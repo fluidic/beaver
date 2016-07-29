@@ -28,7 +28,7 @@ class DefaultContext implements Context {
     Map<String, ContextPart> partMap = {};
     final futures = parts.map((ContextPart part) {
       partMap[part.name] = part;
-      return part.setUp();
+      return part.setUp(conf);
     });
     await Future.wait(futures);
 

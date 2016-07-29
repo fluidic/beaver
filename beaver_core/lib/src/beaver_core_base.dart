@@ -13,7 +13,7 @@ abstract class Context {
 
 abstract class ContextPart {
   String get name;
-  Future<Null> setUp();
+  Future<Null> setUp(Configuration conf);
   Future<Null> tearDown();
 }
 

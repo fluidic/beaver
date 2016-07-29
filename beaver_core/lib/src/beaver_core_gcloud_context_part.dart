@@ -2,6 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:gcloud/db.dart';
@@ -14,28 +15,30 @@ class GCloudContextPart implements ContextPart {
   @override
   String get name => 'gcloud';
 
-  final String _jsonCredentials;
-  final String _projectName;
-
   Storage _storage;
   DatastoreDB _db;
 
   Storage get storage => _storage;
   DatastoreDB get db => _db;
 
-  GCloudContextPart(this._jsonCredentials, this._projectName);
+  GCloudContextPart();
 
-  Future<Null> setUp() async {
+  Future<Null> setUp(Configuration conf) async {
+    final jsonCredentialsPath =
+        conf['gcloud']['service_account_credentials_path'];
+    final projectName = conf['gcloud']['project_name'];
+    final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
+
     final credentials =
-        new auth.ServiceAccountCredentials.fromJson(_jsonCredentials);
+        new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
     final scopes = []
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
     var client = await auth.clientViaServiceAccount(credentials, scopes);
 
     _db =
-        new DatastoreDB(new datastore_impl.DatastoreImpl(client, _projectName));
-    _storage = new Storage(client, _projectName);
+        new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
+    _storage = new Storage(client, projectName);
   }
 
   Future<Null> tearDown() async {}

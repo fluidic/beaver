@@ -2,11 +2,8 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'package:beaver_core/beaver_core.dart';
 import 'package:beaver_dart_task/beaver_dart_task.dart';
-
-import 'package:quiver_strings/strings.dart' as strings;
 
 final task = (Context context) async {
   List<Task> tasks = [
@@ -20,11 +17,7 @@ final task = (Context context) async {
 
 main() async {
   Configuration conf = new YamlConfiguration.fromFile('beaver.yaml');
-  final jsonCredentialsPath =
-      conf['gcloud']['service_account_credentials_path'];
-  final projectName = conf['gcloud']['project_name'];
-  final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
-  final parts = [new GCloudContextPart(jsonCredentials, projectName)];
+  final parts = [new GCloudContextPart()];
   final logger = new ConsoleLogger();
   Context context =
       await DefaultContext.create(conf, parts: parts, logger: logger);
