@@ -39,7 +39,7 @@ Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
   contextPartClassMap.forEach((String name, ClassMirror contextParClass) {
     partMap[name] = contextParClass.newInstance(new Symbol(''), []).reflectee;
   });
-  Future.wait(partMap.values.map((ContextPart part) => part.setUp(config)));
+  await Future.wait(partMap.values.map((ContextPart part) => part.setUp(config)));
   return partMap;
 }
 
