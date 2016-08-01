@@ -2,7 +2,7 @@ library beaver_core;
 
 export 'src/annotation.dart';
 export 'src/base.dart';
-export 'src/configuration.dart';
+export 'src/config.dart';
 export 'src/context.dart';
 export 'src/exception.dart';
 export 'src/html_reporter.dart';

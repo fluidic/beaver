@@ -17,24 +17,23 @@ class GCloudContextPart extends ContextPart {
 
   GCloudContextPart();
 
-  Future<Null> setUp(Configuration conf) async {
+  Future<Null> setUp(Config config) async {
     final jsonCredentialsPath =
-    conf['gcloud']['service_account_credentials_path'];
-    final projectName = conf['gcloud']['project_name'];
+        config['gcloud']['service_account_credentials_path'];
+    final projectName = config['gcloud']['project_name'];
     final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
 
     final credentials =
-    new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
+        new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
     final scopes = []
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
     var client = await auth.clientViaServiceAccount(credentials, scopes);
 
     _db =
-    new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
+        new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
     _storage = new Storage(client, projectName);
   }
 
   Future<Null> tearDown() async {}
 }
-

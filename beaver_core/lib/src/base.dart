@@ -6,7 +6,7 @@ import './annotation.dart';
 class TaskException implements Exception {}
 
 abstract class Context {
-  Configuration get configuration;
+  Config get config;
   Logger get logger;
   ContextPart getPart(String name);
 }
@@ -21,7 +21,7 @@ abstract class ContextPart {
     return name;
   }
 
-  Future<Null> setUp(Configuration conf);
+  Future<Null> setUp(Config conf);
   Future<Null> tearDown();
 }
 
@@ -38,7 +38,7 @@ abstract class Logger {
   void error(message) => log(LogLevel.ERROR, message);
 }
 
-abstract class Configuration implements Map {}
+abstract class Config implements Map {}
 
 abstract class Task {
   const Task();

@@ -5,16 +5,16 @@ import 'package:yaml/yaml.dart';
 
 import './base.dart';
 
-class YamlConfiguration extends DelegatingMap implements Configuration {
+class YamlConfig extends DelegatingMap implements Config {
   final YamlMap _yamlMap;
 
   @override
   Map get delegate => _yamlMap;
 
-  YamlConfiguration(String yaml) : _yamlMap = loadYaml(yaml);
+  YamlConfig(String yaml) : _yamlMap = loadYaml(yaml);
 
-  factory YamlConfiguration.fromFile(String path) {
+  factory YamlConfig.fromFile(String path) {
     final yaml = new File(path).readAsStringSync();
-    return new YamlConfiguration(yaml);
+    return new YamlConfig(yaml);
   }
 }

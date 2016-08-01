@@ -3,7 +3,7 @@ import 'dart:mirrors';
 
 import './annotation.dart';
 import './base.dart';
-import './configuration.dart';
+import './config.dart';
 import './context.dart';
 import './json_reporter.dart';
 import './logger.dart';
@@ -37,12 +37,12 @@ Future runBeaver(obj) async {
   _dumpClassMap('List of Task classes:', taskClassMap);
   _dumpClassMap('List of ContextPart classes:', contextPartClassMap);
 
-  Configuration conf = new YamlConfiguration.fromFile('beaver.yaml');
+  Config config = new YamlConfig.fromFile('beaver.yaml');
   // FIXME: Don't hardcode parts and logger.
   final parts = [];
   final logger = new ConsoleLogger();
   Context context =
-      await DefaultContext.create(conf, parts: parts, logger: logger);
+      await DefaultContext.create(config, parts: parts, logger: logger);
 
   var task;
   if (obj is Function || obj is Task) {

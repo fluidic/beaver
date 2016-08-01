@@ -12,7 +12,7 @@ class TaskRunner {
 
   Future<Null> _cloneRepo() async {
     // FIXME: Support the repository types other than git.
-    final repo = context.configuration['repository']['location'];
+    final repo = context.config['repository']['location'];
     await new GitTask(['clone', repo]).execute(context);
   }
 
@@ -31,7 +31,7 @@ class TaskRunner {
       status = TaskStatus.Failure;
     }
 
-    return new TaskRunResult._internal(context.configuration, status, logger.toString());
+    return new TaskRunResult._internal(context.config, status, logger.toString());
   }
 }
 
@@ -47,12 +47,12 @@ String taskStatusToString(TaskStatus status) {
 }
 
 class TaskRunResult {
-  final Configuration configuration;
+  final Config config;
 
   final TaskStatus status;
 
   final String log;
 
-  TaskRunResult._internal(this.configuration, this.status, this.log);
+  TaskRunResult._internal(this.config, this.status, this.log);
 }
 
