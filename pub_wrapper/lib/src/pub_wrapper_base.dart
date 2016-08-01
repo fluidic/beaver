@@ -19,13 +19,13 @@ Future<String> _getPub() async {
 
 Future<ProcessResult> runPub(List<String> args,
     {bool throwOnError: true, String processWorkingDir}) async {
-  var git = await _getPub();
+  var pub = await _getPub();
 
-  var pr = await Process.run(git, args,
+  var pr = await Process.run(pub, args,
       workingDirectory: processWorkingDir, runInShell: true);
 
   if (throwOnError) {
-    _throwIfProcessFailed(pr, git, args);
+    _throwIfProcessFailed(pr, pub, args);
   }
   return pr;
 }
