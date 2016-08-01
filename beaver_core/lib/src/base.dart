@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:mirrors';
 
 import './annotation.dart';
 
@@ -12,15 +11,6 @@ abstract class Context {
 }
 
 abstract class ContextPart {
-  String get name {
-    var name;
-    ClassMirror cm = reflect(this).type;
-    cm.metadata.forEach((metadata) {
-      name = metadata.reflectee.name;
-    });
-    return name;
-  }
-
   Future<Null> setUp(Config conf);
   Future<Null> tearDown();
 }
