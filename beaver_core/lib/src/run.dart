@@ -5,8 +5,8 @@ import './annotation.dart';
 import './base.dart';
 import './config.dart';
 import './context.dart';
-import './json_reporter.dart';
 import './logger.dart';
+import './reporter/json_reporter.dart';
 import './task_runner.dart';
 import './uti/reflection.dart';
 

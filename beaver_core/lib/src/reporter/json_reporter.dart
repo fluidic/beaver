@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import './base.dart';
-import './task_runner.dart';
+import '../base.dart';
+import '../task_runner.dart';
 
 class JsonReporter implements Reporter {
   @override

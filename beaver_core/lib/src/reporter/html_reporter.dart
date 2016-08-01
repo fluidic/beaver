@@ -1,5 +1,5 @@
-import './base.dart';
-import './task_runner.dart';
+import '../base.dart';
+import '../task_runner.dart';
 
 class HtmlReporter implements Reporter {
   @override
@@ -11,4 +11,3 @@ class HtmlReporter implements Reporter {
 
   String toHtml() => throw new UnimplementedError();
 }
-
