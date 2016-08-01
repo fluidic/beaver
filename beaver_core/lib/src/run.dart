@@ -7,8 +7,8 @@ import './config.dart';
 import './context.dart';
 import './json_reporter.dart';
 import './logger.dart';
-import './reflection.dart';
 import './task_runner.dart';
+import './uti/reflection.dart';
 
 Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
   final taskClassMap = {};
