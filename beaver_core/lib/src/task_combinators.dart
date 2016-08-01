@@ -3,9 +3,6 @@ import 'dart:async';
 import './base.dart';
 
 class _ParallelTask implements Task {
-  @override
-  String get name => 'parallel_task';
-
   final Iterable<Task> _tasks;
 
   _ParallelTask(this._tasks);
@@ -16,9 +13,6 @@ class _ParallelTask implements Task {
 }
 
 class _SequentialTask implements Task {
-  @override
-  String get name => 'sequential_task';
-
   final Iterable<Task> _tasks;
 
   _SequentialTask(this._tasks);
