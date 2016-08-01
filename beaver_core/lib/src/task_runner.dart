@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import './base.dart';
+import './task/git_task.dart';
 
 class TaskRunner {
   final Context context;
@@ -9,7 +10,15 @@ class TaskRunner {
   TaskRunner(this.context, /* Task|ExecuteFunc */ task)
       : this.task = task is Task ? task : new Task.fromFunc(task);
 
+  Future<Null> _cloneRepo() async {
+    // FIXME: Support the repository types other than git.
+    final repo = context.configuration['repository']['location'];
+    await new GitTask(['clone', repo]).execute(context);
+  }
+
   Future<TaskRunResult> run() async {
+    await _cloneRepo();
+
     var status = TaskStatus.Success;
     final logger = context.logger;
     try {
