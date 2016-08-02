@@ -15,6 +15,9 @@ class MkdirTask extends Task {
   MkdirTask(this.dir);
 
   @override
-  Future<Object> execute(Context context) =>
-      file_helper.mkdir([dir], recursive: true);
+  Future<Object> execute(Context context) async {
+    if (!await file_helper.mkdir([dir], recursive: true)) {
+      throw new TaskException('Mkdir is failed.');
+    }
+  }
 }
