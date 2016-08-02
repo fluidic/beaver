@@ -16,4 +16,5 @@ export 'src/task/mkdir_task.dart';
 export 'src/task/move_task.dart';
 export 'src/task/post_task.dart';
 export 'src/task/shell_task.dart';
+export 'src/task/touch_task.dart';
 export 'src/task_combinators.dart';
