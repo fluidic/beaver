@@ -4,6 +4,7 @@ import 'package:quiver_collection/collection.dart';
 import 'package:yaml/yaml.dart';
 
 import './base.dart';
+import './utils/io.dart';
 
 class YamlConfig extends DelegatingMap implements Config {
   final YamlMap _yamlMap;
@@ -14,7 +15,7 @@ class YamlConfig extends DelegatingMap implements Config {
   YamlConfig(String yaml) : _yamlMap = loadYaml(yaml);
 
   factory YamlConfig.fromFile(String path) {
-    final yaml = new File(path).readAsStringSync();
+    final yaml = readTextFile(path);
     return new YamlConfig(yaml);
   }
 }
