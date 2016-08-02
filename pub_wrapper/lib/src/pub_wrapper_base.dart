@@ -17,17 +17,43 @@ Future<String> _getPub() async {
   return _pubCache;
 }
 
-Future<ProcessResult> runPub(List<String> args,
+/// A regular expression matching a trailing CR character.
+final _trailingCR = new RegExp(r"\r$");
+
+/// Splits [text] on its line breaks in a Windows-line-break-friendly way.
+List<String> _splitLines(String text) =>
+    text.split("\n").map((line) => line.replaceFirst(_trailingCR, "")).toList();
+
+class PubProcessResult {
+  final List<String> stdout;
+  final List<String> stderr;
+  final int exitCode;
+
+  PubProcessResult(String stdout, String stderr, this.exitCode)
+      : this.stdout = _toLines(stdout),
+        this.stderr = _toLines(stderr);
+
+  static List<String> _toLines(String output) {
+    var lines = _splitLines(output);
+    if (!lines.isEmpty && lines.last == "") lines.removeLast();
+    return lines;
+  }
+
+  bool get success => exitCode == 0;
+}
+
+Future<PubProcessResult> runPub(List<String> args,
     {bool throwOnError: true, String processWorkingDir}) async {
   var pub = await _getPub();
 
-  var pr = await Process.run(pub, args,
+  var result = await Process.run(pub, args,
       workingDirectory: processWorkingDir, runInShell: true);
 
   if (throwOnError) {
-    _throwIfProcessFailed(pr, pub, args);
+    _throwIfProcessFailed(result, pub, args);
   }
-  return pr;
+
+  return new PubProcessResult(result.stdout, result.stderr, result.exitCode);
 }
 
 void _throwIfProcessFailed(
@@ -43,4 +69,3 @@ ${pr.stderr}''';
     throw new ProcessException(process, args, message, pr.exitCode);
   }
 }
-

@@ -14,13 +14,12 @@ class PubTask extends Task {
   @override
   Future<Null> execute(Context context) async {
     final result = await runPub(args, processWorkingDir: processWorkingDir);
-    final infoMessage = result.stdout.toString();
-    if (infoMessage.isNotEmpty) {
-      context.logger.info(infoMessage);
+    for (final line in result.stderr) {
+      context.logger.info(line);
     }
-    final errorMessage = result.stderr.toString();
-    if (errorMessage.isNotEmpty) {
-      context.logger.error(errorMessage);
+    for (final line in result.stdout) {
+      context.logger.error(line);
     }
   }
 }
+
