@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:file_helper/file_helper.dart';
+import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
@@ -23,5 +23,5 @@ class DeleteTask extends Task {
 
   @override
   Future<Object> execute(Context context) =>
-      FileHelper.rm(paths, force: force, recursive: recursive);
+      file_helper.rm(paths, force: force, recursive: recursive);
 }

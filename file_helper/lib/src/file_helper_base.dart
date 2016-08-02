@@ -6,318 +6,315 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path_lib;
 
-class FileHelper {
-  /// Creates directories.
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  ///
-  /// If directories exist, returns `false`.
-  /// If [recursive] is set to `true`, creates all the required subdirectories and
-  /// returns `true` if no errors occurred.
-  static Future<bool> mkdir(Iterable<String> paths,
-      {bool recursive: false}) async {
-    if (paths == null || paths.isEmpty) {
-      return false;
-    }
-
-    var result = true;
-    for (final path in paths) {
-      final directory = new Directory(path);
-      if (await directory.exists()) {
-        if (!recursive) {
-          result = false;
-        }
-      } else {
-        try {
-          await directory.create(recursive: recursive);
-        } catch (e) {
-          result = false;
-        }
-      }
-    }
-
-    return result;
+/// Creates directories.
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+///
+/// If directories exist, returns `false`.
+/// If [recursive] is set to `true`, creates all the required subdirectories and
+/// returns `true` if no errors occurred.
+Future<bool> mkdir(Iterable<String> paths, {bool recursive: false}) async {
+  if (paths == null || paths.isEmpty) {
+    return false;
   }
 
-  /// Copies paths to the directory.
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  static Future<bool> copy(Iterable<String> paths, String dir) async {
-    if (paths == null || dir == null) {
-      return false;
-    }
-
-    if (!await FileSystemEntity.isDirectory(dir)) {
-      return false;
-    }
-
-    var result = true;
-    for (final path in paths) {
-      if (path.isEmpty) {
+  var result = true;
+  for (final path in paths) {
+    final directory = new Directory(path);
+    if (await directory.exists()) {
+      if (!recursive) {
         result = false;
-        continue;
       }
-
-      final basename = path_lib.basename(path);
-      if (basename.isEmpty) {
+    } else {
+      try {
+        await directory.create(recursive: recursive);
+      } catch (e) {
         result = false;
-        continue;
-      }
-      final dest = path_lib.join(dir, basename);
-
-      FileSystemEntity srcEntity = await _getEntity(path);
-      if (srcEntity is Directory) {
-        final destDirEntity = await new Directory(dest)..create();
-        await for (final entity
-            in srcEntity.list(recursive: true, followLinks: false)) {
-          final relPath = path_lib.relative(entity.path, from: srcEntity.path);
-          final destPath = path_lib.join(destDirEntity.path, relPath);
-          if (entity is Directory) {
-            await new Directory(destPath).create(recursive: true);
-          } else if (entity is File) {
-            entity.copy(destPath);
-          } else if (entity is Link) {
-            final target = await entity.target();
-            await new Link(destPath).create(target);
-          } else {
-            result = false;
-          }
-        }
-      } else if (srcEntity is File) {
-        await srcEntity.copy(dest);
-      } else if (srcEntity is Link) {
-        final target = await srcEntity.target();
-        await new Link(dest).create(target);
-      } else {
-        result = false;
-        continue;
       }
     }
-
-    return result;
   }
 
-  /// Moves paths to the directory.
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  static Future<bool> move(Iterable<String> paths, String dir) async {
-    if (paths == null || dir == null) {
-      return false;
-    }
+  return result;
+}
 
-    if (!await FileSystemEntity.isDirectory(dir)) {
-      return false;
-    }
-
-    var result = true;
-    for (final path in paths) {
-      if (path.isEmpty) {
-        result = false;
-        continue;
-      }
-
-      final basename = path_lib.basename(path);
-      if (basename.isEmpty) {
-        result = false;
-        continue;
-      }
-
-      final dest = path_lib.join(dir, basename);
-      if (!await rename(path, dest)) {
-        result = false;
-      }
-    }
-
-    return result;
+/// Copies paths to the directory.
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+Future<bool> copy(Iterable<String> paths, String dir) async {
+  if (paths == null || dir == null) {
+    return false;
   }
 
-  /// Renames [oldPath] to [newPath].
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  static Future<bool> rename(String oldPath, String newPath) async {
-    if (oldPath == null || newPath == null) {
-      return false;
-    }
-
-    FileSystemEntity entity = await _getEntity(oldPath);
-    if (entity == null) {
-      return false;
-    }
-
-    try {
-      await entity.rename(newPath);
-    } catch (e) {
-      return false;
-    }
-
-    return true;
+  if (!await FileSystemEntity.isDirectory(dir)) {
+    return false;
   }
 
-  /// Removes paths.
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  ///
-  /// By default, it does not remove directories.
-  /// If [directory] is set to `true`, removes the directories if they are empty.
-  /// If [force] is set to `true`, ignores nonexistent files.
-  /// If [recursive] is set to `true`, remove the directories and their contents
-  /// recursively.
-  static Future<bool> rm(Iterable<String> paths,
-      {bool directory: false, bool force: false, bool recursive: false}) async {
-    if (paths == null || paths.isEmpty) {
-      return false;
+  var result = true;
+  for (final path in paths) {
+    if (path.isEmpty) {
+      result = false;
+      continue;
     }
 
-    var result = true;
-    for (final path in paths) {
-      if (path.isEmpty) {
-        if (!force) {
-          result = false;
-        }
+    final basename = path_lib.basename(path);
+    if (basename.isEmpty) {
+      result = false;
+      continue;
+    }
+    final dest = path_lib.join(dir, basename);
 
-        continue;
-      }
-
-      FileSystemEntity entity = await _getEntity(path);
-
-      if (entity == null) {
-        if (!force) {
-          result = false;
-        }
-      } else {
+    FileSystemEntity srcEntity = await _getEntity(path);
+    if (srcEntity is Directory) {
+      final destDirEntity = await new Directory(dest)..create();
+      await for (final entity
+          in srcEntity.list(recursive: true, followLinks: false)) {
+        final relPath = path_lib.relative(entity.path, from: srcEntity.path);
+        final destPath = path_lib.join(destDirEntity.path, relPath);
         if (entity is Directory) {
-          if (recursive) {
-            try {
-              await entity.delete(recursive: recursive);
-            } catch (e) {
-              result = false;
-            }
-          } else if (directory) {
-            result = rmdir([entity.path]);
-          } else {
-            result = false;
-          }
+          await new Directory(destPath).create(recursive: true);
+        } else if (entity is File) {
+          entity.copy(destPath);
+        } else if (entity is Link) {
+          final target = await entity.target();
+          await new Link(destPath).create(target);
         } else {
+          result = false;
+        }
+      }
+    } else if (srcEntity is File) {
+      await srcEntity.copy(dest);
+    } else if (srcEntity is Link) {
+      final target = await srcEntity.target();
+      await new Link(dest).create(target);
+    } else {
+      result = false;
+      continue;
+    }
+  }
+
+  return result;
+}
+
+/// Moves paths to the directory.
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+Future<bool> move(Iterable<String> paths, String dir) async {
+  if (paths == null || dir == null) {
+    return false;
+  }
+
+  if (!await FileSystemEntity.isDirectory(dir)) {
+    return false;
+  }
+
+  var result = true;
+  for (final path in paths) {
+    if (path.isEmpty) {
+      result = false;
+      continue;
+    }
+
+    final basename = path_lib.basename(path);
+    if (basename.isEmpty) {
+      result = false;
+      continue;
+    }
+
+    final dest = path_lib.join(dir, basename);
+    if (!await rename(path, dest)) {
+      result = false;
+    }
+  }
+
+  return result;
+}
+
+/// Renames [oldPath] to [newPath].
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+Future<bool> rename(String oldPath, String newPath) async {
+  if (oldPath == null || newPath == null) {
+    return false;
+  }
+
+  FileSystemEntity entity = await _getEntity(oldPath);
+  if (entity == null) {
+    return false;
+  }
+
+  try {
+    await entity.rename(newPath);
+  } catch (e) {
+    return false;
+  }
+
+  return true;
+}
+
+/// Removes paths.
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+///
+/// By default, it does not remove directories.
+/// If [directory] is set to `true`, removes the directories if they are empty.
+/// If [force] is set to `true`, ignores nonexistent files.
+/// If [recursive] is set to `true`, remove the directories and their contents
+/// recursively.
+Future<bool> rm(Iterable<String> paths,
+    {bool directory: false, bool force: false, bool recursive: false}) async {
+  if (paths == null || paths.isEmpty) {
+    return false;
+  }
+
+  var result = true;
+  for (final path in paths) {
+    if (path.isEmpty) {
+      if (!force) {
+        result = false;
+      }
+
+      continue;
+    }
+
+    FileSystemEntity entity = await _getEntity(path);
+
+    if (entity == null) {
+      if (!force) {
+        result = false;
+      }
+    } else {
+      if (entity is Directory) {
+        if (recursive) {
           try {
-            await entity.delete();
+            await entity.delete(recursive: recursive);
           } catch (e) {
             result = false;
           }
+        } else if (directory) {
+          result = rmdir([entity.path]);
+        } else {
+          result = false;
         }
-      }
-    }
-
-    return result;
-  }
-
-  /// Removes empty directories.
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  static Future<bool> rmdir(Iterable<String> paths) async {
-    if (paths == null || paths.isEmpty) {
-      return false;
-    }
-
-    var result = true;
-    for (final path in paths) {
-      if (path.isEmpty) {
-        result = false;
-        continue;
-      }
-
-      if (!await FileSystemEntity.isDirectory(path)) {
-        result = false;
-        continue;
-      }
-
-      if (await _isEmptyDir(path)) {
+      } else {
         try {
-          await new Directory(path).delete();
+          await entity.delete();
         } catch (e) {
           result = false;
         }
-      } else {
+      }
+    }
+  }
+
+  return result;
+}
+
+/// Removes empty directories.
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+Future<bool> rmdir(Iterable<String> paths) async {
+  if (paths == null || paths.isEmpty) {
+    return false;
+  }
+
+  var result = true;
+  for (final path in paths) {
+    if (path.isEmpty) {
+      result = false;
+      continue;
+    }
+
+    if (!await FileSystemEntity.isDirectory(path)) {
+      result = false;
+      continue;
+    }
+
+    if (await _isEmptyDir(path)) {
+      try {
+        await new Directory(path).delete();
+      } catch (e) {
+        result = false;
+      }
+    } else {
+      result = false;
+    }
+  }
+
+  return result;
+}
+
+/// Changes the modification time of the specified paths.
+///
+/// Returns `true` if the operation was successful; otherwise `false`.
+///
+/// If [create] is set to `true`, creates files that do not exist, reports
+/// failure if the files can not be created.
+/// If [create] is set to `false`, do not create files that do not exist and
+/// do not report failure about files that do not exist.
+Future<bool> touch(Iterable<String> paths, {bool create: true}) async {
+  if (paths == null || paths.isEmpty) {
+    return false;
+  }
+
+  var result = true;
+  for (final path in paths) {
+    if (path.isEmpty) {
+      result = false;
+      continue;
+    }
+
+    if (Platform.isWindows) {
+      // FIXME: Implement.
+      throw new UnimplementedError();
+    } else {
+      if (!await _touchOnPosix(path, create)) {
         result = false;
       }
     }
-
-    return result;
   }
 
-  /// Changes the modification time of the specified paths.
-  ///
-  /// Returns `true` if the operation was successful; otherwise `false`.
-  ///
-  /// If [create] is set to `true`, creates files that do not exist, reports
-  /// failure if the files can not be created.
-  /// If [create] is set to `false`, do not create files that do not exist and
-  /// do not report failure about files that do not exist.
-  static Future<bool> touch(Iterable<String> paths, {bool create: true}) async {
-    if (paths == null || paths.isEmpty) {
-      return false;
-    }
+  return result;
+}
 
-    var result = true;
-    for (final path in paths) {
-      if (path.isEmpty) {
-        result = false;
-        continue;
-      }
+Future<FileSystemEntity> _getEntity(String path) async {
+  final type = await FileSystemEntity.type(path);
+  switch (type) {
+    case FileSystemEntityType.DIRECTORY:
+      return new Directory(path);
+    case FileSystemEntityType.FILE:
+      return new File(path);
+    case FileSystemEntityType.LINK:
+      return new Link(path);
+    case FileSystemEntityType.NOT_FOUND:
+    default:
+      return null;
+  }
+}
 
-      if (Platform.isWindows) {
-        // FIXME: Implement.
-        throw new UnimplementedError();
-      } else {
-        if (!await _touchOnPosix(path, create)) {
-          result = false;
-        }
-      }
-    }
+Future<int> _shell(String command, Iterable<String> arguments,
+    {String workingDirectory}) async {
+  return (await Process.run(command, arguments,
+          runInShell: true, workingDirectory: workingDirectory))
+      .exitCode;
+}
 
-    return result;
+Future<bool> _touchOnPosix(String path, bool create) async {
+  final arguments = <String>[path];
+  if (!create) {
+    arguments.add("-c");
   }
 
-  static Future<FileSystemEntity> _getEntity(String path) async {
-    final type = await FileSystemEntity.type(path);
-    switch (type) {
-      case FileSystemEntityType.DIRECTORY:
-        return new Directory(path);
-      case FileSystemEntityType.FILE:
-        return new File(path);
-      case FileSystemEntityType.LINK:
-        return new Link(path);
-      case FileSystemEntityType.NOT_FOUND:
-      default:
-        return null;
-    }
+  return await _shell("touch", arguments) == 0;
+}
+
+Future<bool> _isEmptyDir(String path) async {
+  if (path == null) {
+    return false;
   }
 
-  static Future<int> _shell(String command, Iterable<String> arguments,
-      {String workingDirectory}) async {
-    return (await Process.run(command, arguments,
-            runInShell: true, workingDirectory: workingDirectory))
-        .exitCode;
+  var directory = new Directory(path);
+  if (!await directory.exists()) {
+    return false;
   }
 
-  static Future<bool> _touchOnPosix(String path, bool create) async {
-    final arguments = <String>[path];
-    if (!create) {
-      arguments.add("-c");
-    }
-
-    return await _shell("touch", arguments) == 0;
-  }
-
-  static Future<bool> _isEmptyDir(String path) async {
-    if (path == null) {
-      return false;
-    }
-
-    var directory = new Directory(path);
-    if (!await directory.exists()) {
-      return false;
-    }
-
-    return (await directory.list()).isEmpty;
-  }
+  return (await directory.list()).isEmpty;
 }

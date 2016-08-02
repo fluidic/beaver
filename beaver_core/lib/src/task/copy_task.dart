@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:file_helper/file_helper.dart';
+import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
@@ -22,9 +22,9 @@ class CopyTask extends Task {
   Future<Object> execute(Context context) async {
     final dir = new Directory(dest);
     if (!await dir.exists()) {
-      await FileHelper.mkdir([dest], recursive: true);
+      await file_helper.mkdir([dest], recursive: true);
     }
 
-    await FileHelper.copy(src, dest);
+    await file_helper.copy(src, dest);
   }
 }

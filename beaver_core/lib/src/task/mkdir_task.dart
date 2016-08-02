@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:file_helper/file_helper.dart';
+import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
@@ -16,5 +16,5 @@ class MkdirTask extends Task {
 
   @override
   Future<Object> execute(Context context) =>
-      FileHelper.mkdir([dir], recursive: true);
+      file_helper.mkdir([dir], recursive: true);
 }

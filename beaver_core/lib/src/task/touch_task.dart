@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:file_helper/file_helper.dart';
+import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
@@ -18,5 +18,5 @@ class TouchTask extends Task {
 
   @override
   Future<Object> execute(Context context) =>
-      FileHelper.touch(paths, create: create);
+      file_helper.touch(paths, create: create);
 }
