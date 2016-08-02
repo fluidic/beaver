@@ -25,12 +25,7 @@ class GUnzipTask extends Task {
 }
 
 class UnzipException extends TaskException {
-  final String _message;
-
-  UnzipException(this._message);
-
-  @override
-  String toString() => _message;
+  UnzipException(String message) : super(message);
 }
 
 /// Unzip a zip file.

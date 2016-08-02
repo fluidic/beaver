@@ -5,14 +5,8 @@ import '../annotation.dart';
 import '../base.dart';
 
 class ShellException extends TaskException {
-  final String _executable;
-
-  final int _exitCode;
-
-  ShellException(this._executable, this._exitCode);
-
-  @override
-  String toString() => '${_executable} exited with ${_exitCode}';
+  ShellException(String executable, int exitCode)
+      : super('${executable} exited with ${exitCode}');
 }
 
 @TaskClass('shell')

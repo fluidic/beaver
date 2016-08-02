@@ -7,12 +7,7 @@ import 'package:path/path.dart' as path;
 import './gcloud_context_part.dart';
 
 class GCloudStorageUploadException extends TaskException {
-  final _message;
-
-  GCloudStorageUploadException(this._message);
-
-  @override
-  String toString() => _message;
+  GCloudStorageUploadException(String message) : super(message);
 }
 
 /// Upload a file to Google Cloud Storage.
@@ -62,4 +57,3 @@ class GCloudStorageUploadTask extends Task {
   static String _getSuggestedObjectName(String filePath) =>
       path.basename(filePath);
 }
-

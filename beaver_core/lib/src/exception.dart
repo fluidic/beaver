@@ -1,3 +1,5 @@
 import './base.dart';
 
-class UnsupportedPlatformException implements TaskException {}
+class UnsupportedPlatformException extends TaskException {
+  UnsupportedPlatformException() : super('Unsupported platform');
+}
