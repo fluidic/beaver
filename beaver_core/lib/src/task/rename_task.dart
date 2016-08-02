@@ -17,6 +17,9 @@ class RenameTask extends Task {
   RenameTask(this.oldPath, this.newPath);
 
   @override
-  Future<Object> execute(Context context) =>
-      file_helper.rename(oldPath, newPath);
+  Future<Object> execute(Context context) async {
+    if (!await file_helper.rename(oldPath, newPath)) {
+      throw new TaskException('Rename is failed.');
+    }
+  }
 }

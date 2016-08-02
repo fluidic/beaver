@@ -22,6 +22,9 @@ class DeleteTask extends Task {
         recursive = recursive;
 
   @override
-  Future<Object> execute(Context context) =>
-      file_helper.rm(paths, force: force, recursive: recursive);
+  Future<Object> execute(Context context) async {
+    if (!await file_helper.rm(paths, force: force, recursive: recursive)) {
+      throw new TaskException('Delete is failed.');
+    }
+  }
 }

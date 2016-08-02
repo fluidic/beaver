@@ -17,6 +17,9 @@ class TouchTask extends Task {
   TouchTask(this.paths, {create: true}) : create = create;
 
   @override
-  Future<Object> execute(Context context) =>
-      file_helper.touch(paths, create: create);
+  Future<Object> execute(Context context) async {
+    if (!await file_helper.touch(paths, create: create)) {
+      throw new TaskException('Touch is failed.');
+    }
+  }
 }

@@ -22,9 +22,13 @@ class MoveTask extends Task {
   Future<Object> execute(Context context) async {
     final dir = new Directory(dest);
     if (!await dir.exists()) {
-      await file_helper.mkdir([dest], recursive: true);
+      if (!await file_helper.mkdir([dest], recursive: true)) {
+        throw new TaskException('Directory \'${dest}\' creation is failed.');
+      }
     }
 
-    await file_helper.move(src, dest);
+    if (!await file_helper.move(src, dest)) {
+      throw new TaskException('Move is failed.');
+    }
   }
 }
