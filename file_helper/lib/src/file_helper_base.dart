@@ -262,11 +262,15 @@ Future<bool> touch(Iterable<String> paths, {bool create: true}) async {
       continue;
     }
 
-    if (Platform.isWindows) {
-      // FIXME: Implement.
-      throw new UnimplementedError();
-    } else {
-      if (!await _touchOnPosix(path, create)) {
+    FileSystemEntity entity = await _getEntity(path);
+    if (create || await entity.exists()) {
+      try {
+        final file = await new File(path).open(mode: FileMode.APPEND);
+        final originalLength = await file.length();
+        await file.writeByte(0);
+        await file.truncate(originalLength);
+        await file.close();
+      } catch (e) {
         result = false;
       }
     }
@@ -290,22 +294,6 @@ Future<FileSystemEntity> _getEntity(String path) async {
   }
 }
 
-Future<int> _shell(String command, Iterable<String> arguments,
-    {String workingDirectory}) async {
-  return (await Process.run(command, arguments,
-          runInShell: true, workingDirectory: workingDirectory))
-      .exitCode;
-}
-
-Future<bool> _touchOnPosix(String path, bool create) async {
-  final arguments = <String>[path];
-  if (!create) {
-    arguments.add("-c");
-  }
-
-  return await _shell("touch", arguments) == 0;
-}
-
 Future<bool> _isEmptyDir(String path) async {
   if (path == null) {
     return false;
@@ -318,3 +306,4 @@ Future<bool> _isEmptyDir(String path) async {
 
   return (await directory.list()).isEmpty;
 }
+
