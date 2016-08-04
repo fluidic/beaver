@@ -39,7 +39,8 @@ Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
   contextPartClassMap.forEach((String name, ClassMirror contextParClass) {
     partMap[name] = contextParClass.newInstance(new Symbol(''), []).reflectee;
   });
-  await Future.wait(partMap.values.map((ContextPart part) => part.setUp(config)));
+  await Future
+      .wait(partMap.values.map((ContextPart part) => part.setUp(config)));
   return partMap;
 }
 
@@ -50,9 +51,6 @@ Future<Logger> _createLogger() async {
 }
 
 Future<Context> _createContext() async {
-  final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
-  _dumpClassMap('List of Task classes:', taskClassMap);
-
   Config config = new YamlConfig.fromFile('beaver.yaml');
   final logger = await _createLogger();
   final partMap = await _createContextPartMap(config);
@@ -60,17 +58,12 @@ Future<Context> _createContext() async {
   return new DefaultContext(config, logger, partMap);
 }
 
-Future runBeaver(obj) async {
+Future runBeaver(String taskName) async {
+  final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
+  _dumpClassMap('List of Task classes:', taskClassMap);
+
   final context = await _createContext();
-  var task;
-  if (obj is Function || obj is Task) {
-    task = obj;
-  } else if (obj is Iterable<Task>) {
-    task = (Context context) => Future.forEach(obj, (t) => t.execute(context));
-  } else {
-    throw new ArgumentError(
-        'argument must be either ExecuteFunc, Task or Iterable<Task>');
-  }
+  final task = taskClassMap[taskName].newInstance(new Symbol(''), []);
 
   TaskRunner runner = new TaskRunner(context, task);
   TaskRunResult result = await runner.run();
