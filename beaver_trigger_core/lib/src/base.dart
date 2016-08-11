@@ -9,6 +9,10 @@ abstract class Context {
   Context(this.url, this.triggerConfigStore);
 }
 
+abstract class EventDetector {
+  String get event;
+}
+
 enum SourceType { git, github, gCloudPubSub, awsSNS }
 
 enum TriggerType { special, http, gCloudPubSub, awsSNS }
