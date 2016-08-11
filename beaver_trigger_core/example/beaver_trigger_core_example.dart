@@ -7,7 +7,8 @@ import 'package:beaver_trigger_core/beaver_trigger_core.dart';
 main() async {
   final context = new HttpTriggerContext(
       Uri.parse('http://localhost:8080'), new TriggerConfigMemoryStore());
-  final trigger = new HttpTrigger(context);
+  final httpTrigger = new HttpTrigger(context);
+  final specialTrigger = new SpecialTrigger(context);
 
   final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8080);
   await for (final req in server) {
@@ -20,7 +21,12 @@ main() async {
         final jsonString = await req.transform(UTF8.decoder).join();
         Map jsonData = JSON.decode(jsonString);
 
-        final json = await trigger.handle(req, jsonData);
+        var json;
+        if (_isSpecialTrigger(req.uri)) {
+          json = await specialTrigger.handle(req, jsonData);
+        } else {
+          json = await httpTrigger.handle(req, jsonData);
+        }
         req.response
           ..statusCode = HttpStatus.OK
           ..write(JSON.encode(json))
@@ -51,14 +57,40 @@ class HttpTrigger {
   HttpTrigger(this.context);
 
   Future handle(HttpRequest request, Map<String, String> jsonData) async {
+    final triggerConfig = await context.triggerConfigStore.load(request.uri);
+
+    var event;
+    switch (triggerConfig.sourceType) {
+      case SourceType.github:
+        final eventDetector = new GithubEventDetector(request.headers, jsonData);
+        event = eventDetector.event;
+        break;
+      default:
+        throw new Exception('Not supported.');
+    }
+
+    print(event);
+
+    return JSON.encode({'hello': 'world'});
+  }
+}
+
+class SpecialTrigger {
+  final Context context;
+
+  SpecialTrigger(this.context);
+
+  Future<String> handle(HttpRequest request, Map<String, String> jsonData) async {
     final endpoint = await setTriggerConfig(
         context,
         sourceTypeFromString(jsonData['sourceType']),
         Uri.parse(jsonData['sourceUrl']),
         triggerTypeFromString(jsonData['triggerType']));
 
-    print(await getTriggerConfig(context, endpoint));
-
-    return JSON.encode({'hello': 'world'});
+    return JSON.encode({'endpoint': '${endpoint}'});
   }
+}
+
+bool _isSpecialTrigger(Uri url) {
+  return url.pathSegments.last == 'special';
 }
