@@ -68,8 +68,14 @@ class HttpTrigger {
       default:
         throw new Exception('Not supported.');
     }
+    print('Event: ${event}');
 
-    print(event);
+    final jobDescriptionLoader = new JobDescriptionLoader(triggerConfig);
+    final jobDescription = await jobDescriptionLoader.load();
+    print('JsobDescription: ');
+    print('  executable: ${jobDescription.executable}');
+    print('  config: ${jobDescription.config}');
+    print('  packageDescription: ${jobDescription.packageDescription}');
 
     return JSON.encode({'hello': 'world'});
   }
