@@ -62,7 +62,7 @@ class HttpTrigger {
     var event;
     switch (triggerConfig.sourceType) {
       case SourceType.github:
-        final eventDetector = new GithubEventDetector(request.headers, jsonData);
+        final eventDetector = new GithubEventDetector(context, request.headers, jsonData);
         event = eventDetector.event;
         break;
       default:
@@ -70,14 +70,14 @@ class HttpTrigger {
     }
     print('Event: ${event}');
 
-    final jobDescriptionLoader = new JobDescriptionLoader(triggerConfig);
+    final jobDescriptionLoader = new JobDescriptionLoader(context, triggerConfig);
     final jobDescription = await jobDescriptionLoader.load();
     print('JsobDescription: ');
     print('  executable: ${jobDescription.executable}');
     print('  config: ${jobDescription.config}');
     print('  packageDescription: ${jobDescription.packageDescription}');
 
-    final jobRunner = new JobRunner(event, jobDescription);
+    final jobRunner = new JobRunner(context, event, jobDescription);
     final result = await jobRunner.run();
 
     return JSON.encode({'result': '${result}'});

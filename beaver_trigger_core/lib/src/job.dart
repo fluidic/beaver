@@ -15,9 +15,10 @@ class JobDescription {
 }
 
 class JobDescriptionLoader {
+  final Context _context;
   final TriggerConfig _triggerConfig;
 
-  JobDescriptionLoader(this._triggerConfig);
+  JobDescriptionLoader(this._context, this._triggerConfig);
 
   Future<JobDescription> load() async {
     final dest = path.join(
@@ -74,10 +75,11 @@ class JobDescriptionLoader {
 }
 
 class JobRunner {
+  final Context _context;
   final String _event;
   final JobDescription _jobDescription;
 
-  JobRunner(this._event, this._jobDescription);
+  JobRunner(this._context, this._event, this._jobDescription);
 
   Future<Object> run() async {
     // FIXME: Get a log.

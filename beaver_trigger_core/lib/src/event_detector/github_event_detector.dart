@@ -3,10 +3,11 @@ import 'dart:io';
 import '../base.dart';
 
 class GithubEventDetector implements EventDetector {
+  final Context _context;
   final HttpHeaders _headers;
   final _jsonBody;
 
-  GithubEventDetector(this._headers, this._jsonBody);
+  GithubEventDetector(this._context, this._headers, this._jsonBody);
 
   @override
   String get event {
