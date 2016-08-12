@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:path/path.dart' as path;
+import 'package:pub_wrapper/pub_wrapper.dart';
 
 import 'base.dart';
 
@@ -49,8 +51,10 @@ class JobDescriptionLoader {
 
     httpClient.close();
 
-    return new JobDescription(Uri.parse(jobDescriptionFile.path),
-        Uri.parse(jobConfigurationFile.path), Uri.parse(packageDescriptionFile.path));
+    return new JobDescription(
+        Uri.parse(jobDescriptionFile.path),
+        Uri.parse(jobConfigurationFile.path),
+        Uri.parse(packageDescriptionFile.path));
   }
 
   Uri _getJobDescriptionUrl(Uri baseUrl) {
@@ -66,5 +70,24 @@ class JobDescriptionLoader {
   Uri _getPackageDescriptionUrl(Uri baesUrl) {
     // FIXME: Don't hardcode.
     return Uri.parse(baesUrl.toString() + '/../pubspec.yaml');
+  }
+}
+
+class JobRunner {
+  final String _event;
+  final JobDescription _jobDescription;
+
+  JobRunner(this._event, this._jobDescription);
+
+  Future<Object> run() async {
+    // FIXME: Get a log.
+    final workingDir = path.dirname(_jobDescription.executable.toFilePath());
+    await _runPubGet(workingDir);
+    await Isolate.spawnUri(_jobDescription.executable, [], _event,
+        automaticPackageResolution: true);
+  }
+
+  Future<Object> _runPubGet(String workingDir) {
+    return runPub(['get'], processWorkingDir: workingDir);
   }
 }

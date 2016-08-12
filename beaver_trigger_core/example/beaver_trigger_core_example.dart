@@ -77,7 +77,10 @@ class HttpTrigger {
     print('  config: ${jobDescription.config}');
     print('  packageDescription: ${jobDescription.packageDescription}');
 
-    return JSON.encode({'hello': 'world'});
+    final jobRunner = new JobRunner(event, jobDescription);
+    final result = await jobRunner.run();
+
+    return JSON.encode({'result': '${result}'});
   }
 }
 
