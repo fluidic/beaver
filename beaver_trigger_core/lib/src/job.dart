@@ -83,8 +83,13 @@ class JobRunner {
     // FIXME: Get a log.
     final workingDir = path.dirname(_jobDescription.executable.toFilePath());
     await _runPubGet(workingDir);
-    await Isolate.spawnUri(_jobDescription.executable, [], _event,
+    
+    // FIXME: An exception raised in Isolate is disappeared silently.
+    await Isolate.spawnUri(_jobDescription.executable,
+        [_jobDescription.config.toFilePath()], _event,
         automaticPackageResolution: true);
+
+    // FIXME: Return the result.
   }
 
   Future<Object> _runPubGet(String workingDir) {
