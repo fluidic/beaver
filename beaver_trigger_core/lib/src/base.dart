@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:uuid/uuid.dart';
 
-abstract class Context {
+class Context {
   final Uri url;
   final TriggerConfigStore triggerConfigStore;
 

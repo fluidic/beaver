@@ -5,11 +5,6 @@ import 'dart:io';
 import 'package:beaver_trigger_core/beaver_trigger_core.dart';
 
 main() async {
-  final context = new HttpTriggerContext(
-      Uri.parse('http://localhost:8080'), new TriggerConfigMemoryStore());
-  final httpTrigger = new HttpTrigger(context);
-  final specialTrigger = new SpecialTrigger(context);
-
   final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8080);
   await for (final req in server) {
     ContentType contentType = req.headers.contentType;
@@ -18,15 +13,7 @@ main() async {
         contentType != null &&
         contentType.mimeType == 'application/json') {
       try {
-        final jsonString = await req.transform(UTF8.decoder).join();
-        Map jsonData = JSON.decode(jsonString);
-
-        var json;
-        if (_isSpecialTrigger(req.uri)) {
-          json = await specialTrigger.handle(req, jsonData);
-        } else {
-          json = await httpTrigger.handle(req, jsonData);
-        }
+        final json = await handle(req);
         req.response
           ..statusCode = HttpStatus.OK
           ..write(JSON.encode(json))
@@ -46,60 +33,21 @@ main() async {
   }
 }
 
-class HttpTriggerContext extends Context {
-  HttpTriggerContext(Uri url, TriggerConfigStore triggerConfigStore)
-      : super(url, triggerConfigStore);
-}
+final context = new Context(
+    Uri.parse('http://localhost:8080'), new TriggerConfigMemoryStore());
 
-class HttpTrigger {
-  final Context context;
+Future<String> handle(HttpRequest request) async {
+  final jsonString = await request.transform(UTF8.decoder).join();
+  Map jsonData = JSON.decode(jsonString);
 
-  HttpTrigger(this.context);
-
-  Future handle(HttpRequest request, Map<String, String> jsonData) async {
-    final triggerConfig = await context.triggerConfigStore.load(request.uri);
-
-    var event;
-    switch (triggerConfig.sourceType) {
-      case SourceType.github:
-        final eventDetector = new GithubEventDetector(context, request.headers, jsonData);
-        event = eventDetector.event;
-        break;
-      default:
-        throw new Exception('Not supported.');
-    }
-    print('Event: ${event}');
-
-    final jobDescriptionLoader = new JobDescriptionLoader(context, triggerConfig);
-    final jobDescription = await jobDescriptionLoader.load();
-    print('JsobDescription: ');
-    print('  executable: ${jobDescription.executable}');
-    print('  config: ${jobDescription.config}');
-    print('  packageDescription: ${jobDescription.packageDescription}');
-
-    final jobRunner = new JobRunner(context, event, jobDescription);
-    final result = await jobRunner.run();
-
-    return JSON.encode({'result': '{${result}}'});
+  var trigger;
+  if (isSpecialTrigger(request.uri)) {
+    trigger = new SpecialTrigger(context, jsonData);
+  } else {
+    trigger = new JobTrigger(context, jsonData, request: request);
   }
-}
 
-class SpecialTrigger {
-  final Context context;
+  final result = await trigger.trigger();
 
-  SpecialTrigger(this.context);
-
-  Future<String> handle(HttpRequest request, Map<String, String> jsonData) async {
-    final endpoint = await setTriggerConfig(
-        context,
-        sourceTypeFromString(jsonData['sourceType']),
-        Uri.parse(jsonData['sourceUrl']),
-        triggerTypeFromString(jsonData['triggerType']));
-
-    return JSON.encode({'endpoint': '${endpoint}'});
-  }
-}
-
-bool _isSpecialTrigger(Uri url) {
-  return url.pathSegments.last == 'special';
+  return JSON.encode(result);
 }
