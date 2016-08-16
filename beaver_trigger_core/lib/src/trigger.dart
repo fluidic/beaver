@@ -67,6 +67,6 @@ class SpecialTrigger extends Trigger {
   }
 }
 
-bool isSpecialTrigger(Uri url) {
+bool isSpecialTriggerRequest(Uri url) {
   return url.pathSegments.last == 'special';
 }

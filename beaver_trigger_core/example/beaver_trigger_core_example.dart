@@ -41,7 +41,7 @@ Future<String> handle(HttpRequest request) async {
   Map jsonData = JSON.decode(jsonString);
 
   var trigger;
-  if (isSpecialTrigger(request.uri)) {
+  if (isSpecialTriggerRequest(request.uri)) {
     trigger = new SpecialTrigger(context, jsonData);
   } else {
     trigger = new JobTrigger(context, jsonData, request: request);
