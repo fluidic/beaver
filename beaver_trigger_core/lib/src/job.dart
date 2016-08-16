@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:path/path.dart' as path;
 import 'package:pub_wrapper/pub_wrapper.dart';
@@ -84,18 +83,30 @@ class JobRunner {
   Future<Object> run() async {
     // FIXME: Get a log.
     final workingDir = path.dirname(_jobDescription.executable.toFilePath());
-    await _runPubGet(workingDir);
-    
-    // FIXME: An exception raised in Isolate is disappeared silently.
-    // FIXME: Isolate vs Process
-    await Isolate.spawnUri(_jobDescription.executable,
-        [_jobDescription.config.toFilePath()], _event,
-        automaticPackageResolution: true);
+    await runPub(['get'], processWorkingDir: workingDir);
 
-    // FIXME: Return the result.
+    var result = await Process.run('dart', ['beaver.dart', '${_event}'],
+        workingDirectory: workingDir, runInShell: true);
+
+    return new JobRunResult(result.stdout, result.stderr, result.exitCode);
   }
+}
 
-  Future<Object> _runPubGet(String workingDir) {
-    return runPub(['get'], processWorkingDir: workingDir);
+class JobRunResult {
+  final String stdout;
+  final String stderr;
+  final int exitCode;
+
+  JobRunResult(this.stdout, this.stderr, this.exitCode);
+
+  @override
+  String toString() {
+    final buff = new StringBuffer();
+    buff.write('stdout: ' + stdout);
+    buff.write(', ');
+    buff.write('stderr: ' + stderr);
+    buff.write(', ');
+    buff.write('exitcode: ${exitCode}');
+    return buff.toString();
   }
 }

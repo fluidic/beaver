@@ -80,7 +80,7 @@ class HttpTrigger {
     final jobRunner = new JobRunner(context, event, jobDescription);
     final result = await jobRunner.run();
 
-    return JSON.encode({'result': '${result}'});
+    return JSON.encode({'result': '{${result}}'});
   }
 }
 
