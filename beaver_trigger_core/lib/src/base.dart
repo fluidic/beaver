@@ -18,21 +18,21 @@ enum SourceType { git, github, gCloudPubSub, awsSNS }
 enum TriggerType { special, http, gCloudPubSub, awsSNS }
 
 class TriggerConfig {
-  Uri endpoint;
+  String id;
   SourceType sourceType;
   Uri sourceUrl;
   TriggerType triggerType;
   String token;
   int interval;
 
-  TriggerConfig(this.endpoint, this.sourceType, this.sourceUrl,
+  TriggerConfig(this.id, this.sourceType, this.sourceUrl,
       this.triggerType, this.token, this.interval);
 
   @override
   String toString() {
     final buffer = new StringBuffer('TriggerConfig { \n');
     buffer
-      ..write('endpoint: ${endpoint}\n')
+      ..write('id: ${id}\n')
       ..write('sourceType: ${sourceType}\n')
       ..write('sourceUrl: ${sourceUrl}\n')
       ..write('triggerType: ${triggerType}\n')
@@ -44,7 +44,7 @@ class TriggerConfig {
 }
 
 abstract class TriggerConfigStore {
-  Future<TriggerConfig> load(Uri endpoint);
+  Future<TriggerConfig> load(String id);
   Future<bool> save(TriggerConfig triggerConfig);
 }
 
@@ -55,7 +55,7 @@ Future<Uri> setTriggerConfig(Context context, SourceType sourceType,
   final endpoint = Uri.parse(context.url.toString() + '/' + id);
 
   final triggerConfig = new TriggerConfig(
-      endpoint, sourceType, sourceUrl, triggerType, token, interval);
+      id, sourceType, sourceUrl, triggerType, token, interval);
   final success = await context.triggerConfigStore.save(triggerConfig);
 
   if (!success) {
@@ -65,6 +65,6 @@ Future<Uri> setTriggerConfig(Context context, SourceType sourceType,
   return endpoint;
 }
 
-Future<TriggerConfig> getTriggerConfig(Context context, Uri endpoint) {
-  return context.triggerConfigStore.load(endpoint);
+Future<TriggerConfig> getTriggerConfig(Context context, String id) {
+  return context.triggerConfigStore.load(id);
 }

@@ -24,7 +24,8 @@ class JobTrigger extends Trigger {
 
   @override
   Future<Map<String, Object>> trigger() async {
-    final triggerConfig = await context.triggerConfigStore.load(request.uri);
+    final triggerConfigId = request.uri.pathSegments.last;
+    final triggerConfig = await context.triggerConfigStore.load(triggerConfigId);
 
     // FIXME: Get EventDetector using the reflection.
     var event;

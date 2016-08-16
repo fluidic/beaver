@@ -21,7 +21,7 @@ class JobDescriptionLoader {
 
   Future<JobDescription> load() async {
     final dest = path.join(
-        Directory.systemTemp.path, _triggerConfig.endpoint.pathSegments.last);
+        Directory.systemTemp.path, _triggerConfig.id);
     await new Directory(dest).create(recursive: true);
 
     // FIXME: If triggerConfig has a valid token, use it to get JobDescription.
