@@ -48,11 +48,10 @@ abstract class TriggerConfigStore {
   Future<bool> save(TriggerConfig triggerConfig);
 }
 
-Future<Uri> setTriggerConfig(Context context, SourceType sourceType,
+Future<String> setTriggerConfig(Context context, SourceType sourceType,
     Uri sourceUrl, TriggerType triggerType,
     {String token, int interval}) async {
   final id = new Uuid().v1();
-  final endpoint = Uri.parse(context.url.toString() + '/' + id);
 
   final triggerConfig = new TriggerConfig(
       id, sourceType, sourceUrl, triggerType, token, interval);
@@ -62,7 +61,7 @@ Future<Uri> setTriggerConfig(Context context, SourceType sourceType,
     throw new Exception('TriggerConfig is not saved.');
   }
 
-  return endpoint;
+  return id;
 }
 
 Future<TriggerConfig> getTriggerConfig(Context context, String id) {
