@@ -87,6 +87,7 @@ class JobRunner {
     await _runPubGet(workingDir);
     
     // FIXME: An exception raised in Isolate is disappeared silently.
+    // FIXME: Isolate vs Process
     await Isolate.spawnUri(_jobDescription.executable,
         [_jobDescription.config.toFilePath()], _event,
         automaticPackageResolution: true);
