@@ -3,14 +3,20 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:pub_wrapper/pub_wrapper.dart';
+import 'package:yaml/yaml.dart';
 
 import 'base.dart';
 
+const String jobDescriptionKey = 'job';
+
 class JobDescription {
-  final Uri executable;
-  final Uri config;
-  final Uri packageDescription;
-  JobDescription(this.executable, this.config, this.packageDescription);
+  final YamlList jobs;
+  final Uri descriptionFile;
+  final Uri customJobFile;
+  final Uri packageDescriptionFile;
+
+  JobDescription(this.jobs, this.descriptionFile, this.customJobFile,
+      this.packageDescriptionFile);
 }
 
 class JobDescriptionLoader {
@@ -20,8 +26,7 @@ class JobDescriptionLoader {
   JobDescriptionLoader(this._context, this._triggerConfig);
 
   Future<JobDescription> load() async {
-    final dest = path.join(
-        Directory.systemTemp.path, _triggerConfig.id);
+    final dest = path.join(Directory.systemTemp.path, _triggerConfig.id);
     await new Directory(dest).create(recursive: true);
 
     // FIXME: If triggerConfig has a valid token, use it to get JobDescription.
@@ -33,13 +38,20 @@ class JobDescriptionLoader {
         new File(path.join(dest, jobDescriptionUrl.pathSegments.last));
     await response.pipe(jobDescriptionFile.openWrite());
 
-    final jobConfigurationUrl =
-        _getJobConfigurationUrl(_triggerConfig.sourceUrl);
-    request = await httpClient.getUrl(jobConfigurationUrl);
-    response = await request.close();
-    final jobConfigurationFile =
-        new File(path.join(dest, jobConfigurationUrl.pathSegments.last));
-    await response.pipe(jobConfigurationFile.openWrite());
+    final jobMap =
+        loadYaml(await jobDescriptionFile.readAsString())[jobDescriptionKey];
+
+    final customJobUrl = _getCustomJobUrl(_triggerConfig.sourceUrl);
+    var customJobFile;
+    try {
+      request = await httpClient.getUrl(customJobUrl);
+      response = await request.close();
+      customJobFile = new File(path.join(dest, customJobUrl.pathSegments.last));
+      await response.pipe(customJobFile.openWrite());
+    } catch (e) {
+      // FIXME: logging.
+      customJobFile = null;
+    }
 
     final packageDescriptionUrl =
         _getPackageDescriptionUrl(_triggerConfig.sourceUrl);
@@ -52,19 +64,20 @@ class JobDescriptionLoader {
     httpClient.close();
 
     return new JobDescription(
+        jobMap,
         Uri.parse(jobDescriptionFile.path),
-        Uri.parse(jobConfigurationFile.path),
+        customJobFile != null ? Uri.parse(customJobFile.path) : null,
         Uri.parse(packageDescriptionFile.path));
   }
 
   Uri _getJobDescriptionUrl(Uri baseUrl) {
     // FIXME: Don't hardcode.
-    return Uri.parse(baseUrl.toString() + '/beaver/beaver.dart');
+    return Uri.parse(baseUrl.toString() + '/beaver/beaver.yaml');
   }
 
-  Uri _getJobConfigurationUrl(Uri baseUrl) {
+  Uri _getCustomJobUrl(Uri baseUrl) {
     // FIXME: Don't hardcode.
-    return Uri.parse(baseUrl.toString() + '/beaver/beaver.yaml');
+    return Uri.parse(baseUrl.toString() + '/beaver/beaver.dart');
   }
 
   Uri _getPackageDescriptionUrl(Uri baesUrl) {
@@ -82,7 +95,7 @@ class JobRunner {
 
   Future<Object> run() async {
     // FIXME: Get a log.
-    final workingDir = path.dirname(_jobDescription.executable.toFilePath());
+    final workingDir = path.dirname(_jobDescription.customJobFile.toFilePath());
     await runPub(['get'], processWorkingDir: workingDir);
 
     var result = await Process.run('dart', ['beaver.dart', '${_event}'],
