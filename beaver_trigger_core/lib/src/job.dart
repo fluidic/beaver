@@ -127,7 +127,8 @@ class JobRunner {
       String workingDir, String taskName) async {
     final result = await Process.run('dart', ['beaver.dart', taskName],
         workingDirectory: workingDir, runInShell: true);
-    return new JobRunResult(result.stdout, result.stderr, result.exitCode);
+
+    return new JobRunResult.fromProcessResult(result);
   }
 
   static Future<JobRunResult> _runJob(Iterable<YamlList> tasks,
@@ -154,28 +155,38 @@ class JobRunner {
       task = beaver_core.seq(taskList);
     }
 
-    await task.execute(context);
+    var status = JobStatus.success;
+    try {
+      await task.execute(context);
+    } catch (e) {
+      logger.error(e);
+      status = JobStatus.failure;
+    }
 
-    // FIXME: Return a valid result.
-    return new JobRunResult('', '', 0);
+    return new JobRunResult(status, logger.toString());
   }
 }
 
+enum JobStatus { success, failure }
+
 class JobRunResult {
-  final String stdout;
-  final String stderr;
-  final int exitCode;
+  JobStatus status;
+  String log;
 
-  JobRunResult(this.stdout, this.stderr, this.exitCode);
+  JobRunResult(this.status, this.log);
 
-  @override
-  String toString() {
-    final buff = new StringBuffer();
-    buff.write('stdout: ' + stdout);
-    buff.write(', ');
-    buff.write('stderr: ' + stderr);
-    buff.write(', ');
-    buff.write('exitcode: ${exitCode}');
-    return buff.toString();
+  JobRunResult.fromProcessResult(ProcessResult result) {
+    status = JobStatus.success;
+    if (result.exitCode != 0) {
+      status = JobStatus.failure;
+    }
+
+    StringBuffer buffer = new StringBuffer();
+    buffer
+      ..write('stdout: ')
+      ..write(result.stdout)
+      ..write(', stderr: ')
+      ..write(result.stderr);
+    log = buffer.toString();
   }
 }
