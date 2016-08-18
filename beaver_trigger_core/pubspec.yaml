@@ -8,6 +8,8 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
+  beaver_core:
+    path: ../beaver_core
   path: '>=1.3.9 <1.4.0'
   pub_wrapper:
     path: ../pub_wrapper

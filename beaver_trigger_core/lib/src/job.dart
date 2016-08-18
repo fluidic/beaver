@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_core/beaver_core.dart' as beaver_core;
 import 'package:path/path.dart' as path;
 import 'package:pub_wrapper/pub_wrapper.dart';
 import 'package:yaml/yaml.dart';
 
-import 'base.dart';
+import './base.dart';
+import './utils/reflection.dart';
 
 const String jobDescriptionKey = 'job';
 
@@ -111,7 +113,8 @@ class JobRunner {
       // We assume there is only one task if custom is true.
       result = await _runCustomJob(workingDir, job['tasks'].first['name']);
     } else {
-      result = await _runJob(job['tasks'], job['concurrency'] ?? false);
+      result = await _runJob(job['tasks'], job['concurrency'] ?? false,
+          _jobDescription.descriptionFile.toFilePath());
     }
 
     return result;
@@ -127,9 +130,34 @@ class JobRunner {
     return new JobRunResult(result.stdout, result.stderr, result.exitCode);
   }
 
-  static Future<JobRunResult> _runJob(
-      Iterable<String> tasks, bool concurrency) async {
-    throw new Exception('Not implemented');
+  static Future<JobRunResult> _runJob(Iterable<YamlList> tasks,
+      bool concurrency, String jobDescriptionPath) async {
+    final taskClassMap = loadClassMapByAnnotation(beaver_core.TaskClass);
+
+    final config = new beaver_core.YamlConfig.fromFile(jobDescriptionPath);
+    // FIXME: Don't use NoneLogger.
+    final logger = new beaver_core.NoneLogger();
+    // FIXME: Pass ContextPart.
+    final context = new beaver_core.DefaultContext(config, logger, {});
+
+    final List<beaver_core.Task> taskList = tasks.map((task) {
+      final args = task['arguments']
+          ? (task['arguments'] as YamlList).toList(growable: false)
+          : [];
+      return newInstance(taskClassMap[task['name']], args);
+    });
+
+    beaver_core.Task task;
+    if (concurrency) {
+      task = beaver_core.par(taskList);
+    } else {
+      task = beaver_core.seq(taskList);
+    }
+
+    await task.execute(context);
+
+    // FIXME: Return a valid result.
+    return new JobRunResult('', '', 0);
   }
 }
 
