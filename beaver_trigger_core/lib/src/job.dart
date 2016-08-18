@@ -93,23 +93,44 @@ class JobRunner {
 
   JobRunner(this._context, this._event, this._jobDescription);
 
-  Future<Object> run() async {
+  Future<JobRunResult> run() async {
     // FIXME: Get a log.
     final workingDir = path.dirname(_jobDescription.customJobFile.toFilePath());
 
+    final job = _jobDescription.jobs.firstWhere(
+        (YamlMap job) => job['event'] == _event,
+        orElse: () => null);
+    if (job == null) {
+      throw new Exception('No job for ${_event} event.');
+    }
+
     await _getDependencies(workingDir);
 
-    var result = await _runCustomJob(workingDir, _event);
+    var result;
+    if (job['custom']) {
+      // We assume there is only one task if custom is true.
+      result = await _runCustomJob(workingDir, job['tasks'].first['name']);
+    } else {
+      result = await _runJob(job['tasks'], job['concurrency'] ?? false);
+    }
 
-    return new JobRunResult(result.stdout, result.stderr, result.exitCode);
+    return result;
   }
 
   static Future<Object> _getDependencies(String workingDir) =>
       runPub(['get'], processWorkingDir: workingDir);
 
-  static Future<Object> _runCustomJob(String workingDir, String event) =>
-      Process.run('dart', ['beaver.dart', '${event}'],
-          workingDirectory: workingDir, runInShell: true);
+  static Future<JobRunResult> _runCustomJob(
+      String workingDir, String taskName) async {
+    final result = await Process.run('dart', ['beaver.dart', taskName],
+        workingDirectory: workingDir, runInShell: true);
+    return new JobRunResult(result.stdout, result.stderr, result.exitCode);
+  }
+
+  static Future<JobRunResult> _runJob(
+      Iterable<String> tasks, bool concurrency) async {
+    throw new Exception('Not implemented');
+  }
 }
 
 class JobRunResult {
