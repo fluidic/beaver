@@ -38,7 +38,7 @@ class JobDescriptionLoader {
         new File(path.join(dest, jobDescriptionUrl.pathSegments.last));
     await response.pipe(jobDescriptionFile.openWrite());
 
-    final jobMap =
+    final jobs =
         loadYaml(await jobDescriptionFile.readAsString())[jobDescriptionKey];
 
     final customJobUrl = _getCustomJobUrl(_triggerConfig.sourceUrl);
@@ -64,7 +64,7 @@ class JobDescriptionLoader {
     httpClient.close();
 
     return new JobDescription(
-        jobMap,
+        jobs,
         Uri.parse(jobDescriptionFile.path),
         customJobFile != null ? Uri.parse(customJobFile.path) : null,
         Uri.parse(packageDescriptionFile.path));
@@ -96,13 +96,20 @@ class JobRunner {
   Future<Object> run() async {
     // FIXME: Get a log.
     final workingDir = path.dirname(_jobDescription.customJobFile.toFilePath());
-    await runPub(['get'], processWorkingDir: workingDir);
 
-    var result = await Process.run('dart', ['beaver.dart', '${_event}'],
-        workingDirectory: workingDir, runInShell: true);
+    await _getDependencies(workingDir);
+
+    var result = await _runCustomJob(workingDir, _event);
 
     return new JobRunResult(result.stdout, result.stderr, result.exitCode);
   }
+
+  static Future<Object> _getDependencies(String workingDir) =>
+      runPub(['get'], processWorkingDir: workingDir);
+
+  static Future<Object> _runCustomJob(String workingDir, String event) =>
+      Process.run('dart', ['beaver.dart', '${event}'],
+          workingDirectory: workingDir, runInShell: true);
 }
 
 class JobRunResult {
