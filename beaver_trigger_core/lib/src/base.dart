@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
 class Context {
+  final Logger logger;
   final TriggerConfigStore triggerConfigStore;
 
-  Context(this.triggerConfigStore);
+  Context(this.logger, this.triggerConfigStore);
 }
 
 abstract class EventDetector {

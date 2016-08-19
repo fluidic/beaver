@@ -28,6 +28,7 @@ class JobDescriptionLoader {
   JobDescriptionLoader(this._context, this._triggerConfig);
 
   Future<JobDescription> load() async {
+    _context.logger.fine('JobDescriptionLoader started.');
     // FIXME: If triggerConfig has a valid token, use it to get JobDescription.
     final httpClient = new HttpClient();
 
@@ -44,7 +45,7 @@ class JobDescriptionLoader {
       customJobFile =
           await _downloadFile(httpClient, customJobUrl, to: destDir);
     } catch (e) {
-      // FIXME: logging.
+      _context.logger.info('No custom job file.');
       customJobFile = null;
     }
 
@@ -105,17 +106,24 @@ class JobRunner {
   JobRunner(this._context, this._event, this._jobDescription);
 
   Future<JobRunResult> run() async {
-    // FIXME: Get a log.
+    _context.logger.fine('JobRunner started.');
     final workingDir = path.dirname(_jobDescription.customJobFile.toFilePath());
 
     final job = _jobDescription.jobs.firstWhere(
         (YamlMap job) => job['event'] == _event,
         orElse: () => null);
     if (job == null) {
+      _context.logger.severe('No job for ${_event} event.');
       throw new Exception('No job for ${_event} event.');
     }
 
-    await _getDependencies(workingDir);
+    final dependencyResult = await _getDependencies(workingDir);
+    for (final line in dependencyResult.stderr) {
+      _context.logger.severe(line);
+    }
+    for (final line in dependencyResult.stdout) {
+      _context.logger.info(line);
+    }
 
     var result;
     if (job['custom']) {
