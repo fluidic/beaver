@@ -28,28 +28,21 @@ class JobDescriptionLoader {
   JobDescriptionLoader(this._context, this._triggerConfig);
 
   Future<JobDescription> load() async {
-    final dest = path.join(Directory.systemTemp.path, _triggerConfig.id);
-    await new Directory(dest).create(recursive: true);
-
     // FIXME: If triggerConfig has a valid token, use it to get JobDescription.
-    final jobDescriptionUrl = _getJobDescriptionUrl(_triggerConfig.sourceUrl);
     final httpClient = new HttpClient();
-    var request = await httpClient.getUrl(jobDescriptionUrl);
-    var response = await request.close();
-    final jobDescriptionFile =
-        new File(path.join(dest, jobDescriptionUrl.pathSegments.last));
-    await response.pipe(jobDescriptionFile.openWrite());
 
+    final destDir = await _getDestinationDirectory(_triggerConfig.id);
+    final jobDescriptionUrl = _getJobDescriptionUrl(_triggerConfig.sourceUrl);
+    final jobDescriptionFile =
+        await _downloadFile(httpClient, jobDescriptionUrl, to: destDir);
     final jobs =
         loadYaml(await jobDescriptionFile.readAsString())[jobDescriptionKey];
 
     final customJobUrl = _getCustomJobUrl(_triggerConfig.sourceUrl);
     var customJobFile;
     try {
-      request = await httpClient.getUrl(customJobUrl);
-      response = await request.close();
-      customJobFile = new File(path.join(dest, customJobUrl.pathSegments.last));
-      await response.pipe(customJobFile.openWrite());
+      customJobFile =
+          await _downloadFile(httpClient, customJobUrl, to: destDir);
     } catch (e) {
       // FIXME: logging.
       customJobFile = null;
@@ -57,11 +50,8 @@ class JobDescriptionLoader {
 
     final packageDescriptionUrl =
         _getPackageDescriptionUrl(_triggerConfig.sourceUrl);
-    request = await httpClient.getUrl(packageDescriptionUrl);
-    response = await request.close();
     final packageDescriptionFile =
-        new File(path.join(dest, packageDescriptionUrl.pathSegments.last));
-    await response.pipe(packageDescriptionFile.openWrite());
+        await _downloadFile(httpClient, packageDescriptionUrl, to: destDir);
 
     httpClient.close();
 
@@ -72,19 +62,38 @@ class JobDescriptionLoader {
         Uri.parse(packageDescriptionFile.path));
   }
 
-  Uri _getJobDescriptionUrl(Uri baseUrl) {
+  static Uri _getJobDescriptionUrl(Uri baseUrl) {
     // FIXME: Don't hardcode.
     return Uri.parse(baseUrl.toString() + '/beaver/beaver.yaml');
   }
 
-  Uri _getCustomJobUrl(Uri baseUrl) {
+  static Uri _getCustomJobUrl(Uri baseUrl) {
     // FIXME: Don't hardcode.
     return Uri.parse(baseUrl.toString() + '/beaver/beaver.dart');
   }
 
-  Uri _getPackageDescriptionUrl(Uri baesUrl) {
+  static Uri _getPackageDescriptionUrl(Uri baesUrl) {
     // FIXME: Don't hardcode.
     return Uri.parse(baesUrl.toString() + '/../pubspec.yaml');
+  }
+
+  static Future<String> _getDestinationDirectory(String id) async {
+    final dirPath = path.join(Directory.systemTemp.path, id);
+    final dir = new Directory(dirPath);
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
+    return dirPath;
+  }
+
+  static Future<File> _downloadFile(HttpClient client, Uri url,
+      {String to: '.'}) async {
+    final file = new File(path.join(to, url.pathSegments.last));
+
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    await response.pipe(file.openWrite());
+    return file;
   }
 }
 
