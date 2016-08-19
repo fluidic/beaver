@@ -33,11 +33,11 @@ main() async {
   }
 }
 
-final context = new Context(new TriggerConfigMemoryStore());
-
 Future<String> handle(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();
   Map jsonData = JSON.decode(jsonString);
+
+  final context = new Context(new TriggerConfigMemoryStore());
 
   var trigger;
   if (isSpecialTriggerRequest(request.uri)) {

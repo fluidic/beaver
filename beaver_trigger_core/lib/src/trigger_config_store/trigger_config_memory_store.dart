@@ -2,8 +2,10 @@ import 'dart:async';
 
 import '../base.dart';
 
+final Map<String, TriggerConfig> _config = {};
+
 class TriggerConfigMemoryStore implements TriggerConfigStore {
-  Map<String, TriggerConfig> _config = {};
+  const TriggerConfigMemoryStore();
 
   @override
   Future<TriggerConfig> load(String id) async {
