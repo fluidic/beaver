@@ -13,7 +13,7 @@ main() async {
         contentType != null &&
         contentType.mimeType == 'application/json') {
       try {
-        final json = await handle(req);
+        final json = await _handle(req);
         req.response
           ..statusCode = HttpStatus.OK
           ..write(JSON.encode(json))
@@ -33,20 +33,21 @@ main() async {
   }
 }
 
-Future<String> handle(HttpRequest request) async {
+Future<String> _handle(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();
   Map jsonData = JSON.decode(jsonString);
 
-  final context = new Context(new TriggerConfigMemoryStore());
-
-  var trigger;
-  if (isSpecialTriggerRequest(request.uri)) {
-    trigger = new SpecialTrigger(context, jsonData);
-  } else {
-    trigger = new JobTrigger(context, jsonData, request: request);
+  final triggerId = request.uri.pathSegments.last;
+  if (triggerId == 'setTrigger') {
+    final id = await setTrigger(jsonData);
+    return JSON.encode({'id': id});
   }
 
-  final result = await trigger.trigger();
-
-  return JSON.encode(result);
+  var status = 'success';
+  try {
+    await trigger(triggerId, jsonData, request: request);
+  } catch (e) {
+    status = 'failure';
+  }
+  return JSON.encode({'status': status});
 }
