@@ -153,8 +153,7 @@ class JobRunner {
     final taskClassMap = loadClassMapByAnnotation(beaver_core.TaskClass);
 
     final config = new beaver_core.YamlConfig.fromFile(jobDescriptionPath);
-    // FIXME: Don't use NoneLogger.
-    final logger = new beaver_core.NoneLogger();
+    final logger = new MemoryLogger();
     // FIXME: Pass ContextPart.
     final context = new beaver_core.DefaultContext(config, logger, {});
 
@@ -206,4 +205,18 @@ class JobRunResult {
       ..write(result.stderr);
     log = buffer.toString();
   }
+}
+
+class MemoryLogger extends beaver_core.Logger {
+  final StringBuffer _buffer = new StringBuffer();
+
+  MemoryLogger();
+
+  @override
+  void log(beaver_core.LogLevel logLevel, message) {
+    _buffer.writeln('${logLevel}: ${message}');
+  }
+
+  @override
+  String toString() => _buffer.toString();
 }
