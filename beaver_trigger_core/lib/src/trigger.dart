@@ -39,9 +39,6 @@ Future<String> setTrigger(Map<String, Object> data) async {
   // FIXME: Don't hardcode.
   final context = new Context(new TriggerConfigMemoryStore());
 
-  return await setTriggerConfig(
-      context,
-      sourceTypeFromString(data['sourceType']),
-      Uri.parse(data['sourceUrl']),
-      triggerTypeFromString(data['triggerType']));
+  return await setTriggerConfig(context,
+      sourceTypeFromString(data['sourceType']), Uri.parse(data['sourceUrl']));
 }
