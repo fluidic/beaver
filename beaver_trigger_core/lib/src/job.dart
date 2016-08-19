@@ -19,6 +19,18 @@ class JobDescription {
 
   JobDescription(this.jobs, this.descriptionFile, this.customJobFile,
       this.packageDescriptionFile);
+
+  @override
+  String toString() {
+    final buffer = new StringBuffer();
+    buffer
+      ..writeln('JobDescription: ')
+      ..writeln('jobs: ${jobs}')
+      ..writeln('descriptionFile: ${descriptionFile.toFilePath()}')
+      ..writeln('customJobFile: ${customJobFile.toFilePath()}')
+      ..writeln('packageDescriptionFile: ${packageDescriptionFile}');
+    return buffer.toString();
+  }
 }
 
 class JobDescriptionLoader {
@@ -204,6 +216,21 @@ class JobRunResult {
       ..write(', stderr: ')
       ..write(result.stderr);
     log = buffer.toString();
+  }
+
+  @override
+  String toString() {
+    var statusStr = 'success';
+    if (status != JobStatus.success) {
+      statusStr = 'failure';
+    }
+
+    final buffer = new StringBuffer();
+    buffer
+      ..writeln('JobRunResult: ')
+      ..writeln('status: ${statusStr}')
+      ..writeln('logs: ${log}');
+    return buffer.toString();
   }
 }
 
