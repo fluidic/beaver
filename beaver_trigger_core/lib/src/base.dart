@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:uuid/uuid.dart';
 
 class Context {
-  final Uri url;
   final TriggerConfigStore triggerConfigStore;
 
-  Context(this.url, this.triggerConfigStore);
+  Context(this.triggerConfigStore);
 }
 
 abstract class EventDetector {
@@ -25,8 +24,8 @@ class TriggerConfig {
   String token;
   int interval;
 
-  TriggerConfig(this.id, this.sourceType, this.sourceUrl,
-      this.triggerType, this.token, this.interval);
+  TriggerConfig(this.id, this.sourceType, this.sourceUrl, this.triggerType,
+      this.token, this.interval);
 
   @override
   String toString() {

@@ -33,8 +33,7 @@ main() async {
   }
 }
 
-final context = new Context(
-    Uri.parse('http://localhost:8080'), new TriggerConfigMemoryStore());
+final context = new Context(new TriggerConfigMemoryStore());
 
 Future<String> handle(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();

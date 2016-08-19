@@ -25,7 +25,8 @@ class JobTrigger extends Trigger {
   @override
   Future<Map<String, Object>> trigger() async {
     final triggerConfigId = request.uri.pathSegments.last;
-    final triggerConfig = await context.triggerConfigStore.load(triggerConfigId);
+    final triggerConfig =
+        await context.triggerConfigStore.load(triggerConfigId);
 
     // FIXME: Get EventDetector using the reflection.
     var event;
@@ -61,9 +62,7 @@ class SpecialTrigger extends Trigger {
         sourceTypeFromString(data['sourceType']),
         Uri.parse(data['sourceUrl']),
         triggerTypeFromString(data['triggerType']));
-    final endpoint = context.url.toString() + '/' + id;
-
-    return {'endpoint': '${endpoint}'};
+    return {'id': '${id}'};
   }
 }
 
