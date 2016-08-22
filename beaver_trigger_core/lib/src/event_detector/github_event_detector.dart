@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import '../base.dart';
+import '../event_detector.dart';
 
 // FIXME: Add more events from https://developer.github.com/v3/activity/events/types/.
 final Map<String, List<String>> _eventMap = {
@@ -14,6 +15,7 @@ final Map<String, List<String>> _eventMap = {
   }
 };
 
+@EventDetectorClass('github')
 class GithubEventDetector implements EventDetector {
   final Context _context;
   final HttpHeaders _headers;

@@ -10,10 +10,6 @@ class Context {
   Context(this.logger, this.triggerConfigStore);
 }
 
-abstract class EventDetector {
-  String get event;
-}
-
 enum SourceType { git, github, gCloudPubSub, awsSNS }
 
 class TriggerConfig {

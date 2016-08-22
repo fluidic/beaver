@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 
 import './base.dart';
-import './event_detector/github_event_detector.dart';
+import './event_detector.dart';
 import './job.dart';
 import './trigger_config_store/trigger_config_memory_store.dart';
 import './utils/enum_from_string.dart';
@@ -31,19 +31,9 @@ Future<Null> _trigger(Context context, String triggerId,
   final triggerConfig = await context.triggerConfigStore.load(triggerId);
   context.logger.info('TriggerConfig found: ${triggerConfig}');
 
-  // FIXME: Get EventDetector using the reflection.
-  var event;
-  switch (triggerConfig.sourceType) {
-    case SourceType.github:
-      final eventDetector =
-          new GithubEventDetector(context, request.headers, data);
-      event = eventDetector.event;
-      break;
-    default:
-      context.logger.severe(
-          'Not supported source type. Plase check your trigger\'s source type.');
-      throw new Exception('Not supported.');
-  }
+  final eventDetector = getEventDetector(
+      triggerConfig.sourceType, context, request.headers, data);
+  final event = eventDetector.event;
   context.logger.info('Event detected: ${event}');
 
   final jobDescriptionLoader = new JobDescriptionLoader(context, triggerConfig);
