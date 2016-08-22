@@ -57,9 +57,9 @@ Future<Null> trigger(String triggerId, Map<String, Object> data,
   }
 }
 
-Future<String> setTrigger(Map<String, Object> data) async {
+Future<String> setTrigger(Map<String, Object> data) {
   final context = _createContext();
 
-  return await setTriggerConfig(context,
+  return setTriggerConfig(context,
       sourceTypeFromString(data['sourceType']), Uri.parse(data['sourceUrl']));
 }
