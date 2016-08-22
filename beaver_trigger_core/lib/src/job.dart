@@ -9,7 +9,7 @@ import 'package:yaml/yaml.dart';
 import './base.dart';
 import './utils/reflection.dart';
 
-const String jobDescriptionKey = 'job';
+const String jobDescriptionKey = 'jobs';
 
 class JobDescription {
   final YamlList jobs;
