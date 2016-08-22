@@ -7,7 +7,7 @@ import './base.dart';
 import './event_detector.dart';
 import './job.dart';
 import './trigger_config_store/trigger_config_memory_store.dart';
-import './utils/enum_from_string.dart';
+import './utils/enum.dart';
 
 Logger _createLogger() {
   final logger = Logger.root;
@@ -60,6 +60,6 @@ Future<Null> trigger(String triggerId, Map<String, Object> data,
 Future<String> setTrigger(Map<String, Object> data) {
   final context = _createContext();
 
-  return setTriggerConfig(context,
-      sourceTypeFromString(data['sourceType']), Uri.parse(data['sourceUrl']));
+  return setTriggerConfig(context, sourceTypeFromString(data['sourceType']),
+      Uri.parse(data['sourceUrl']));
 }
