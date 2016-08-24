@@ -61,10 +61,17 @@ class JobDescriptionLoader {
       customJobFile = null;
     }
 
+    // FIXME: Generate from descriptionFile.
     final packageDescriptionUrl =
         _getPackageDescriptionUrl(_triggerConfig.sourceUrl);
-    final packageDescriptionFile =
-        await _downloadFile(httpClient, packageDescriptionUrl, to: destDir);
+    var packageDescriptionFile;
+    try {
+      packageDescriptionFile =
+          await _downloadFile(httpClient, packageDescriptionUrl, to: destDir);
+    } catch (e) {
+      _context.logger.info('No package dscription file.');
+      packageDescriptionFile = null;
+    }
 
     httpClient.close();
 
@@ -72,7 +79,9 @@ class JobDescriptionLoader {
         jobs,
         Uri.parse(jobDescriptionFile.path),
         customJobFile != null ? Uri.parse(customJobFile.path) : null,
-        Uri.parse(packageDescriptionFile.path));
+        packageDescriptionFile != null
+            ? Uri.parse(packageDescriptionFile.path)
+            : null);
   }
 
   static Uri _getJobDescriptionUrl(Uri baseUrl) {
