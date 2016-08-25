@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:beaver_trigger_core/beaver_trigger_core.dart';
+import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 main() async {
   final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8080);

@@ -1,5 +1,5 @@
-name: beaver_trigger_core
-description: Core classes of beaver trigger.
+name: beaver_trigger_handler
+description: Handler for trigger.
 version: 0.1.0
 author: Fluidic Team <dev@fluidic.io>
 #homepage: https://www.example.com

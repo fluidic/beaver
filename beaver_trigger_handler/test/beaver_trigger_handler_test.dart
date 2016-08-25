@@ -1,4 +1,4 @@
-import 'package:beaver_trigger_core/beaver_trigger_core.dart';
+import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:test/test.dart';
 
 void main() {
