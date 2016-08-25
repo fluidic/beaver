@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 
 import './base.dart';
 import './event_detector.dart';
-import './job.dart';
+import './task_instance_runner.dart';
 import './trigger_config_store/trigger_config_memory_store.dart';
 import './utils/enum.dart';
 
@@ -40,7 +40,7 @@ Future<Null> _trigger_handler(Context context, String triggerId,
   final jobDescription = await jobDescriptionLoader.load();
   context.logger.info('JobDescription loaded: ${jobDescription}');
 
-  final jobRunner = new JobRunner(context, event, jobDescription);
+  final jobRunner = new TaskInstanceRunner(context, event, jobDescription);
   final result = await jobRunner.run();
   context.logger.info('Job Running Result: ${result}');
 }

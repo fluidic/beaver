@@ -9,7 +9,7 @@ import 'package:yaml/yaml.dart';
 import './base.dart';
 import './utils/reflection.dart';
 
-const String jobDescriptionKey = 'jobs';
+const String taskInstancesKey = 'taskInstances';
 
 class JobDescription {
   final YamlList jobs;
@@ -49,7 +49,7 @@ class JobDescriptionLoader {
     final jobDescriptionFile =
         await _downloadFile(httpClient, jobDescriptionUrl, to: destDir);
     final jobs =
-        loadYaml(await jobDescriptionFile.readAsString())[jobDescriptionKey];
+        loadYaml(await jobDescriptionFile.readAsString())[taskInstancesKey];
 
     final customJobUrl = _getCustomJobUrl(_triggerConfig.sourceUrl);
     var customJobFile;
@@ -119,14 +119,14 @@ class JobDescriptionLoader {
   }
 }
 
-class JobRunner {
+class TaskInstanceRunner {
   final Context _context;
   final String _event;
   final JobDescription _jobDescription;
 
-  JobRunner(this._context, this._event, this._jobDescription);
+  TaskInstanceRunner(this._context, this._event, this._jobDescription);
 
-  Future<JobRunResult> run() async {
+  Future<TaskInstanceResult> run() async {
     _context.logger.fine('JobRunner started.');
     final workingDir = path.dirname(_jobDescription.customJobFile.toFilePath());
 
@@ -161,15 +161,15 @@ class JobRunner {
   static Future<Object> _getDependencies(String workingDir) =>
       runPub(['get'], processWorkingDir: workingDir);
 
-  static Future<JobRunResult> _runCustomJob(
+  static Future<TaskInstanceResult> _runCustomJob(
       String workingDir, String taskName) async {
     final result = await Process.run('dart', ['beaver.dart', taskName],
         workingDirectory: workingDir, runInShell: true);
 
-    return new JobRunResult.fromProcessResult(result);
+    return new TaskInstanceResult.fromProcessResult(result);
   }
 
-  static Future<JobRunResult> _runJob(Iterable<YamlList> tasks,
+  static Future<TaskInstanceResult> _runJob(Iterable<YamlList> tasks,
       bool concurrency, String jobDescriptionPath) async {
     final taskClassMap = loadClassMapByAnnotation(beaver_core.TaskClass);
 
@@ -192,30 +192,30 @@ class JobRunner {
       task = beaver_core.seq(taskList);
     }
 
-    var status = JobStatus.success;
+    var status = TaskInstanceStatus.success;
     try {
       await task.execute(context);
     } catch (e) {
       logger.error(e);
-      status = JobStatus.failure;
+      status = TaskInstanceStatus.failure;
     }
 
-    return new JobRunResult(status, logger.toString());
+    return new TaskInstanceResult(status, logger.toString());
   }
 }
 
-enum JobStatus { success, failure }
+enum TaskInstanceStatus { success, failure }
 
-class JobRunResult {
-  JobStatus status;
+class TaskInstanceResult {
+  TaskInstanceStatus status;
   String log;
 
-  JobRunResult(this.status, this.log);
+  TaskInstanceResult(this.status, this.log);
 
-  JobRunResult.fromProcessResult(ProcessResult result) {
-    status = JobStatus.success;
+  TaskInstanceResult.fromProcessResult(ProcessResult result) {
+    status = TaskInstanceStatus.success;
     if (result.exitCode != 0) {
-      status = JobStatus.failure;
+      status = TaskInstanceStatus.failure;
     }
 
     StringBuffer buffer = new StringBuffer();
@@ -230,7 +230,7 @@ class JobRunResult {
   @override
   String toString() {
     var statusStr = 'success';
-    if (status != JobStatus.success) {
+    if (status != TaskInstanceStatus.success) {
       statusStr = 'failure';
     }
 
