@@ -1,3 +1,3 @@
 library beaver_trigger_core;
 
-export 'src/trigger.dart';
+export 'src/trigger_handler.dart';

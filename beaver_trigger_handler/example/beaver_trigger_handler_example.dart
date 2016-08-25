@@ -45,7 +45,7 @@ Future<String> _handle(HttpRequest request) async {
 
   var status = 'success';
   try {
-    await trigger(triggerId, jsonData, request: request);
+    await trigger_handler(triggerId, jsonData, request: request);
   } catch (e) {
     status = 'failure';
   }

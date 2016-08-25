@@ -26,7 +26,7 @@ Context _createContext() {
   return new Context(logger, triggerConfigStore);
 }
 
-Future<Null> _trigger(Context context, String triggerId,
+Future<Null> _trigger_handler(Context context, String triggerId,
     Map<String, Object> data, HttpRequest request) async {
   final triggerConfig = await context.triggerConfigStore.load(triggerId);
   context.logger.info('TriggerConfig found: ${triggerConfig}');
@@ -45,12 +45,12 @@ Future<Null> _trigger(Context context, String triggerId,
   context.logger.info('Job Running Result: ${result}');
 }
 
-Future<Null> trigger(String triggerId, Map<String, Object> data,
+Future<Null> trigger_handler(String triggerId, Map<String, Object> data,
     {HttpRequest request}) async {
   final context = _createContext();
 
   try {
-    await _trigger(context, triggerId, data, request);
+    await _trigger_handler(context, triggerId, data, request);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;
