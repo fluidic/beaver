@@ -38,11 +38,6 @@ Future<String> _handle(HttpRequest request) async {
   Map jsonData = JSON.decode(jsonString);
 
   final triggerId = request.uri.pathSegments.last;
-  if (triggerId == 'setTrigger') {
-    final id = await setTrigger(jsonData);
-    return JSON.encode({'id': id});
-  }
-
   var status = 'success';
   try {
     await trigger_handler(triggerId, jsonData, request: request);

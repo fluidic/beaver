@@ -56,10 +56,3 @@ Future<Null> trigger_handler(String triggerId, Map<String, Object> data,
     throw e;
   }
 }
-
-Future<String> setTrigger(Map<String, Object> data) {
-  final context = _createContext();
-
-  return setTriggerConfig(context, sourceTypeFromString(data['sourceType']),
-      Uri.parse(data['sourceUrl']));
-}
