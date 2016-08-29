@@ -35,9 +35,9 @@ Future<Null> _trigger_handler(Context context, String projectId,
   final event = eventDetector.event;
   context.logger.info('Event detected: ${event}');
 
-  final jobRunner = new TaskInstanceRunner(context, event, project);
-  final result = await jobRunner.run();
-  context.logger.info('Job Running Result: ${result}');
+  final taskInstanceRunner = new TaskInstanceRunner(context, event, project);
+  final result = await taskInstanceRunner.run();
+  context.logger.info('TaskInstance Running Result: ${result}');
 }
 
 // FIXME: data and request are dependent on triggerType. Make it optional.
