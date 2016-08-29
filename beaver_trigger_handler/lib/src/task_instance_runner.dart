@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:beaver_core/beaver_core.dart' as beaver_core;
 
 import './base.dart';
-import './utils/reflection.dart';
 
 class TaskInstanceRunner {
   final Context _context;
@@ -15,26 +14,13 @@ class TaskInstanceRunner {
   Future<TaskInstanceResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    // FIXME: Use runBeaver of beaver core.
-    final taskClassMap = loadClassMapByAnnotation(beaver_core.TaskClass);
-    final config = null;
-    final logger = new MemoryLogger();
-    final context = new beaver_core.DefaultContext(config, logger, {});
+    // FIXME: Get the result and pass it to TaskInstanceResult.
+    // FIXME: Add the logic to run task on the other vm.
+    // FIXME: TriggerHandler has the config as Yaml already. Make runBeaver
+    // can take it.
+    beaver_core.runBeaver(_taskInstance['name'], _taskInstance['args']);
 
-    final args = _taskInstance['args']
-        ? _taskInstance['args'].toList(growable: false)
-        : [];
-    final task = newInstance(taskClassMap[_taskInstance['name']], args);
-
-    var status = TaskInstanceStatus.success;
-    try {
-      await task.execute(context);
-    } catch (e) {
-      logger.error(e);
-      status = TaskInstanceStatus.failure;
-    }
-
-    return new TaskInstanceResult(status, logger.toString());
+    return new TaskInstanceResult(TaskInstanceStatus.success, '');
   }
 }
 
