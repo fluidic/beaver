@@ -37,10 +37,10 @@ Future<String> _handle(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();
   Map jsonData = JSON.decode(jsonString);
 
-  final triggerId = request.uri.pathSegments.last;
+  final projectId = request.uri.pathSegments.last;
   var status = 'success';
   try {
-    await trigger_handler(triggerId, jsonData, request: request);
+    await trigger_handler(projectId, jsonData, request: request);
   } catch (e) {
     status = 'failure';
   }
