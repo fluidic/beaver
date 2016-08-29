@@ -37,7 +37,7 @@ Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
 
   final partMap = {};
   contextPartClassMap.forEach((String name, ClassMirror contextParClass) {
-    partMap[name] = newInstance(contextParClass);
+    partMap[name] = newInstance(contextParClass, []);
   });
   await Future
       .wait(partMap.values.map((ContextPart part) => part.setUp(config)));
@@ -58,12 +58,12 @@ Future<Context> _createContext() async {
   return new DefaultContext(config, logger, partMap);
 }
 
-Future runBeaver(String taskName) async {
+Future runBeaver(String taskName, List<String> taskArgs) async {
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 
   final context = await _createContext();
-  final task = newInstance(taskClassMap[taskName]);
+  final task = newInstance(taskClassMap[taskName], taskArgs);
 
   TaskRunner runner = new TaskRunner(context, task);
   TaskRunResult result = await runner.run();

@@ -15,4 +15,4 @@ class MyTask implements Task {
 }
 
 // FIXME: Get the task name from the message
-main(args, message) => runBeaver('my_task');
+main(args, message) => runBeaver('my_task', []);
