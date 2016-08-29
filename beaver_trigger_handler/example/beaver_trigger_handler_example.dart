@@ -2,9 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 main() async {
+  final ProjectStore ps = new ProjectStore(ConnectorType.mapInMemory);
+  final projectId = await ps.setNewProject('test');
+  await ps.setConfig(projectId, new File('./beaver.yaml').readAsStringSync());
+  print(projectId);
+
   final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8080);
   await for (final req in server) {
     ContentType contentType = req.headers.contentType;
