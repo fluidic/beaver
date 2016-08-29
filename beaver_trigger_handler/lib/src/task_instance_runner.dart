@@ -2,44 +2,33 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:beaver_core/beaver_core.dart' as beaver_core;
-import 'package:beaver_store/beaver_store.dart';
-import 'package:yaml/yaml.dart';
 
 import './base.dart';
 import './utils/reflection.dart';
 
 class TaskInstanceRunner {
   final Context _context;
-  final String _event;
-  final Project _project;
+  final Map _taskInstance;
 
-  TaskInstanceRunner(this._context, this._event, this._project);
+  TaskInstanceRunner(this._context, this._taskInstance);
 
   Future<TaskInstanceResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final YamlList triggers = this._project.config['triggers'];
-    final taskInstance = triggers
-        .firstWhere((trigger) => trigger['events'].contains(_event))['task'];
-    final result = await _run(taskInstance);
-
-    return result;
-  }
-
-  static Future<TaskInstanceResult> _run(YamlMap task) async {
     // FIXME: Use runBeaver of beaver core.
     final taskClassMap = loadClassMapByAnnotation(beaver_core.TaskClass);
     final config = null;
     final logger = new MemoryLogger();
     final context = new beaver_core.DefaultContext(config, logger, {});
 
-    final args =
-        task['args'] ? (task['args'] as YamlList).toList(growable: false) : [];
-    final taskInstance = newInstance(taskClassMap[task['name']], args);
+    final args = _taskInstance['args']
+        ? _taskInstance['args'].toList(growable: false)
+        : [];
+    final task = newInstance(taskClassMap[_taskInstance['name']], args);
 
     var status = TaskInstanceStatus.success;
     try {
-      await taskInstance.execute(context);
+      await task.execute(context);
     } catch (e) {
       logger.error(e);
       status = TaskInstanceStatus.failure;

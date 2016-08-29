@@ -39,4 +39,9 @@ class GithubEventDetector implements EventDetector {
 
     return 'github_event_' + mainEvent + '_' + subEvent;
   }
+
+  @override
+  String get url {
+    return _jsonBody['repository']['html_url'];
+  }
 }

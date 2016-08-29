@@ -5,9 +5,10 @@ import './base.dart';
 import './event_detector/github_event_detector.dart';
 import './utils/reflection.dart';
 
-
+// FIXME: Change the class name more proper.
 abstract class EventDetector {
   String get event;
+  String get url;
 }
 
 class EventDetectorClass {
