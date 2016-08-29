@@ -15,6 +15,7 @@ export 'src/task/download_task.dart';
 export 'src/task/git_task.dart';
 export 'src/task/mkdir_task.dart';
 export 'src/task/move_task.dart';
+export 'src/task/patch_task.dart';
 export 'src/task/post_task.dart';
 export 'src/task/rename_task.dart';
 export 'src/task/shell_task.dart';
