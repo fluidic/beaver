@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:mirrors';
 
+import 'package:quiver_strings/strings.dart' as strings;
+
 import './annotation.dart';
 import './base.dart';
 import './config.dart';
@@ -50,19 +52,23 @@ Future<Logger> _createLogger() async {
   return new MemoryLogger(logger);
 }
 
-Future<Context> _createContext() async {
-  Config config = new YamlConfig.fromFile('beaver.yaml');
+Future<Context> _createContext(String configPath) async {
+  if (strings.isEmpty(configPath)) {
+    configPath = 'beaver.yaml';
+  }
+  Config config = new YamlConfig.fromFile(configPath);
   final logger = await _createLogger();
   final partMap = await _createContextPartMap(config);
 
   return new DefaultContext(config, logger, partMap);
 }
 
-Future runBeaver(String taskName, List<String> taskArgs) async {
+Future runBeaver(String taskName, List<String> taskArgs,
+    {String configPath}) async {
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 
-  final context = await _createContext();
+  final context = await _createContext(configPath);
   final task = newInstance(taskClassMap[taskName], taskArgs);
 
   TaskRunner runner = new TaskRunner(context, task);
