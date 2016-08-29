@@ -26,12 +26,12 @@ Context _createContext() {
 }
 
 Future<Null> _trigger_handler(Context context, String projectId,
-    Map<String, Object> data, HttpRequest request) async {
+    String triggerType, Map<String, Object> data, HttpRequest request) async {
   final project = await context.projectStore.getProject(projectId);
   context.logger.info('Project found: ${project}');
 
-  final eventDetector = getEventDetector(
-      project.sourceType, context, request.headers, data);
+  final eventDetector =
+      getEventDetector(triggerType, context, request.headers, data);
   final event = eventDetector.event;
   context.logger.info('Event detected: ${event}');
 
@@ -40,12 +40,14 @@ Future<Null> _trigger_handler(Context context, String projectId,
   context.logger.info('Job Running Result: ${result}');
 }
 
-Future<Null> trigger_handler(String projectId, Map<String, Object> data,
+// FIXME: data and request are dependent on triggerType. Make it optional.
+Future<Null> trigger_handler(
+    String projectId, String triggerType, Map<String, Object> data,
     {HttpRequest request}) async {
   final context = _createContext();
 
   try {
-    await _trigger_handler(context, projectId, data, request);
+    await _trigger_handler(context, projectId, triggerType, data, request);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;

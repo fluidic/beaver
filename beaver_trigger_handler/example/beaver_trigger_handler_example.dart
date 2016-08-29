@@ -40,7 +40,7 @@ Future<String> _handle(HttpRequest request) async {
   final projectId = request.uri.pathSegments.last;
   var status = 'success';
   try {
-    await trigger_handler(projectId, jsonData, request: request);
+    await trigger_handler(projectId, 'github', jsonData, request: request);
   } catch (e) {
     status = 'failure';
   }
