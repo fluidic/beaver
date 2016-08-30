@@ -8,8 +8,9 @@ author: Fluidic Team <dev@fluidic.io>
 environment:
   sdk: '>=1.0.0 <2.0.0'
 
-#dependencies:
-#  foo_bar: '>=1.0.0 <2.0.0'
+dependencies:
+  args: '>=0.13.5 <0.14.0'
+  yaml: '>=2.1.10 <2.2.0'
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'

@@ -1,3 +1,3 @@
-int calculate() {
-  return 6 * 7;
-}
+library beaver_cli;
+
+export 'src/beaver_cli_base.dart';
