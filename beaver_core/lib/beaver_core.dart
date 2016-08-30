@@ -8,7 +8,6 @@ export 'src/exception.dart';
 export 'src/logger.dart' show NoneLogger, ConsoleLogger;
 export 'src/reporter/html_reporter.dart';
 export 'src/reporter/json_reporter.dart';
-export 'src/run.dart';
 export 'src/task/copy_task.dart';
 export 'src/task/delete_task.dart';
 export 'src/task/download_task.dart';

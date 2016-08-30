@@ -1,4 +1,4 @@
-import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_core/beaver_core_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
