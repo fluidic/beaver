@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:beaver_core/beaver_core.dart' as beaver_core;
+import 'package:beaver_core/beaver_core_runner.dart';
 
 import './base.dart';
 
@@ -18,7 +18,7 @@ class TaskInstanceRunner {
     // FIXME: Add the logic to run task on the other vm.
     // FIXME: TriggerHandler has the config as Yaml already. Make runBeaver
     // can take it.
-    beaver_core.runBeaver(_taskInstance['name'], _taskInstance['args']);
+    runBeaver(_taskInstance['name'], _taskInstance['args']);
 
     return new TaskInstanceResult(TaskInstanceStatus.success, '');
   }
