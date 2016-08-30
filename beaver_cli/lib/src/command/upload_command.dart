@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:ini/ini.dart';
 
 class UploadCommand extends Command {
   @override
@@ -11,7 +12,10 @@ class UploadCommand extends Command {
   @override
   String get name => 'upload';
 
-  UploadCommand() : super() {
+  UploadCommand(Config config) : super() {
+    address = config.get('server', 'address');
+    port = int.parse(config.get('server', 'port'));
+
     argParser.addOption('config-file',
         abbr: 'c',
         defaultsTo: './beaver.yaml',
@@ -26,6 +30,8 @@ class UploadCommand extends Command {
   }
 
   String get api => '/api/upload';
+  String address;
+  int port;
 
   @override
   Future<Null> run() async {
@@ -34,9 +40,7 @@ class UploadCommand extends Command {
         JSON.encode({'id': argResults['project-id'], 'config': config});
 
     final httpClient = new HttpClient();
-    // FIXME: Don't hardcode.
-    final request =
-        await httpClient.open('POST', 'localhost', 8081, api);
+    final request = await httpClient.open('POST', address, port, api);
     request.headers.add('Content-Type', 'application/json');
     request.write(data);
     final response = await request.close();

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:ini/ini.dart';
 import 'package:yaml/yaml.dart';
 
 class RegisterCommand extends Command {
@@ -12,7 +13,10 @@ class RegisterCommand extends Command {
   @override
   String get name => 'register';
 
-  RegisterCommand() : super() {
+  RegisterCommand(Config config) : super() {
+    address = config.get('server', 'address');
+    port = int.parse(config.get('server', 'port'));
+
     argParser.addOption('config-file',
         abbr: 'c',
         defaultsTo: './beaver.yaml',
@@ -20,6 +24,8 @@ class RegisterCommand extends Command {
   }
 
   String get api => '/api/register';
+  String address;
+  int port;
 
   @override
   Future<Null> run() async {
@@ -27,9 +33,7 @@ class RegisterCommand extends Command {
         loadYaml(new File(argResults['config-file']).readAsStringSync());
 
     final httpClient = new HttpClient();
-    // FIXME: Don't hardcode.
-    var request =
-        await httpClient.open('POST', 'localhost', 8081, api);
+    var request = await httpClient.open('POST', address, port, api);
     request.headers.add('Content-Type', 'application/json');
     var data = JSON
         .encode({'project': config['project'], 'config': config.toString()});
