@@ -19,7 +19,7 @@ main() async {
         contentType != null &&
         contentType.mimeType == 'application/json') {
       try {
-        final json = await _handle(req);
+        final json = await handler(req);
         req.response
           ..statusCode = HttpStatus.OK
           ..write(JSON.encode(json))
@@ -39,14 +39,14 @@ main() async {
   }
 }
 
-Future<String> _handle(HttpRequest request) async {
+Future<String> handler(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();
   Map jsonData = JSON.decode(jsonString);
 
   final projectId = request.uri.pathSegments.last;
   var status = 'success';
   try {
-    await trigger_handler(projectId, 'github', jsonData, request: request);
+    await triggerHandler(projectId, 'github', jsonData, request: request);
   } catch (e) {
     status = 'failure';
   }

@@ -36,7 +36,7 @@ Map findTrigger(Context context, List<Map> triggers, String url, String event) {
   });
 }
 
-Future<Null> _trigger_handler(Context context, String projectId,
+Future<Null> _triggerHandler(Context context, String projectId,
     String triggerType, Map<String, Object> data, HttpRequest request) async {
   final project = await context.projectStore.getProject(projectId);
   context.logger.info('Project found: ${project}');
@@ -58,13 +58,13 @@ Future<Null> _trigger_handler(Context context, String projectId,
 }
 
 // FIXME: data and request are dependent on triggerType. Make it optional.
-Future<Null> trigger_handler(
+Future<Null> triggerHandler(
     String projectId, String triggerType, Map<String, Object> data,
     {HttpRequest request}) async {
   final context = _createContext();
 
   try {
-    await _trigger_handler(context, projectId, triggerType, data, request);
+    await _triggerHandler(context, projectId, triggerType, data, request);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;
