@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:beaver_store/beaver_store.dart';
 import 'package:logging/logging.dart';
@@ -36,13 +35,17 @@ Map findTrigger(Context context, List<Map> triggers, String url, String event) {
   });
 }
 
-Future<Null> _triggerHandler(Context context, String projectId,
-    String triggerType, Map<String, Object> data, HttpRequest request) async {
+Future<Null> _triggerHandler(
+    Context context,
+    String projectId,
+    String triggerType,
+    Map<String, Object> data,
+    Map<String, String> requestHeaders) async {
   final project = await context.projectStore.getProject(projectId);
   context.logger.info('Project found: ${project}');
 
   final eventDetector =
-      getEventDetector(triggerType, context, request.headers, data);
+      getEventDetector(triggerType, context, requestHeaders, data);
   final event = eventDetector.event;
   final url = eventDetector.url;
   context.logger.info('Event detected: ${event}');
@@ -60,11 +63,12 @@ Future<Null> _triggerHandler(Context context, String projectId,
 // FIXME: data and request are dependent on triggerType. Make it optional.
 Future<Null> triggerHandler(
     String projectId, String triggerType, Map<String, Object> data,
-    {HttpRequest request}) async {
+    {Map<String, String> requestHeaders}) async {
   final context = _createContext();
 
   try {
-    await _triggerHandler(context, projectId, triggerType, data, request);
+    await _triggerHandler(
+        context, projectId, triggerType, data, requestHeaders);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../base.dart';
 import '../event_detector.dart';
 
@@ -18,7 +16,7 @@ final Map<String, List<String>> _eventMap = {
 @EventDetectorClass('github')
 class GithubEventDetector implements EventDetector {
   final Context _context;
-  final HttpHeaders _headers;
+  final Map<String, String> _headers;
   final _jsonBody;
 
   GithubEventDetector(this._context, this._headers, this._jsonBody);
@@ -26,7 +24,7 @@ class GithubEventDetector implements EventDetector {
   @override
   String get event {
     _context.logger.fine('GithubEventDetector started.');
-    final mainEvent = _headers.value('X-Github-Event');
+    final mainEvent = _headers['x-github-event'];
     if (mainEvent == null) {
       throw new Exception('This is not the Github event.');
     }

@@ -44,9 +44,15 @@ Future<String> handler(HttpRequest request) async {
   Map jsonData = JSON.decode(jsonString);
 
   final projectId = request.uri.pathSegments.last;
+
+  final headers = {};
+  request.headers.forEach((name, value) {
+    headers[name] = value.first;
+  });
   var status = 'success';
   try {
-    await triggerHandler(projectId, 'github', jsonData, request: request);
+    await triggerHandler(projectId, 'github', jsonData,
+        requestHeaders: headers);
   } catch (e) {
     status = 'failure';
   }
