@@ -8,6 +8,8 @@ import '../models/project.dart';
 final Map<String, Project> _map = {};
 
 class MapInMemoryConnector implements Connector {
+  const MapInMemoryConnector();
+
   @override
   Future<Project> load(String id) async {
     return _map[id];
