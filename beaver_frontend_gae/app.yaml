@@ -1,0 +1,5 @@
+runtime: custom
+vm: true
+threadsafe: true
+manual_scaling:
+  instances: 1
