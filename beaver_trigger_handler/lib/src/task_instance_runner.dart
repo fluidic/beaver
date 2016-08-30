@@ -62,17 +62,3 @@ class TaskInstanceResult {
     return buffer.toString();
   }
 }
-
-class MemoryLogger extends beaver_core.Logger {
-  final StringBuffer _buffer = new StringBuffer();
-
-  MemoryLogger();
-
-  @override
-  void log(beaver_core.LogLevel logLevel, message) {
-    _buffer.writeln('${logLevel}: ${message}');
-  }
-
-  @override
-  String toString() => _buffer.toString();
-}
