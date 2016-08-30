@@ -1,6 +1,7 @@
 import 'dart:mirrors';
 
-newInstance(ClassMirror cm, List args) => cm.newInstance(new Symbol(''), args).reflectee;
+newInstance(String constructorName, ClassMirror cm, List args) =>
+    cm.newInstance(new Symbol(constructorName), args).reflectee;
 
 List<ClassMirror> queryClassesByAnnotation(ClassMirror annotation) {
   final results = [];

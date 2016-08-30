@@ -18,6 +18,9 @@ class CopyTask extends Task {
 
   CopyTask(this.src, this.dest);
 
+  CopyTask.fromArgs(List<String> args)
+      : this(args.getRange(0, args.length - 1), args.last);
+
   @override
   Future<Object> execute(Context context) async {
     final dir = new Directory(dest);

@@ -17,6 +17,9 @@ class ShellTask extends Task {
 
   ShellTask(this.executable, this.arguments);
 
+  ShellTask.fromArgs(List<String> args)
+      : this(args.first, args.getRange(1, args.length));
+
   @override
   Future<Null> execute(Context context) async {
     // FIXME: Process.run may throw a ProcessException if executable does not exist.

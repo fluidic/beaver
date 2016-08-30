@@ -14,6 +14,8 @@ class MkdirTask extends Task {
 
   MkdirTask(this.dir);
 
+  MkdirTask.fromArgs(List<String> args) : this(args[0]);
+
   @override
   Future<Object> execute(Context context) async {
     if (!await file_helper.mkdir([dir], recursive: true)) {

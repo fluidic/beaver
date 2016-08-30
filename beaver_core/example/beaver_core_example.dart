@@ -6,6 +6,8 @@ import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
 
 @TaskClass('my_task')
 class MyTask implements Task {
+  MyTask.fromArgs(List<String> args);
+
   @override
   Future<Object> execute(Context context) => seq([
         new InstallDartSdkTask(withContentShell: true, withDartium: true),

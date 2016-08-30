@@ -16,6 +16,8 @@ class RenameTask extends Task {
 
   RenameTask(this.oldPath, this.newPath);
 
+  RenameTask.fromArgs(List<String> args) : this(args[0], args[1]);
+
   @override
   Future<Object> execute(Context context) async {
     if (!await file_helper.rename(oldPath, newPath)) {

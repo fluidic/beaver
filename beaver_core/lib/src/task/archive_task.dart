@@ -18,6 +18,8 @@ class GUnzipTask extends Task {
 
   GUnzipTask(this.src, this.dest);
 
+  GUnzipTask.fromArgs(List<String> args) : this(args[0], args[1]);
+
   @override
   Future<Object> execute(Context context) async {
     throw new UnimplementedError();
@@ -38,6 +40,8 @@ class UnzipTask extends Task {
   final String dest;
 
   UnzipTask(this.src, this.dest);
+
+  UnzipTask.fromArgs(List<String> args) : this(args[0], args[1]);
 
   @override
   Future<Null> execute(Context context) async {
@@ -84,6 +88,8 @@ class UntarTask extends Task {
 
   UntarTask(this.src, this.dest);
 
+  UntarTask.fromArgs(List<String> args) : this(args[0], args[1]);
+
   @override
   Future<Object> execute(Context context) async {
     throw new UnimplementedError();
@@ -100,6 +106,8 @@ class BUnzip2Task extends Task {
   final String dest;
 
   BUnzip2Task(this.src, this.dest);
+
+  BUnzip2Task.fromArgs(List<String> args) : this(args[0], args[1]);
 
   @override
   Future<Object> execute(Context context) async {

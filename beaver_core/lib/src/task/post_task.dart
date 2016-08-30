@@ -25,6 +25,8 @@ class PostTask extends Task {
 
   PostTask(this.url, this.data);
 
+  PostTask.fromArgs(List<String> args) : this(args[0], args[1]);
+
   @override
   Future<PostTaskResult> execute(Context context) async {
     final httpClient = new HttpClient();

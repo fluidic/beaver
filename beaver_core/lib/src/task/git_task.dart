@@ -13,6 +13,8 @@ class GitTask extends Task {
   GitTask(this.args, {String processWorkingDir})
       : this.processWorkingDir = processWorkingDir;
 
+  GitTask.fromArgs(List<String> args) : this(args);
+
   @override
   Future<Null> execute(Context context) async {
     final result = await runGit(args, processWorkingDir: processWorkingDir);

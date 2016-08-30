@@ -17,6 +17,8 @@ class DownloadTask extends Task {
 
   DownloadTask(this.src, this.dest);
 
+  DownloadTask.fromArgs(List<String> args) : this(args[0], args[1]);
+
   @override
   Future<File> execute(Context context) async {
     final srcUri = Uri.parse(src);

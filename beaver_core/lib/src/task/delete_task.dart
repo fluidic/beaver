@@ -21,6 +21,8 @@ class DeleteTask extends Task {
       : force = force,
         recursive = recursive;
 
+  DeleteTask.fromArgs(List<String> args) : this(args);
+
   @override
   Future<Object> execute(Context context) async {
     if (!await file_helper.rm(paths, force: force, recursive: recursive)) {
