@@ -25,6 +25,9 @@ class ProjectStore {
     // FIXME: Upload the config file to the specific location.
     final config = new Config(yaml);
     final project = await _connector.load(id);
+    if (project == null) {
+      throw new Exception('No project for ${id}');
+    }
     if (project.name != config['project']) {
       throw new Exception('Project name is not valid.');
     }
