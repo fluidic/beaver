@@ -23,3 +23,6 @@ doc/api/
 
 # Mac
 .DS_Store
+
+# beaver cli config
+.beaverconfig
