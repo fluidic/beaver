@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import './connector.dart';
-import './models/config.dart';
-import './models/project.dart';
+import './model/config.dart';
+import './model/project.dart';
 
 enum ConnectorType { localMachine, gCloud }
 

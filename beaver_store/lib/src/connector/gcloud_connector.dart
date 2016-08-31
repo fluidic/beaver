@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../connector.dart';
-import '../models/project.dart';
+import '../model/project.dart';
 
 class GCloudConnector implements Connector {
   @override

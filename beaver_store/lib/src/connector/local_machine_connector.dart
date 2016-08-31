@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:uuid/uuid.dart';
 
 import '../connector.dart';
-import '../models/project.dart';
+import '../model/project.dart';
 
 final Map<String, Project> _map = {};
 

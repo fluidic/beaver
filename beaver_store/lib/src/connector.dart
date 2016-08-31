@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import './beaver_store_base.dart';
-import './connectors/gcloud_connector.dart';
-import './connectors/local_machine_connector.dart';
-import './models/project.dart';
+import './connector/gcloud_connector.dart';
+import './connector/local_machine_connector.dart';
+import './model/project.dart';
 
 abstract class Connector {
   Future<Project> load(String id);
