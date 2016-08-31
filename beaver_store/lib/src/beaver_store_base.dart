@@ -14,17 +14,16 @@ class ProjectStore {
 
   /// Return the id of Project.
   Future<String> setNewProject(String name) {
-    return _connector.save(new Project(name));
+    return _connector.saveProject(new Project(name));
   }
 
   Future<Project> getProject(String id) {
-    return _connector.load(id);
+    return _connector.loadProject(id);
   }
 
   Future<Null> setConfig(String id, String yaml) async {
-    // FIXME: Upload the config file to the specific location.
     final config = new Config(yaml);
-    final project = await _connector.load(id);
+    final project = await _connector.loadProject(id);
     if (project == null) {
       throw new Exception('No project for ${id}');
     }
@@ -32,6 +31,7 @@ class ProjectStore {
       throw new Exception('Project name is not valid.');
     }
     project.config = config;
-    _connector.save(project);
+    project.configFile = await _connector.saveConfigFile(project.id, yaml);
+    await _connector.saveProject(project);
   }
 }

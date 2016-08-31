@@ -14,6 +14,7 @@ main() async {
   final project = await store.getProject(id);
   print(project.config['project']);
   print(project.config['description']);
+  print(project.configFile);
 }
 
 String _loadYamlFile(String path) {

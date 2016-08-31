@@ -5,14 +5,22 @@ import '../model/project.dart';
 
 class GCloudConnector implements Connector {
   @override
-  Future<Project> load(String id) async {
-    // FIXME: Implement.
-    throw new Exception('Not implemented.');
+  Future<String> loadConfigFile(String projectId) {
+    // TODO: implement loadConfigFile
   }
 
   @override
-  Future<String> save(Project project) async {
-    // FIXME: Implement.
-    throw new Exception('Not implemented.');
+  Future<Project> loadProject(String projectId) {
+    // TODO: implement loadProject
+  }
+
+  @override
+  Future<Uri> saveConfigFile(String projectId, String config) {
+    // TODO: implement saveConfigFile
+  }
+
+  @override
+  Future<String> saveProject(Project project) {
+    // TODO: implement saveProject
   }
 }

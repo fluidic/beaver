@@ -6,8 +6,11 @@ import './connector/local_machine_connector.dart';
 import './model/project.dart';
 
 abstract class Connector {
-  Future<Project> load(String id);
-  Future<String> save(Project project);
+  Future<Project> loadProject(String projectId);
+  Future<String> saveProject(Project project);
+
+  Future<String> loadConfigFile(String projectId);
+  Future<Uri> saveConfigFile(String projectId, String config);
 }
 
 final Map<ConnectorType, CreateConnector> _map = {
