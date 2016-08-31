@@ -55,7 +55,8 @@ Future<Null> _triggerHandler(
   final trigger = findTrigger(context, triggers, url, event);
   context.logger.info('Trigger is triggerred. ${trigger}');
 
-  final taskInstanceRunner = new TaskInstanceRunner(context, trigger['task']);
+  final taskInstanceRunner =
+      new TaskInstanceRunner(context, project, trigger['task']);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstance Running Result: ${result}');
 }
