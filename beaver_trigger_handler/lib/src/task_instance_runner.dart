@@ -22,7 +22,7 @@ class TaskInstanceRunner {
     // FIXME: Add the logic to run task on the other vm.
     // FIXME: TriggerHandler has the config as Yaml already. Make runBeaver
     // can take it.
-    runBeaver(_taskInstance['name'], _taskInstance['args'],
+    await runBeaver(_taskInstance['name'], _taskInstance['args'],
         configPath: _project.configFile.path);
 
     return new TaskInstanceResult(TaskInstanceStatus.success, '');
