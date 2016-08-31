@@ -4,7 +4,7 @@ import './connector.dart';
 import './models/config.dart';
 import './models/project.dart';
 
-enum ConnectorType { mapInMemory, gCloudDataStore }
+enum ConnectorType { localMachine, gCloud }
 
 class ProjectStore {
   final Connector _connector;

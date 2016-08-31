@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:beaver_store/beaver_store.dart';
 
 main() async {
-  final store = new ProjectStore(ConnectorType.mapInMemory);
+  final store = new ProjectStore(ConnectorType.localMachine);
 
   final id = await store.setNewProject('beaver');
   print(id);

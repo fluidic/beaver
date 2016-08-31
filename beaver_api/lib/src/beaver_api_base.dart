@@ -29,7 +29,7 @@ Future<Map<String, Object>> apiHandler(
 }
 
 // FIXME: Don't use ConnectorType.mapInMemory here.
-final _projectStore = new ProjectStore(ConnectorType.mapInMemory);
+final _projectStore = new ProjectStore(ConnectorType.localMachine);
 
 /// Set new project. Returns the id of the registered project.
 Future<String> _registerProject(String projectName, String config) async {

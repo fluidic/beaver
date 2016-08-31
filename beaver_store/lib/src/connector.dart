@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import './models/project.dart';
-import './connectors/map_in_memory_connector.dart';
-import './connectors/gcloud_datastore_connector.dart';
 import './beaver_store_base.dart';
+import './connectors/gcloud_connector.dart';
+import './connectors/local_machine_connector.dart';
+import './models/project.dart';
 
 abstract class Connector {
   Future<Project> load(String id);
@@ -11,8 +11,8 @@ abstract class Connector {
 }
 
 final Map<ConnectorType, CreateConnector> _map = {
-  ConnectorType.mapInMemory: () => new MapInMemoryConnector(),
-  ConnectorType.gCloudDataStore: () => new GCloudDatastoreConnector()
+  ConnectorType.localMachine: () => new LocalMachineConnector(),
+  ConnectorType.gCloud: () => new GCloudConnector()
 };
 
 typedef Connector CreateConnector();

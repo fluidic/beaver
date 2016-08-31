@@ -3,7 +3,7 @@ import 'dart:async';
 import '../connector.dart';
 import '../models/project.dart';
 
-class GCloudDatastoreConnector implements Connector {
+class GCloudConnector implements Connector {
   @override
   Future<Project> load(String id) async {
     // FIXME: Implement.

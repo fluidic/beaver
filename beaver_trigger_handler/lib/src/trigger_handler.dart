@@ -21,7 +21,7 @@ Logger _createLogger() {
 Context _createContext() {
   final logger = _createLogger();
   // FIXME: Don't hardcode.
-  final projectStore = new ProjectStore(ConnectorType.mapInMemory);
+  final projectStore = new ProjectStore(ConnectorType.localMachine);
   return new Context(logger, projectStore);
 }
 
