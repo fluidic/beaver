@@ -1,12 +1,12 @@
-import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:beaver_api/beaver_api.dart';
+import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_route/shelf_route.dart' as shelf_route;
-import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 main() async {
   final router = shelf_route.router()
@@ -40,7 +40,8 @@ Future _githubTriggerHandler(shelf.Request request) async {
 
   var status = 'success';
   try {
-    await triggerHandler(projectId, 'github', requestBody, requestHeaders: request.headers);
+    final trigger = new Trigger('github', request.headers, requestBody);
+    await triggerHandler(trigger, projectId);
   } catch (e) {
     status = 'failure';
   }
