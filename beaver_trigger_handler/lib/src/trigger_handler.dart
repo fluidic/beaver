@@ -45,7 +45,7 @@ Future<Null> _triggerHandler(
   context.logger.info('Project found: ${project}');
 
   final eventDetector =
-      getEventDetector(triggerType, context, requestHeaders, data);
+      getEventDetector(context, triggerType, requestHeaders, data);
   final event = eventDetector.event;
   final url = eventDetector.url;
   context.logger.info('Event detected: ${event}');

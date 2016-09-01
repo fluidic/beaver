@@ -15,7 +15,7 @@ class EventDetectorClass {
   const EventDetectorClass(this.name);
 }
 
-EventDetector getEventDetector(String triggerType, Context context,
+EventDetector getEventDetector(Context context, String triggerType,
     Map<String, String> headers, Map jsonBody) {
   final eventDetectorClassMap = loadClassMapByAnnotation(EventDetectorClass);
   final eventDetectorClass = eventDetectorClassMap[triggerType];
