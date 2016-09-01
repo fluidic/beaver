@@ -10,6 +10,8 @@ abstract class TriggerParser {
 
 class TriggerResult {
   String event;
+  // FIXME: Url is valid and unique even though trigger is not the repository?
+  // e.g. For GCloud Pub/Sub, can we use the url as a parameter here?
   String url;
   Map<String, Object> data;
 

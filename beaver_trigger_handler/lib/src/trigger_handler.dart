@@ -25,12 +25,14 @@ Context _createContext() {
   return new Context(logger, projectStore);
 }
 
-// FIXME: Url is valid and unique even though trigger is not the repository?
-// e.g. For GCloud Pub/Sub, can we use the url as a parameter here?
-Map findTriggerConfig(
-    Context context, List<Map> triggers, String url, String event) {
-  return triggers.firstWhere((trigger) {
-    if (trigger['url'] == url && trigger['events'].contains(event)) {
+List _getTriggerConfigs(Project project) {
+  return (project.config['triggers'] as YamlList).toList(growable: false);
+}
+
+Map _findTriggerConfig(List<Map> triggerConfigs, TriggerResult triggerResult) {
+  return triggerConfigs.firstWhere((triggerConfig) {
+    if (triggerConfig['url'] == triggerResult.url &&
+        triggerConfig['events'].contains(triggerResult.event)) {
       return true;
     }
   });
@@ -44,10 +46,8 @@ Future<Null> _triggerHandler(
   final triggerResult = parseTrigger(context, trigger);
   context.logger.info('Event detected: ${triggerResult.event}');
 
-  final triggers =
-      (project.config['triggers'] as YamlList).toList(growable: false);
-  final triggerConfig = findTriggerConfig(
-      context, triggers, triggerResult.url, triggerResult.event);
+  final triggerConfigs = _getTriggerConfigs(project);
+  final triggerConfig = _findTriggerConfig(triggerConfigs, triggerResult);
   context.logger.info('Trigger is triggerred. ${triggerConfig}');
 
   final taskInstanceRunner =
