@@ -37,16 +37,11 @@ Map findTriggerConfig(
 }
 
 Future<Null> _triggerHandler(
-    Context context,
-    String projectId,
-    String triggerType,
-    Map<String, Object> data,
-    Map<String, String> requestHeaders) async {
+    Context context, Trigger trigger, String projectId) async {
   final project = await context.projectStore.getProject(projectId);
   context.logger.info('Project found: ${project}');
 
-  final triggerResult =
-      parseTrigger(context, triggerType, requestHeaders, data);
+  final triggerResult = parseTrigger(context, trigger);
   context.logger.info('Event detected: ${triggerResult.event}');
 
   final triggers =
@@ -61,15 +56,11 @@ Future<Null> _triggerHandler(
   context.logger.info('TaskInstance Running Result: ${result}');
 }
 
-// FIXME: data and request are dependent on triggerType. Make it optional.
-Future<Null> triggerHandler(
-    String projectId, String triggerType, Map<String, Object> data,
-    {Map<String, String> requestHeaders}) async {
+Future<Null> triggerHandler(Trigger trigger, String projectId) async {
   final context = _createContext();
 
   try {
-    await _triggerHandler(
-        context, projectId, triggerType, data, requestHeaders);
+    await _triggerHandler(context, trigger, projectId);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;

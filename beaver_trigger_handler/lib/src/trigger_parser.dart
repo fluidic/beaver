@@ -5,8 +5,7 @@ import './trigger_parser/github_trigger_parser.dart';
 import './utils/reflection.dart';
 
 abstract class TriggerParser {
-  TriggerResult parse(
-      Context context, Map<String, String> headers, Map<String, Object> data);
+  TriggerResult parse(Context context, Trigger trigger);
 }
 
 class TriggerResult {
@@ -22,10 +21,9 @@ class TriggerParserClass {
   const TriggerParserClass(this.name);
 }
 
-TriggerResult parseTrigger(Context context, String triggerType,
-    Map<String, String> headers, Map<String, Object> body) {
+TriggerResult parseTrigger(Context context, Trigger trigger) {
   final triggerParserClassMap = loadClassMapByAnnotation(TriggerParserClass);
-  final triggerParserClass = triggerParserClassMap[triggerType];
+  final triggerParserClass = triggerParserClassMap[trigger.type];
   final triggerParser = newInstance(triggerParserClass, []);
-  return triggerParser.parse(context, headers, body);
+  return triggerParser.parse(context, trigger);
 }

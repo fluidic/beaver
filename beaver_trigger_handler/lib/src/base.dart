@@ -7,3 +7,11 @@ class Context {
 
   Context(this.logger, this.projectStore);
 }
+
+class Trigger {
+  final String type;
+  final Map<String, String> headers;
+  final Map<String, Object> data;
+
+  Trigger(this.type, this.headers, this.data);
+}

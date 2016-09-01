@@ -51,8 +51,8 @@ Future<String> handler(HttpRequest request) async {
   });
   var status = 'success';
   try {
-    await triggerHandler(projectId, 'github', jsonData,
-        requestHeaders: headers);
+    final trigger = new Trigger('github', headers, jsonData);
+    await triggerHandler(trigger, projectId);
   } catch (e) {
     status = 'failure';
   }
