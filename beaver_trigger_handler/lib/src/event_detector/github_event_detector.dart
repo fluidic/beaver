@@ -17,9 +17,9 @@ final Map<String, List<String>> _eventMap = {
 class GithubEventDetector implements EventDetector {
   final Context _context;
   final Map<String, String> _headers;
-  final _jsonBody;
+  final Map<String, Object> _data;
 
-  GithubEventDetector(this._context, this._headers, this._jsonBody);
+  GithubEventDetector(this._context, this._headers, this._data);
 
   @override
   String get event {
@@ -30,7 +30,7 @@ class GithubEventDetector implements EventDetector {
     }
 
     final subEventMap = _eventMap[mainEvent];
-    final subEvent = _jsonBody[subEventMap['key']];
+    final subEvent = _data[subEventMap['key']];
     if (subEvent == null || !subEventMap['values'].contains(subEvent)) {
       throw new Exception('Not supported Github event.');
     }
@@ -40,6 +40,6 @@ class GithubEventDetector implements EventDetector {
 
   @override
   String get url {
-    return _jsonBody['repository']['html_url'];
+    return (_data['repository'] as Map)['html_url'];
   }
 }
