@@ -5,8 +5,8 @@ import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
 import './base.dart';
-import './event_detector.dart';
 import './task_instance_runner.dart';
+import './trigger_parser.dart';
 
 Logger _createLogger() {
   final logger = Logger.root;
@@ -27,7 +27,8 @@ Context _createContext() {
 
 // FIXME: Url is valid and unique even though trigger is not the repository?
 // e.g. For GCloud Pub/Sub, can we use the url as a parameter here?
-Map findTrigger(Context context, List<Map> triggers, String url, String event) {
+Map findTriggerConfig(
+    Context context, List<Map> triggers, String url, String event) {
   return triggers.firstWhere((trigger) {
     if (trigger['url'] == url && trigger['events'].contains(event)) {
       return true;
@@ -44,19 +45,18 @@ Future<Null> _triggerHandler(
   final project = await context.projectStore.getProject(projectId);
   context.logger.info('Project found: ${project}');
 
-  final eventDetector =
-      getEventDetector(context, triggerType, requestHeaders, data);
-  final event = eventDetector.event;
-  final url = eventDetector.url;
-  context.logger.info('Event detected: ${event}');
+  final triggerResult =
+      parseTrigger(context, triggerType, requestHeaders, data);
+  context.logger.info('Event detected: ${triggerResult.event}');
 
   final triggers =
       (project.config['triggers'] as YamlList).toList(growable: false);
-  final trigger = findTrigger(context, triggers, url, event);
-  context.logger.info('Trigger is triggerred. ${trigger}');
+  final triggerConfig = findTriggerConfig(
+      context, triggers, triggerResult.url, triggerResult.event);
+  context.logger.info('Trigger is triggerred. ${triggerConfig}');
 
   final taskInstanceRunner =
-      new TaskInstanceRunner(context, project, trigger['task']);
+      new TaskInstanceRunner(context, project, triggerConfig['task']);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstance Running Result: ${result}');
 }

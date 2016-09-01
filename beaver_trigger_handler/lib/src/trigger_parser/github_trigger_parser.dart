@@ -1,5 +1,5 @@
 import '../base.dart';
-import '../event_detector.dart';
+import '../trigger_parser.dart';
 
 // FIXME: Add more events from https://developer.github.com/v3/activity/events/types/.
 final Map<String, List<String>> _eventMap = {
@@ -13,24 +13,25 @@ final Map<String, List<String>> _eventMap = {
   }
 };
 
-@EventDetectorClass('github')
-class GithubEventDetector implements EventDetector {
-  final Context _context;
-  final Map<String, String> _headers;
-  final Map<String, Object> _data;
-
-  GithubEventDetector(this._context, this._headers, this._data);
-
+@TriggerParserClass('github')
+class GithubTriggerParser implements TriggerParser {
   @override
-  String get event {
-    _context.logger.fine('GithubEventDetector started.');
-    final mainEvent = _headers['x-github-event'];
+  TriggerResult parse(
+      Context context, Map<String, String> headers, Map<String, Object> data) {
+    context.logger.fine('GithubTriggerParser started.');
+    final event = _getEvent(headers, data);
+    final url = _getUrl(data);
+    return new TriggerResult(event, url, data);
+  }
+
+  String _getEvent(Map<String, String> headers, Map<String, Object> data) {
+    final mainEvent = headers['x-github-event'];
     if (mainEvent == null) {
       throw new Exception('This is not the Github event.');
     }
 
     final subEventMap = _eventMap[mainEvent];
-    final subEvent = _data[subEventMap['key']];
+    final subEvent = data[subEventMap['key']];
     if (subEvent == null || !subEventMap['values'].contains(subEvent)) {
       throw new Exception('Not supported Github event.');
     }
@@ -38,8 +39,7 @@ class GithubEventDetector implements EventDetector {
     return 'github_event_' + mainEvent + '_' + subEvent;
   }
 
-  @override
-  String get url {
-    return (_data['repository'] as Map)['html_url'];
+  String _getUrl(Map<String, Object> data) {
+    return (data['repository'] as Map)['html_url'];
   }
 }
