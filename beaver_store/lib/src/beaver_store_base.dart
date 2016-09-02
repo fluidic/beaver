@@ -27,7 +27,7 @@ class ProjectStore {
     if (project == null) {
       throw new Exception('No project for ${id}');
     }
-    if (project.name != config['project']) {
+    if (project.name != config['project_name']) {
       throw new Exception('Project name is not valid.');
     }
     project.config = config;

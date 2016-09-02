@@ -35,8 +35,8 @@ class RegisterCommand extends Command {
     final httpClient = new HttpClient();
     var request = await httpClient.open('POST', address, port, api);
     request.headers.add('Content-Type', 'application/json');
-    var data = JSON
-        .encode({'project': config['project'], 'config': config.toString()});
+    var data = JSON.encode(
+        {'project': config['project_name'], 'config': config.toString()});
     request.write(data);
     var response = await request.close();
     var responseBody = await response.transform(UTF8.decoder).join();
