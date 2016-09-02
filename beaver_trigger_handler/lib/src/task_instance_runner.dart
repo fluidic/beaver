@@ -27,7 +27,6 @@ class TaskInstanceRunner {
     config['service_account_credentials_path'] = jsonCredentialsPath;
 
     // FIXME: Get the result and pass it to TaskInstanceResult.
-    // FIXME: Add the logic to run task on the other vm.
     await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
 
     return new TaskInstanceResult(TaskInstanceStatus.success, '');
