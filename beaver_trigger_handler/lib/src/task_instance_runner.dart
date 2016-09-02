@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_config_store/beaver_config_store.dart';
 /// For [Task] registration.
 import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
-import 'package:beaver_store/beaver_store.dart';
 
 import './base.dart';
 
@@ -28,8 +28,7 @@ class TaskInstanceRunner {
 
     // FIXME: Get the result and pass it to TaskInstanceResult.
     // FIXME: Add the logic to run task on the other vm.
-    await runBeaver(
-        _taskInstance['name'], _taskInstance['args'], config);
+    await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
 
     return new TaskInstanceResult(TaskInstanceStatus.success, '');
   }

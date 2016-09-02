@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:beaver_store/beaver_store.dart';
+import 'package:beaver_config_store/beaver_config_store.dart';
 
 Future<Map<String, Object>> apiHandler(
     String api, Map<String, Object> data) async {
@@ -28,17 +28,17 @@ Future<Map<String, Object>> apiHandler(
   return ret;
 }
 
-// FIXME: Don't use ConnectorType.mapInMemory here.
-final _projectStore = new ProjectStore(ConnectorType.localMachine);
+// FIXME: Don't use StorageServiceType.localMachine here.
+final _configStore = new ConfigStore(StorageServiceType.localMachine);
 
 /// Set new project. Returns the id of the registered project.
 Future<String> _registerProject(String projectName, String config) async {
-  final projectId = await _projectStore.setNewProject(projectName);
-  await _projectStore.setConfig(projectId, config);
+  final projectId = await _configStore.setNewProject(projectName);
+  await _configStore.setConfig(projectId, config);
   return projectId;
 }
 
 Future<Null> _uploadConfigFile(String projectId, String config) =>
-    _projectStore.setConfig(projectId, config);
+    _configStore.setConfig(projectId, config);
 
 // FIXME: Implement API for getting results.

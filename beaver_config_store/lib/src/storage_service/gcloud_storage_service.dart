@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import '../connector.dart';
 import '../model/project.dart';
+import '../storage_service.dart';
 
-class GCloudConnector implements Connector {
+class GCloudStorageService implements StorageService {
   @override
   Future<String> loadConfigFile(String projectId) {
     // TODO: implement loadConfigFile

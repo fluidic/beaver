@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:beaver_store/beaver_store.dart';
+import 'package:beaver_config_store/beaver_config_store.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
@@ -21,8 +21,8 @@ Logger _createLogger() {
 Context _createContext() {
   final logger = _createLogger();
   // FIXME: Don't hardcode.
-  final projectStore = new ProjectStore(ConnectorType.localMachine);
-  return new Context(logger, projectStore);
+  final configStore = new ConfigStore(StorageServiceType.localMachine);
+  return new Context(logger, configStore);
 }
 
 List _getTriggerConfigs(Project project) {
@@ -40,7 +40,7 @@ Map _findTriggerConfig(List<Map> triggerConfigs, TriggerResult triggerResult) {
 
 Future<Null> _triggerHandler(
     Context context, Trigger trigger, String projectId) async {
-  final project = await context.projectStore.getProject(projectId);
+  final project = await context.configStore.getProject(projectId);
   context.logger.info('Project found: ${project}');
 
   final triggerResult = parseTrigger(context, trigger);

@@ -8,10 +8,10 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
+  beaver_config_store:
+    path: ../beaver_config_store
   beaver_task:
     path: ../beaver_task
-  beaver_store:
-    path: ../beaver_store
   logging: '>=0.11.3+1  <0.12.0'
   yaml: '>=2.1.10 <2.2.0'
 

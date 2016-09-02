@@ -1,1 +1,0 @@
-# beaver_store

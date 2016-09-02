@@ -1,11 +1,11 @@
+import 'package:beaver_config_store/beaver_config_store.dart';
 import 'package:logging/logging.dart';
-import 'package:beaver_store/beaver_store.dart';
 
 class Context {
   final Logger logger;
-  final ProjectStore projectStore;
+  final ConfigStore configStore;
 
-  Context(this.logger, this.projectStore);
+  Context(this.logger, this.configStore);
 }
 
 class Trigger {

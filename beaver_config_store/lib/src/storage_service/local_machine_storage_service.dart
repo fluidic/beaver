@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
-import '../connector.dart';
 import '../model/project.dart';
+import '../storage_service.dart';
 
 final Map<String, Project> _map = {};
 
-class LocalMachineConnector implements Connector {
-  const LocalMachineConnector();
+class LocalMachineStorageService implements StorageService {
+  const LocalMachineStorageService();
 
   @override
   Future<Project> loadProject(String projectId) async {
