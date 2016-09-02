@@ -1,6 +1,6 @@
 import 'dart:mirrors';
 
-// FIXME: This util is duplicated with beaver_core's reflection.
+// FIXME: This util is duplicated with beaver_task's reflection.
 
 Map<String, ClassMirror> loadClassMapByAnnotation(Type annotationClassType) {
   final taskClassMap = {};

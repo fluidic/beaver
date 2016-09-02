@@ -1,2 +1,0 @@
-# beaver_core
-

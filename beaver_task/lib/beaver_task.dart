@@ -1,4 +1,4 @@
-library beaver_core;
+library beaver_task;
 
 export 'src/annotation.dart';
 export 'src/base.dart';

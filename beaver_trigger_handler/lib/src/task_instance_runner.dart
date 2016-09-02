@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 /// For [Task] registration.
-import 'package:beaver_core/beaver_core.dart' as beaver_core;
-import 'package:beaver_core/beaver_core_runner.dart';
+import 'package:beaver_task/beaver_task.dart' as beaver_task;
+import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:beaver_store/beaver_store.dart';
 
 import './base.dart';

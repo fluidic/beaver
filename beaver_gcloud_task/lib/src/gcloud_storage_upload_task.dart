@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_task/beaver_task.dart';
 import 'package:path/path.dart' as path;
 
 import './gcloud_context_part.dart';

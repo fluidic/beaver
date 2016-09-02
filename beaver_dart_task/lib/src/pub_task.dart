@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_task/beaver_task.dart';
 import 'package:pub_wrapper/pub_wrapper.dart';
 
 @TaskClass('pub')

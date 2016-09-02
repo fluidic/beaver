@@ -1,5 +1,5 @@
-name: beaver_core
-description: Core classes of beaver.
+name: beaver_task
+description: Task classes of beaver.
 version: 0.1.0
 author: Fluidic Team <dev@fluidic.io>
 #homepage: https://www.example.com

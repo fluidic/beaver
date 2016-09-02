@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:beaver_core/beaver_core.dart';
-import 'package:beaver_core/beaver_core_runner.dart';
+import 'package:beaver_task/beaver_task.dart';
+import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:beaver_dart_task/beaver_dart_task.dart';
 
 @TaskClass('my_task')

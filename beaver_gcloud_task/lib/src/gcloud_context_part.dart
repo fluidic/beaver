@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_task/beaver_task.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:gcloud/db.dart';
 import 'package:gcloud/storage.dart';

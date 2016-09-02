@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:beaver_core/beaver_core.dart';
+import 'package:beaver_task/beaver_task.dart';
 import 'package:quiver_iterables/iterables.dart' show concat;
 
 @TaskClass('install_dart_sdk')
