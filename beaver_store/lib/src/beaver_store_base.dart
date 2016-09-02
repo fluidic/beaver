@@ -22,7 +22,7 @@ class ProjectStore {
   }
 
   Future<Null> setConfig(String id, String yaml) async {
-    final config = new Config(yaml);
+    final config = new YamlConfig(yaml);
     final project = await _connector.loadProject(id);
     if (project == null) {
       throw new Exception('No project for ${id}');

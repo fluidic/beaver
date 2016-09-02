@@ -1,10 +1,11 @@
+import 'package:beaver_task/beaver_task.dart';
 import 'package:quiver_collection/collection.dart';
 import 'package:yaml/yaml.dart';
 
-class Config extends DelegatingMap {
+class YamlConfig extends DelegatingMap implements Config {
   final YamlMap _yaml;
 
-  Config(String yaml) : _yaml = loadYaml(yaml);
+  YamlConfig(String yaml) : _yaml = loadYaml(yaml);
 
   @override
   Map get delegate => _yaml;
