@@ -18,12 +18,18 @@ class TaskInstanceRunner {
   Future<TaskInstanceResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
+    Map<String, String> envVars = Platform.environment;
+    final jsonCredentialsPath = envVars['SERVICE_ACCOUNT_CREDENTIALS_PATH'];
+    if (jsonCredentialsPath == null || jsonCredentialsPath.isEmpty) {
+      throw new Exception('SERVICE_ACCOUNT_CREDENTIALS_PATH is not set.');
+    }
+    final config = new Map.from(_project.config);
+    config['service_account_credentials_path'] = jsonCredentialsPath;
+
     // FIXME: Get the result and pass it to TaskInstanceResult.
     // FIXME: Add the logic to run task on the other vm.
-    // FIXME: TriggerHandler has the config as Yaml already. Make runBeaver
-    // can take it.
-    await runBeaver(_taskInstance['name'], _taskInstance['args'],
-        configPath: _project.configFile.path);
+    await runBeaver(
+        _taskInstance['name'], _taskInstance['args'], config);
 
     return new TaskInstanceResult(TaskInstanceStatus.success, '');
   }

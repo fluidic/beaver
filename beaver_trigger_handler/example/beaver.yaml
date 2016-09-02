@@ -1,5 +1,6 @@
 project: test
 description: "hello world"
+cloud_type: "gcloud"
 
 triggers:
   - url: "https://github.com/fluidic/beaver"
