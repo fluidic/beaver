@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:mirrors';
 
-import 'package:quiver_strings/strings.dart' as strings;
-
 import './annotation.dart';
 import './base.dart';
-import './config.dart';
 import './context.dart';
 import './logger.dart';
 import './reporter/json_reporter.dart';
@@ -52,25 +49,29 @@ Future<Logger> _createLogger() async {
   return new MemoryLogger(logger);
 }
 
-Future<Context> _createContext(String configPath) async {
-  if (strings.isEmpty(configPath)) {
-    configPath = 'beaver.yaml';
-  }
-  Config config = new YamlConfig.fromFile(configPath);
+Future<Context> _createGCloudContext(Config config) async {
   final logger = await _createLogger();
   final partMap = await _createContextPartMap(config);
+  final context = new GCloudContext(config, logger, partMap);
+  await context.setUp();
 
-  return new DefaultContext(config, logger, partMap);
+  return context;
 }
 
-Future runBeaver(String taskName, List<String> taskArgs,
-    {String configPath}) async {
+Future runBeaver(String taskName, List<String> taskArgs, Config config) async {
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 
-  final context = await _createContext(configPath);
-  final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
+  Context context;
+  switch (config['cloud_type']) {
+    case 'gcloud':
+      context = await _createGCloudContext(config);
+      break;
+    default:
+      throw new AssertionError(); // Unreachable
+  }
 
+  final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
   TaskRunner runner = new TaskRunner(context, task);
   TaskRunResult result = await runner.run();
   // FIXME: Don't hardcode reporter.

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:beaver_core/beaver_core.dart';
 import 'package:beaver_core/beaver_core_runner.dart';
 import 'package:beaver_dart_task/beaver_dart_task.dart';
-import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
 
 @TaskClass('my_task')
 class MyTask implements Task {
@@ -18,4 +17,9 @@ class MyTask implements Task {
 }
 
 // FIXME: Get the task name from the message
-main(args, message) => runBeaver('my_task', []);
+main(args, message) => runBeaver('my_task', [], {
+      'cloud_type': 'gcloud',
+      'service_account_credentials_path':
+          '/Users/kseo/Private/test-71962def868a.json',
+      'project_name': 'test'
+    });

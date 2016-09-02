@@ -2,7 +2,6 @@ library beaver_core;
 
 export 'src/annotation.dart';
 export 'src/base.dart';
-export 'src/config.dart';
 export 'src/context.dart';
 export 'src/exception.dart';
 export 'src/logger.dart' show NoneLogger, ConsoleLogger;
