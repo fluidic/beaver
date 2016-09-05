@@ -19,8 +19,11 @@ Future<Map<String, Object>> apiHandler(
       final config = data['config'];
       await _uploadConfigFile(projectId, config);
       break;
-    case 'results':
-      // FIXME: Implement.
+    case 'result':
+      final projectId = data['id'];
+      final buildNumber = int.parse(data['build_number']);
+      final result = await _getResult(projectId, buildNumber);
+      ret['result'] = result;
       break;
     default:
       throw new Exception('Wrong API.');
@@ -41,4 +44,5 @@ Future<String> _registerProject(String projectName, String config) async {
 Future<Null> _uploadConfigFile(String projectId, String config) =>
     _configStore.setConfig(projectId, config);
 
-// FIXME: Implement API for getting results.
+Future<String> _getResult(String projectId, int buildNumber) =>
+    _configStore.getResult(projectId, buildNumber);
