@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:beaver_trigger_handler/src/task_instance_runner.dart';
+
 import '../model/project.dart';
 import '../storage_service.dart';
 
@@ -22,5 +24,10 @@ class GCloudStorageService implements StorageService {
   @override
   Future<String> saveProject(Project project) {
     // TODO: implement saveProject
+  }
+
+  @override
+  Future<bool> saveResult(String projectId, TaskInstanceResult result) {
+    // TODO: implement saveResult
   }
 }

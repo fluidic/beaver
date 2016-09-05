@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
+
 import './beaver_config_store_base.dart';
+import './model/project.dart';
 import './storage_service/gcloud_storage_service.dart';
 import './storage_service/local_machine_storage_service.dart';
-import './model/project.dart';
 
 abstract class StorageService {
   Future<Project> loadProject(String projectId);
@@ -11,6 +13,8 @@ abstract class StorageService {
 
   Future<String> loadConfigFile(String projectId);
   Future<Uri> saveConfigFile(String projectId, String config);
+
+  Future<bool> saveResult(String projectId, TaskInstanceResult result);
 }
 
 final Map<StorageServiceType, CreateStorageService> _map = {

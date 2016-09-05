@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
+
 import './model/config.dart';
 import './model/project.dart';
 import './storage_service.dart';
@@ -33,5 +35,9 @@ class ConfigStore {
     project.config = config;
     project.configFile = await _storageService.saveConfigFile(project.id, yaml);
     await _storageService.saveProject(project);
+  }
+
+  Future<Null> saveResult(String id, TaskInstanceResult result) async {
+    await _storageService.saveResult(id, result);
   }
 }

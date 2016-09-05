@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
@@ -37,11 +38,26 @@ class LocalMachineStorageService implements StorageService {
 
   @override
   Future<Uri> saveConfigFile(String projectId, String config) async {
-    final dirPath = path.join(Directory.systemTemp.path, projectId);
-    await new Directory(dirPath).create(recursive: true);
-    final filePath = path.join(dirPath, 'beaver.yaml');
+    final dir = await _getProjectDir(projectId);
+    final filePath = path.join(dir.path, 'beaver.yaml');
     final file = await new File(filePath).create();
     await file.writeAsString(config);
     return Uri.parse(filePath);
+  }
+
+  @override
+  Future<bool> saveResult(String projectId, TaskInstanceResult result) async {
+    final dir = await _getProjectDir(projectId);
+    // FIXME: Use build number instead of datetime.
+    final filePath =
+        path.join(dir.path, 'result', new DateTime.now().toString());
+    final file = await new File(filePath).create(recursive: true);
+    await file.writeAsString(result.toString());
+    return true;
+  }
+
+  Future<Directory> _getProjectDir(String projectId) async {
+    final dirPath = path.join(Directory.systemTemp.path, projectId);
+    return await new Directory(dirPath).create(recursive: true);
   }
 }
