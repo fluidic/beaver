@@ -5,9 +5,45 @@ import './annotation.dart';
 import './base.dart';
 import './context.dart';
 import './logger.dart';
-import './reporter/json_reporter.dart';
-import './task_runner.dart';
 import './utils/reflection.dart';
+
+enum TaskStatus { Success, Failure }
+
+class TaskRunResult {
+  final Config config;
+
+  final TaskStatus status;
+
+  final String log;
+
+  TaskRunResult._internal(this.config, this.status, this.log);
+}
+
+Future<TaskRunResult> _runTask(
+    Context context, /* Task|ExecuteFunc */ task) async {
+  task = task is Task ? task : new Task.fromFunc(task);
+  var status = TaskStatus.Success;
+  final logger = context.logger;
+  try {
+    await task.execute(context);
+  } on TaskException catch (e) {
+    logger.error(e);
+    status = TaskStatus.Failure;
+  } catch (e) {
+    logger.error(e);
+    status = TaskStatus.Failure;
+  }
+  return new TaskRunResult._internal(context.config, status, logger.toString());
+}
+
+String taskStatusToString(TaskStatus status) {
+  switch (status) {
+    case TaskStatus.Success:
+      return 'success';
+    case TaskStatus.Failure:
+      return 'failure';
+  }
+}
 
 Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
   final taskClassMap = {};
@@ -58,7 +94,7 @@ Future<Context> _createGCloudContext(Config config) async {
   return context;
 }
 
-Future runBeaver(String taskName, List<String> taskArgs, Config config) async {
+Future<TaskRunResult> runBeaver(String taskName, List<String> taskArgs, Config config) async {
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 
@@ -72,9 +108,5 @@ Future runBeaver(String taskName, List<String> taskArgs, Config config) async {
   }
 
   final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
-  TaskRunner runner = new TaskRunner(context, task);
-  TaskRunResult result = await runner.run();
-  // FIXME: Don't hardcode reporter.
-  JsonReporter reporter = new JsonReporter(result);
-  print(reporter.toJson());
+  return _runTask(context, task);
 }
