@@ -39,12 +39,13 @@ Future _githubTriggerHandler(shelf.Request request) async {
   final requestBody = JSON.decode(await request.readAsString());
 
   var status = 'success';
+  var buildNumber;
   try {
     final trigger = new Trigger('github', request.headers, requestBody);
-    await triggerHandler(trigger, projectId);
+    buildNumber = await triggerHandler(trigger, projectId);
   } catch (e) {
     status = 'failure';
   }
-  final responseBody = {'status': status};
+  final responseBody = {'status': status, 'build_number': buildNumber};
   return new shelf.Response.ok(JSON.encode(responseBody));
 }
