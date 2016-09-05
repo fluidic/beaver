@@ -7,6 +7,7 @@ class Project {
   String id;
   Config config;
   Uri configFile;
+  int buildNumber;
 
-  Project(this.name);
+  Project(this.name) : buildNumber = 0;
 }

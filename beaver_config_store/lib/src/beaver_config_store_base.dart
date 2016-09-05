@@ -23,6 +23,13 @@ class ConfigStore {
     return _storageService.loadProject(id);
   }
 
+  Future<Project> getProjectAfterUpdatingBuildNumber(String id) async {
+    final project = await _storageService.loadProject(id);
+    project.buildNumber++;
+    await _storageService.saveProject(project);
+    return project;
+  }
+
   Future<Null> setConfig(String id, String yaml) async {
     final config = new YamlConfig(yaml);
     final project = await _storageService.loadProject(id);
@@ -37,7 +44,8 @@ class ConfigStore {
     await _storageService.saveProject(project);
   }
 
-  Future<Null> saveResult(String id, TaskInstanceResult result) async {
-    await _storageService.saveResult(id, result);
+  Future<Null> saveResult(
+      String id, int buildNumber, TaskInstanceResult result) async {
+    await _storageService.saveResult(id, buildNumber, result);
   }
 }

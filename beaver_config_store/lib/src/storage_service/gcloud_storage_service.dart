@@ -27,7 +27,8 @@ class GCloudStorageService implements StorageService {
   }
 
   @override
-  Future<bool> saveResult(String projectId, TaskInstanceResult result) {
+  Future<bool> saveResult(
+      String projectId, int buildNumber, TaskInstanceResult result) {
     // TODO: implement saveResult
   }
 }
