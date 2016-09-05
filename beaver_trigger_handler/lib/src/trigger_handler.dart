@@ -38,9 +38,10 @@ Map _findTriggerConfig(List<Map> triggerConfigs, TriggerResult triggerResult) {
   });
 }
 
-Future<Null> _triggerHandler(
+Future<int> _triggerHandler(
     Context context, Trigger trigger, String projectId) async {
-  final project = await context.configStore.getProject(projectId);
+  final project =
+      await context.configStore.getProjectAfterUpdatingBuildNumber(projectId);
   context.logger.info('Project found: ${project}');
 
   final triggerResult = parseTrigger(context, trigger);
@@ -55,15 +56,17 @@ Future<Null> _triggerHandler(
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstance Running Result: ${result}');
 
-  await context.configStore.saveResult(projectId, result);
-  context.logger.info('TaskInstanceResult is saved.');
+  await context.configStore.saveResult(projectId, project.buildNumber, result);
+  context.logger.info(
+      'TaskInstanceResult is saved: Build number: ${project.buildNumber}');
+  return project.buildNumber;
 }
 
-Future<Null> triggerHandler(Trigger trigger, String projectId) async {
+Future<int> triggerHandler(Trigger trigger, String projectId) async {
   final context = _createContext();
 
   try {
-    await _triggerHandler(context, trigger, projectId);
+    return await _triggerHandler(context, trigger, projectId);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;

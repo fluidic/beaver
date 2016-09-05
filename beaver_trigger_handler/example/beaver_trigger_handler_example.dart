@@ -50,11 +50,12 @@ Future<String> handler(HttpRequest request) async {
     headers[name] = value.first;
   });
   var status = 'success';
+  var buildNumber;
   try {
     final trigger = new Trigger('github', headers, jsonData);
-    await triggerHandler(trigger, projectId);
+    buildNumber = await triggerHandler(trigger, projectId);
   } catch (e) {
     status = 'failure';
   }
-  return JSON.encode({'status': status});
+  return JSON.encode({'status': status, 'build_number': buildNumber});
 }
