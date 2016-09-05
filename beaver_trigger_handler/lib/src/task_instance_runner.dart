@@ -26,20 +26,31 @@ class TaskInstanceRunner {
     final config = new Map.from(_project.config);
     config['service_account_credentials_path'] = jsonCredentialsPath;
 
-    // FIXME: Get the result and pass it to TaskInstanceResult.
-    await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
+    final result =
+        await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
 
-    return new TaskInstanceResult(TaskInstanceStatus.success, '');
+    return new TaskInstanceResult.fromTaskRunResult(result);
   }
 }
 
 enum TaskInstanceStatus { success, failure }
 
+// FIXME: This class is just wrapper of TaskRunResult. Do we need this?
 class TaskInstanceResult {
   TaskInstanceStatus status;
   String log;
 
   TaskInstanceResult(this.status, this.log);
+
+  TaskInstanceResult.fromTaskRunResult(TaskRunResult result) {
+    status = result.status == TaskStatus.Success
+        ? TaskInstanceStatus.success
+        : TaskInstanceStatus.failure;
+
+    StringBuffer b = new StringBuffer();
+    b..write(result.config.toString())..write(result.status)..write(result.log);
+    log = b.toString();
+  }
 
   TaskInstanceResult.fromProcessResult(ProcessResult result) {
     status = TaskInstanceStatus.success;
@@ -65,7 +76,7 @@ class TaskInstanceResult {
 
     final buffer = new StringBuffer();
     buffer
-      ..writeln('JobRunResult: ')
+      ..writeln('TaskInstanceResult: ')
       ..writeln('status: ${statusStr}')
       ..writeln('logs: ${log}');
     return buffer.toString();

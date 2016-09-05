@@ -54,6 +54,9 @@ Future<Null> _triggerHandler(
       new TaskInstanceRunner(context, project, triggerConfig['task']);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstance Running Result: ${result}');
+
+  await context.configStore.saveResult(projectId, result);
+  context.logger.info('TaskInstanceResult is saved.');
 }
 
 Future<Null> triggerHandler(Trigger trigger, String projectId) async {
