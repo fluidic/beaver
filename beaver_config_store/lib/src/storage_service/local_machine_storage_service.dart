@@ -49,10 +49,21 @@ class LocalMachineStorageService implements StorageService {
   Future<bool> saveResult(
       String projectId, int buildNumber, TaskInstanceResult result) async {
     final dir = await _getProjectDir(projectId);
-    final filePath = path.join(dir.path, 'result', buildNumber.toString());
+    final filePath = _getResultFilePath(dir, buildNumber);
     final file = await new File(filePath).create(recursive: true);
     await file.writeAsString(result.toString());
     return true;
+  }
+
+  @override
+  Future<String> getResult(String projectId, int buildNumber) async {
+    final dir = await _getProjectDir(projectId);
+    final filePath = _getResultFilePath(dir, buildNumber);
+    return await new File(filePath).readAsString();
+  }
+
+  String _getResultFilePath(Directory base, int buildNumber) {
+    return path.join(base.path, 'result', buildNumber.toString());
   }
 
   Future<Directory> _getProjectDir(String projectId) async {
