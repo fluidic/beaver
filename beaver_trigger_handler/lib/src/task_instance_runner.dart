@@ -29,56 +29,46 @@ class TaskInstanceRunner {
     final result =
         await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
 
-    return new TaskInstanceResult.fromTaskRunResult(result);
+    // FIXME: Set the self log.
+    return new TaskInstanceResult(
+        TaskInstanceStatus.success, _project, '', result);
   }
 }
 
 enum TaskInstanceStatus { success, failure }
 
-// FIXME: This class is just wrapper of TaskRunResult. Do we need this?
 class TaskInstanceResult {
   TaskInstanceStatus status;
+  Project project;
+  TaskRunResult taskRunResult;
   String log;
 
-  TaskInstanceResult(this.status, this.log);
-
-  TaskInstanceResult.fromTaskRunResult(TaskRunResult result) {
-    status = result.status == TaskStatus.Success
-        ? TaskInstanceStatus.success
-        : TaskInstanceStatus.failure;
-
-    StringBuffer b = new StringBuffer();
-    b..write(result.config.toString())..write(result.status)..write(result.log);
-    log = b.toString();
-  }
-
-  TaskInstanceResult.fromProcessResult(ProcessResult result) {
-    status = TaskInstanceStatus.success;
-    if (result.exitCode != 0) {
-      status = TaskInstanceStatus.failure;
-    }
-
-    StringBuffer buffer = new StringBuffer();
-    buffer
-      ..write('stdout: ')
-      ..write(result.stdout)
-      ..write(', stderr: ')
-      ..write(result.stderr);
-    log = buffer.toString();
-  }
+  TaskInstanceResult(this.status, this.project, this.log, this.taskRunResult);
 
   @override
   String toString() {
-    var statusStr = 'success';
+    var taskInstanceStatus = 'success';
     if (status != TaskInstanceStatus.success) {
-      statusStr = 'failure';
+      taskInstanceStatus = 'failure';
+    }
+
+    var taskStatus = 'success';
+    if (taskRunResult.status != TaskStatus.Success) {
+      taskStatus = 'failure';
     }
 
     final buffer = new StringBuffer();
     buffer
-      ..writeln('TaskInstanceResult: ')
-      ..writeln('status: ${statusStr}')
-      ..writeln('logs: ${log}');
+      ..writeln('Project: ${project.name}')
+      ..writeln('Build Number: ${project.buildNumber}')
+      ..writeln('TaskInstanceResult -------')
+      ..writeln('status: ${taskInstanceStatus}')
+      ..writeln('project: ${project.toString()}')
+      ..writeln('log: ${log}')
+      ..writeln('TaskResult: ---')
+      ..writeln('status: ${taskStatus}')
+      ..writeln('config: ${taskRunResult.config.toString()}')
+      ..writeln('log: ${taskRunResult.log}');
     return buffer.toString();
   }
 }
