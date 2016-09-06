@@ -45,10 +45,10 @@ class ConfigStore {
   }
 
   Future<Null> saveResult(
-      String id, int buildNumber, TaskInstanceResult result) async {
+      String id, int buildNumber, TaskInstanceRunResult result) async {
     await _storageService.saveResult(id, buildNumber, result);
   }
 
-  Future<TaskInstanceResult> getResult(String id, int buildNumber) =>
+  Future<TaskInstanceRunResult> getResult(String id, int buildNumber) =>
       _storageService.getResult(id, buildNumber);
 }

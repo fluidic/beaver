@@ -15,7 +15,7 @@ class TaskInstanceRunner {
 
   TaskInstanceRunner(this._context, this._project, this._taskInstance);
 
-  Future<TaskInstanceResult> run() async {
+  Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
     Map<String, String> envVars = Platform.environment;
@@ -30,20 +30,20 @@ class TaskInstanceRunner {
         await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
 
     // FIXME: Set the self log.
-    return new TaskInstanceResult(
+    return new TaskInstanceRunResult(
         TaskInstanceStatus.success, _project, '', result);
   }
 }
 
 enum TaskInstanceStatus { success, failure }
 
-class TaskInstanceResult {
+class TaskInstanceRunResult {
   TaskInstanceStatus status;
   Project project;
   TaskRunResult taskRunResult;
   String log;
 
-  TaskInstanceResult(this.status, this.project, this.log, this.taskRunResult);
+  TaskInstanceRunResult(this.status, this.project, this.log, this.taskRunResult);
 
   @override
   String toString() {

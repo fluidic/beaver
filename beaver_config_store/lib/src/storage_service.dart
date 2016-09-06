@@ -15,8 +15,8 @@ abstract class StorageService {
   Future<Uri> saveConfigFile(String projectId, String config);
 
   Future<bool> saveResult(
-      String projectId, int buildNumber, TaskInstanceResult result);
-  Future<TaskInstanceResult> getResult(String projectId, int buildNumber);
+      String projectId, int buildNumber, TaskInstanceRunResult result);
+  Future<TaskInstanceRunResult> getResult(String projectId, int buildNumber);
 }
 
 final Map<StorageServiceType, CreateStorageService> _map = {
