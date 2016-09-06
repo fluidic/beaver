@@ -8,14 +8,15 @@ import 'package:uuid/uuid.dart';
 import '../model/project.dart';
 import '../storage_service.dart';
 
-final Map<String, Project> _map = {};
+final Map<String, Project> _projectMap = {};
+final Map<String, TaskInstanceResult> _resultMap = {};
 
 class LocalMachineStorageService implements StorageService {
   const LocalMachineStorageService();
 
   @override
   Future<Project> loadProject(String projectId) async {
-    return _map[projectId];
+    return _projectMap[projectId];
   }
 
   @override
@@ -24,7 +25,7 @@ class LocalMachineStorageService implements StorageService {
       final id = new Uuid().v4();
       project.id = id;
     }
-    _map[project.id] = project;
+    _projectMap[project.id] = project;
     return project.id;
   }
 
@@ -48,22 +49,16 @@ class LocalMachineStorageService implements StorageService {
   @override
   Future<bool> saveResult(
       String projectId, int buildNumber, TaskInstanceResult result) async {
-    final dir = await _getProjectDir(projectId);
-    final filePath = _getResultFilePath(dir, buildNumber);
-    final file = await new File(filePath).create(recursive: true);
-    await file.writeAsString(result.toString());
+    final key = projectId + '__' + buildNumber.toString();
+    _resultMap[key] = result;
     return true;
   }
 
   @override
-  Future<String> getResult(String projectId, int buildNumber) async {
-    final dir = await _getProjectDir(projectId);
-    final filePath = _getResultFilePath(dir, buildNumber);
-    return await new File(filePath).readAsString();
-  }
-
-  String _getResultFilePath(Directory base, int buildNumber) {
-    return path.join(base.path, 'result', buildNumber.toString());
+  Future<TaskInstanceResult> getResult(
+      String projectId, int buildNumber) async {
+    final key = projectId + '__' + buildNumber.toString();
+    return _resultMap[key];
   }
 
   Future<Directory> _getProjectDir(String projectId) async {
