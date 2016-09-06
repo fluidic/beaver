@@ -29,6 +29,12 @@ class ResultCommand extends Command {
         exit(0);
       }
     }, help: 'Build number to be got.');
+
+    argParser.addOption('format',
+        abbr: 'f',
+        defaultsTo: 'text',
+        allowed: ['text', 'html'],
+        help: 'The result format.');
   }
 
   String get api => '/api/result';
@@ -39,7 +45,8 @@ class ResultCommand extends Command {
   Future<Null> run() async {
     final data = JSON.encode({
       'id': argResults['project-id'],
-      'build_number': argResults['build-number']
+      'build_number': argResults['build-number'],
+      'format': argResults['format']
     });
 
     final httpClient = new HttpClient();
