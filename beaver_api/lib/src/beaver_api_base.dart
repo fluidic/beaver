@@ -22,7 +22,8 @@ Future<Map<String, Object>> apiHandler(
     case 'result':
       final projectId = data['id'];
       final buildNumber = int.parse(data['build_number']);
-      final result = await _getResult(projectId, buildNumber);
+      final format = data['format'];
+      final result = await _getResult(projectId, buildNumber, format);
       ret['result'] = result;
       break;
     default:
@@ -44,5 +45,15 @@ Future<String> _registerProject(String projectName, String config) async {
 Future<Null> _uploadConfigFile(String projectId, String config) =>
     _configStore.setConfig(projectId, config);
 
-Future<String> _getResult(String projectId, int buildNumber) =>
-    _configStore.getResult(projectId, buildNumber);
+Future<String> _getResult(
+    String projectId, int buildNumber, String format) async {
+  final result = await _configStore.getResult(projectId, buildNumber);
+  switch (format) {
+    case 'html':
+      // FIXME: implement.
+      throw new Exception('Not implemented.');
+    case 'text':
+    default:
+      return result.toString();
+  }
+}
