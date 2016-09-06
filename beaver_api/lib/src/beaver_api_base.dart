@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:beaver_config_store/beaver_config_store.dart';
 
+import './formatter/html_formatter.dart';
+import './formatter/text_formatter.dart';
+
 Future<Map<String, Object>> apiHandler(
     String api, Map<String, Object> data) async {
   final ret = {};
@@ -50,10 +53,11 @@ Future<String> _getResult(
   final result = await _configStore.getResult(projectId, buildNumber);
   switch (format) {
     case 'html':
-      // FIXME: implement.
-      throw new Exception('Not implemented.');
+      final formatter = new HtmlFormatter(result);
+      return formatter.toHtml();
     case 'text':
     default:
-      return result.toString();
+      final formatter = new TextFormatter(result);
+      return formatter.toText();
   }
 }
