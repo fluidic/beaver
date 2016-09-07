@@ -7,6 +7,8 @@ import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
+/// For [Task] registration.
+
 
 class TaskInstanceRunner {
   final Context _context;
@@ -29,9 +31,8 @@ class TaskInstanceRunner {
     final result =
         await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
 
-    // FIXME: Set the self log.
     return new TaskInstanceRunResult(
-        TaskInstanceStatus.success, _project, '', result);
+        TaskInstanceStatus.success, _project, result);
   }
 }
 
@@ -41,9 +42,8 @@ class TaskInstanceRunResult {
   TaskInstanceStatus status;
   Project project;
   TaskRunResult taskRunResult;
-  String log;
 
-  TaskInstanceRunResult(this.status, this.project, this.log, this.taskRunResult);
+  TaskInstanceRunResult(this.status, this.project, this.taskRunResult);
 
   @override
   String toString() {
@@ -64,7 +64,6 @@ class TaskInstanceRunResult {
       ..writeln('TaskInstanceResult -------')
       ..writeln('status: ${taskInstanceStatus}')
       ..writeln('project: ${project.toString()}')
-      ..writeln('log: ${log}')
       ..writeln('TaskResult: ---')
       ..writeln('status: ${taskStatus}')
       ..writeln('config: ${taskRunResult.config.toString()}')
