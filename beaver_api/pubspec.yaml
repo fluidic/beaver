@@ -12,6 +12,7 @@ dependencies:
     path: ../beaver_config_store
   beaver_trigger_handler:
     path: ../beaver_trigger_handler
+  xml: '>=2.4.3 <2.5.0'
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
