@@ -1,6 +1,7 @@
 project_name: test
 description: "hello world"
 cloud_type: gcloud
+service_account_credentials_path: "/Users/maniagoon/.gcloud/my-project.json"
 
 triggers:
   - url: "https://github.com/fluidic/beaver"
