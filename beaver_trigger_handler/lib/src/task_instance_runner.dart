@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:beaver_config_store/beaver_config_store.dart';
 /// For [Task] registration.
@@ -7,8 +6,6 @@ import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
-/// For [Task] registration.
-
 
 class TaskInstanceRunner {
   final Context _context;
@@ -20,16 +17,8 @@ class TaskInstanceRunner {
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    Map<String, String> envVars = Platform.environment;
-    final jsonCredentialsPath = envVars['SERVICE_ACCOUNT_CREDENTIALS_PATH'];
-    if (jsonCredentialsPath == null || jsonCredentialsPath.isEmpty) {
-      throw new Exception('SERVICE_ACCOUNT_CREDENTIALS_PATH is not set.');
-    }
-    final config = new Map.from(_project.config);
-    config['service_account_credentials_path'] = jsonCredentialsPath;
-
-    final result =
-        await runBeaver(_taskInstance['name'], _taskInstance['args'], config);
+    final result = await runBeaver(
+        _taskInstance['name'], _taskInstance['args'], _project.config);
 
     return new TaskInstanceRunResult(
         TaskInstanceStatus.success, _project, result);
