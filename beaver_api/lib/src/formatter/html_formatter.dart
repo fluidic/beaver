@@ -6,7 +6,7 @@ class HtmlFormatter implements Formatter {
   @override
   String get type => 'html';
 
-  final TaskInstanceRunResult _result;
+  final TriggerResult _result;
 
   HtmlFormatter(this._result);
 

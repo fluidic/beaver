@@ -9,7 +9,7 @@ import '../model/project.dart';
 import '../storage_service.dart';
 
 final Map<String, Project> _projectMap = {};
-final Map<String, TaskInstanceRunResult> _resultMap = {};
+final Map<String, TriggerResult> _resultMap = {};
 
 class LocalMachineStorageService implements StorageService {
   const LocalMachineStorageService();
@@ -48,15 +48,14 @@ class LocalMachineStorageService implements StorageService {
 
   @override
   Future<bool> saveResult(
-      String projectId, int buildNumber, TaskInstanceRunResult result) async {
+      String projectId, int buildNumber, TriggerResult result) async {
     final key = projectId + '__' + buildNumber.toString();
     _resultMap[key] = result;
     return true;
   }
 
   @override
-  Future<TaskInstanceRunResult> getResult(
-      String projectId, int buildNumber) async {
+  Future<TriggerResult> getResult(String projectId, int buildNumber) async {
     final key = projectId + '__' + buildNumber.toString();
     return _resultMap[key];
   }

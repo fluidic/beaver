@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:beaver_config_store/beaver_config_store.dart';
-/// For [Task] registration.
 import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
@@ -9,21 +7,19 @@ import './base.dart';
 
 class TaskInstanceRunner {
   final Context _context;
-  final Project _project;
-  final Trigger _trigger;
+  final beaver_task.Config _config;
   final Map _taskInstance;
 
-  TaskInstanceRunner(
-      this._context, this._project, this._trigger, this._taskInstance);
+  TaskInstanceRunner(this._context, this._config, Map taskInstance)
+      : this._taskInstance = taskInstance['task'];
 
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final result = await runBeaver(
-        _taskInstance['name'], _taskInstance['args'], _project.config);
+    final result =
+        await runBeaver(_taskInstance['name'], _taskInstance['args'], _config);
 
-    return new TaskInstanceRunResult(
-        TaskInstanceStatus.success, _project, _trigger, result);
+    return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
   }
 }
 
@@ -31,12 +27,9 @@ enum TaskInstanceStatus { success, failure }
 
 class TaskInstanceRunResult {
   final TaskInstanceStatus status;
-  final Project project;
-  final Trigger trigger;
   final TaskRunResult taskRunResult;
 
-  TaskInstanceRunResult(
-      this.status, this.project, this.trigger, this.taskRunResult);
+  TaskInstanceRunResult(this.status, this.taskRunResult);
 
   @override
   String toString() {
@@ -52,11 +45,8 @@ class TaskInstanceRunResult {
 
     final buffer = new StringBuffer();
     buffer
-      ..writeln('Project: ${project.name}')
-      ..writeln('Build Number: ${project.buildNumber}')
       ..writeln('TaskInstanceResult -------')
       ..writeln('status: ${taskInstanceStatus}')
-      ..writeln('project: ${project.toString()}')
       ..writeln('TaskResult: ---')
       ..writeln('status: ${taskStatus}')
       ..writeln('config: ${taskRunResult.config.toString()}')

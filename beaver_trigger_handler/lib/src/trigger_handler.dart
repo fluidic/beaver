@@ -29,10 +29,10 @@ List _getTriggerConfigs(Project project) {
   return (project.config['triggers'] as YamlList).toList(growable: false);
 }
 
-Map _findTriggerConfig(List<Map> triggerConfigs, TriggerResult triggerResult) {
+Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
   return triggerConfigs.firstWhere((triggerConfig) {
-    if (triggerConfig['url'] == triggerResult.url &&
-        triggerConfig['events'].contains(triggerResult.event)) {
+    if (triggerConfig['url'] == parsedTrigger.url &&
+        triggerConfig['events'].contains(parsedTrigger.event)) {
       return true;
     }
   });
@@ -44,19 +44,22 @@ Future<int> _triggerHandler(
       await context.configStore.getProjectAfterUpdatingBuildNumber(projectId);
   context.logger.info('Project found: ${project}');
 
-  final triggerResult = parseTrigger(context, trigger);
-  context.logger.info('Event detected: ${triggerResult.event}');
+  final parsedTrigger = parseTrigger(context, trigger);
+  context.logger.info('Event detected: ${parsedTrigger.event}');
 
-  final triggerConfigs = _getTriggerConfigs(project);
-  final triggerConfig = _findTriggerConfig(triggerConfigs, triggerResult);
+  final triggerConfig = _getTriggerConfigs(project);
+  final taskInstance = _findTriggerConfig(triggerConfig, parsedTrigger);
   context.logger.info('Trigger is triggerred. ${triggerConfig}');
 
   final taskInstanceRunner =
-      new TaskInstanceRunner(context, project, trigger, triggerConfig['task']);
+      new TaskInstanceRunner(context, project.config, taskInstance);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstance Running Result: ${result}');
 
-  await context.configStore.saveResult(projectId, project.buildNumber, result);
+  final triggerResult =
+      new TriggerResult(trigger, parsedTrigger, taskInstance, result);
+  await context.configStore
+      .saveResult(projectId, project.buildNumber, triggerResult);
   context.logger.info(
       'TaskInstanceResult is saved: Build number: ${project.buildNumber}');
   return project.buildNumber;
@@ -71,4 +74,14 @@ Future<int> triggerHandler(Trigger trigger, String projectId) async {
     context.logger.severe(e.toString());
     throw e;
   }
+}
+
+class TriggerResult {
+  Trigger trigger;
+  ParsedTrigger parsedTrigger;
+  Map taskInstance;
+  TaskInstanceRunResult taskInstanceRunResult;
+
+  TriggerResult(this.trigger, this.parsedTrigger, this.taskInstance,
+      this.taskInstanceRunResult);
 }

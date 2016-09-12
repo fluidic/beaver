@@ -16,11 +16,11 @@ final Map<String, List<String>> _eventMap = {
 @TriggerParserClass('github')
 class GithubTriggerParser implements TriggerParser {
   @override
-  TriggerResult parse(Context context, Trigger trigger) {
+  ParsedTrigger parse(Context context, Trigger trigger) {
     context.logger.fine('GithubTriggerParser started.');
     final event = _getEvent(trigger.headers, trigger.data);
     final url = _getUrl(trigger.data);
-    return new TriggerResult(event, url, trigger.data);
+    return new ParsedTrigger(event, url, trigger.data);
   }
 
   String _getEvent(Map<String, String> headers, Map<String, Object> data) {
