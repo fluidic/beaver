@@ -10,9 +10,11 @@ import './base.dart';
 class TaskInstanceRunner {
   final Context _context;
   final Project _project;
+  final Trigger _trigger;
   final Map _taskInstance;
 
-  TaskInstanceRunner(this._context, this._project, this._taskInstance);
+  TaskInstanceRunner(
+      this._context, this._project, this._trigger, this._taskInstance);
 
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
@@ -21,18 +23,20 @@ class TaskInstanceRunner {
         _taskInstance['name'], _taskInstance['args'], _project.config);
 
     return new TaskInstanceRunResult(
-        TaskInstanceStatus.success, _project, result);
+        TaskInstanceStatus.success, _project, _trigger, result);
   }
 }
 
 enum TaskInstanceStatus { success, failure }
 
 class TaskInstanceRunResult {
-  TaskInstanceStatus status;
-  Project project;
-  TaskRunResult taskRunResult;
+  final TaskInstanceStatus status;
+  final Project project;
+  final Trigger trigger;
+  final TaskRunResult taskRunResult;
 
-  TaskInstanceRunResult(this.status, this.project, this.taskRunResult);
+  TaskInstanceRunResult(
+      this.status, this.project, this.trigger, this.taskRunResult);
 
   @override
   String toString() {
