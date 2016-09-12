@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:ini/ini.dart';
+
+import '../config.dart';
 
 class UploadCommand extends Command {
   @override
@@ -12,9 +13,36 @@ class UploadCommand extends Command {
   @override
   String get name => 'upload';
 
-  UploadCommand(Config config) : super() {
-    address = config.get('server', 'address');
-    port = int.parse(config.get('server', 'port'));
+  UploadCommand() : super() {
+    argParser.addOption('address', abbr: 'A', callback: (value) {
+      if (value == null) {
+        final config = getConfig();
+        address = config?.get('server', 'address');
+      } else {
+        address = value;
+      }
+
+      if (address == null) {
+        print('address is required.');
+        exit(0);
+      }
+    }, help: 'Address will be requested.');
+
+    argParser.addOption('port', abbr: 'P', callback: (value) {
+      var portStr;
+      if (value == null) {
+        final config = getConfig();
+        portStr = config?.get('server', 'port');
+      } else {
+        portStr = value;
+      }
+
+      if (portStr == null) {
+        port = 80;
+      } else {
+        port = int.parse(portStr);
+      }
+    }, help: 'Port number will be used to request.');
 
     argParser.addOption('config-file',
         abbr: 'c',
