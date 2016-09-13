@@ -4,20 +4,31 @@ import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
+import './trigger_parser.dart';
 
 class TaskInstanceRunner {
   final Context _context;
   final beaver_task.Config _config;
-  final Map _taskInstance;
+  final ParsedTrigger _parsedTrigger;
+  final Map _task;
 
-  TaskInstanceRunner(this._context, this._config, Map taskInstance)
-      : this._taskInstance = taskInstance['task'];
+  TaskInstanceRunner(
+      this._context, this._config, this._parsedTrigger, Map taskInstance)
+      : this._task = taskInstance['task'];
 
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final result =
-        await runBeaver(_taskInstance['name'], _taskInstance['args'], _config);
+    final args = [];
+    _task['args'].forEach((arg) {
+      if (_parsedTrigger.isTriggerData(arg)) {
+        args.add(_parsedTrigger.getTriggerData(arg));
+      } else {
+        args.add(arg);
+      }
+    });
+
+    final result = await runBeaver(_task['name'], args, _config);
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
   }

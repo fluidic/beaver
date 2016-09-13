@@ -1,10 +1,7 @@
 import './base.dart';
-
 /// For [GithubTriggerParser].
 import './trigger_parser/github_trigger_parser.dart';
 import './utils/reflection.dart';
-
-/// For [GithubTriggerParser].
 
 abstract class TriggerParser {
   ParsedTrigger parse(Context context, Trigger trigger);
@@ -18,6 +15,31 @@ class ParsedTrigger {
   Map<String, Object> data;
 
   ParsedTrigger(this.event, this.url, this.data);
+
+  static const triggerDataPrefix = 'trigger:';
+
+  bool isTriggerData(String str) {
+    if (str.startsWith(triggerDataPrefix)) {
+      return true;
+    }
+    return false;
+  }
+
+  String getTriggerData(String str) {
+    if (!isTriggerData(str)) {
+      throw new Exception('Not a trigger data.');
+    }
+
+    var keys = str.split(':')[1];
+    keys = keys.split('.');
+
+    var value = data;
+    for (final key in keys) {
+      value = value[key];
+    }
+
+    return value;
+  }
 }
 
 class TriggerParserClass {
