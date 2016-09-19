@@ -30,15 +30,23 @@ class ParsedTrigger {
       throw new Exception('Not a trigger data.');
     }
 
-    var keys = str.split(':')[1];
-    keys = keys.split('.');
-
-    var value = data;
-    for (final key in keys) {
-      value = value[key];
+    var keys;
+    try {
+      keys = str.split(':')[1];
+      keys = keys.split('.');
+    } catch (_) {
+      throw new Exception('Wrong format for a trigger data: ${str}');
     }
 
-    return value;
+    try {
+      var value = data;
+      for (final key in keys) {
+        value = value[key];
+      }
+      return value;
+    } catch (_) {
+      throw new Exception('No data for a trigger data: ${str}');
+    }
   }
 }
 
