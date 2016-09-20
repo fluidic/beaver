@@ -8,4 +8,16 @@ class Project {
   int buildNumber;
 
   Project(this.name) : buildNumber = 0;
+
+  @override
+  String toString() {
+    final buffer = new StringBuffer();
+    buffer
+      ..writeln('name: ${name}')
+      ..writeln('id: ${id}')
+      ..writeln('config: ${config}')
+      ..writeln('configFile: ${configFile}')
+      ..writeln('buildNumber: ${buildNumber}');
+    return buffer.toString();
+  }
 }
