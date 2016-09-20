@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:beaver_store/beaver_store.dart';
 
@@ -26,7 +27,8 @@ Future<Map<String, Object>> apiHandler(
       final projectId = data['id'];
       final buildNumber = int.parse(data['build_number']);
       final format = data['format'];
-      final result = await _getResult(projectId, buildNumber, format);
+      final count = int.parse(data['count']);
+      final result = await _getResult(projectId, buildNumber, format, count);
       ret['result'] = result;
       break;
     default:
@@ -49,15 +51,18 @@ Future<Null> _uploadConfigFile(String projectId, String config) =>
     _beaverStore.setConfig(projectId, config);
 
 Future<String> _getResult(
-    String projectId, int buildNumber, String format) async {
-  final result = await _beaverStore.getResult(projectId, buildNumber);
+    String projectId, int buildNumber, String format, int count) async {
+  final targetBuildNumbers =
+      new Iterable.generate(min(buildNumber, count), (i) => buildNumber - i);
+  final results = await Future.wait(targetBuildNumbers
+      .map((targetNumber) => _beaverStore.getResult(projectId, targetNumber)));
   switch (format) {
     case 'html':
-      final formatter = new HtmlFormatter(result);
+      final formatter = new HtmlFormatter(results);
       return formatter.toHtml();
     case 'text':
     default:
-      final formatter = new TextFormatter(result);
+      final formatter = new TextFormatter(results);
       return formatter.toText();
   }
 }
