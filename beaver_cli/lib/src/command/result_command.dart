@@ -63,6 +63,11 @@ class ResultCommand extends Command {
         defaultsTo: 'text',
         allowed: ['text', 'html'],
         help: 'The result format.');
+
+    argParser.addOption('count',
+        abbr: 'n',
+        defaultsTo: '1',
+        help: 'Number of results to output.');
   }
 
   String get api => '/api/result';
@@ -74,7 +79,8 @@ class ResultCommand extends Command {
     final data = JSON.encode({
       'id': argResults['project-id'],
       'build_number': argResults['build-number'],
-      'format': argResults['format']
+      'format': argResults['format'],
+      'count': argResults['count']
     });
 
     final httpClient = new HttpClient();
