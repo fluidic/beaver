@@ -48,6 +48,16 @@ class ParsedTrigger {
       throw new Exception('No data for a trigger data: ${str}');
     }
   }
+
+  @override
+  String toString() {
+    final buffer = new StringBuffer();
+    buffer
+      ..writeln('event: ${event}')
+      ..writeln('url: ${url}')
+      ..writeln('data: ${data}');
+    return buffer.toString();
+  }
 }
 
 class TriggerParserClass {
