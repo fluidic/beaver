@@ -40,28 +40,28 @@ Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
 
 Future<int> _triggerHandler(
     Context context, Trigger trigger, String projectId) async {
+  context.logger.info('TriggerHandler is started.');
   final project =
       await context.configStore.getProjectAfterUpdatingBuildNumber(projectId);
-  context.logger.info('Project found: ${project}');
+  context.logger.info('Project: ${project}');
 
   final parsedTrigger = parseTrigger(context, trigger);
-  context.logger.info('Event detected: ${parsedTrigger.event}');
+  context.logger.info('Trigger: ${parsedTrigger}');
 
   final triggerConfig = _getTriggerConfigs(project);
   final taskInstance = _findTriggerConfig(triggerConfig, parsedTrigger);
-  context.logger.info('Trigger is triggerred. ${triggerConfig}');
+  context.logger.info('TriggerConfig: ${triggerConfig}');
 
   final taskInstanceRunner = new TaskInstanceRunner(
       context, project.config, parsedTrigger, taskInstance);
   final result = await taskInstanceRunner.run();
-  context.logger.info('TaskInstance Running Result: ${result}');
+  context.logger.info('TaskInstanceRunResult: ${result}');
 
   final triggerResult =
       new TriggerResult(project, trigger, parsedTrigger, taskInstance, result);
   await context.configStore
       .saveResult(projectId, project.buildNumber, triggerResult);
-  context.logger.info(
-      'TaskInstanceResult is saved: Build number: ${project.buildNumber}');
+  context.logger.info('Result is saved.');
   return project.buildNumber;
 }
 
@@ -83,6 +83,6 @@ class TriggerResult {
   final Map<String, Object> taskInstance;
   final TaskInstanceRunResult taskInstanceRunResult;
 
-  TriggerResult(this.project, this.trigger, this.parsedTrigger, this.taskInstance,
-      this.taskInstanceRunResult);
+  TriggerResult(this.project, this.trigger, this.parsedTrigger,
+      this.taskInstance, this.taskInstanceRunResult);
 }

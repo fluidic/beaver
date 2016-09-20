@@ -56,9 +56,8 @@ class TaskInstanceRunResult {
 
     final buffer = new StringBuffer();
     buffer
-      ..writeln('TaskInstanceResult -------')
       ..writeln('status: ${taskInstanceStatus}')
-      ..writeln('TaskResult: ---')
+      ..writeln('TaskRunResult')
       ..writeln('status: ${taskStatus}')
       ..writeln('config: ${taskRunResult.config.toString()}')
       ..writeln('log: ${taskRunResult.log}');
