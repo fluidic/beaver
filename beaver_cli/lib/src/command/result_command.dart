@@ -85,6 +85,11 @@ class ResultCommand extends Command {
     var responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    print(responseBody);
+    final jsonBody = JSON.decode(responseBody);
+    if (jsonBody['status'] == 'success') {
+      print(jsonBody['result'].toString());
+    } else {
+      print(responseBody);
+    }
   }
 }
