@@ -9,4 +9,7 @@ class YamlConfig extends DelegatingMap implements Config {
 
   @override
   Map get delegate => _yaml;
+
+  @override
+  String toString() => _yaml.toString();
 }
