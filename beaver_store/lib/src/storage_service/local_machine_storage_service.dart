@@ -56,7 +56,7 @@ class LocalMachineStorageService implements StorageService {
   }
 
   @override
-  Future<TriggerResult> getResult(String projectId, int buildNumber) async {
+  Future<TriggerResult> loadResult(String projectId, int buildNumber) async {
     final key = projectId + '__' + buildNumber.toString();
     return _resultMap[key];
   }

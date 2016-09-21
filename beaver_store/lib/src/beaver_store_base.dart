@@ -49,5 +49,5 @@ class BeaverStore {
   }
 
   Future<TriggerResult> getResult(String id, int buildNumber) =>
-      _storageService.getResult(id, buildNumber);
+      _storageService.loadResult(id, buildNumber);
 }
