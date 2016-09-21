@@ -10,6 +10,7 @@ import '../storage_service.dart';
 
 final Map<String, Project> _projectMap = {};
 final Map<String, TriggerResult> _resultMap = {};
+final Map<String, int> _buildNumberMap = {};
 
 class LocalMachineStorageService implements StorageService {
   const LocalMachineStorageService();
@@ -63,5 +64,19 @@ class LocalMachineStorageService implements StorageService {
   Future<Directory> _getProjectDir(String projectId) async {
     final dirPath = path.join(Directory.systemTemp.path, projectId);
     return await new Directory(dirPath).create(recursive: true);
+  }
+
+  @override
+  Future<int> getBuildNumber(String projectId) async {
+    if (!_buildNumberMap.containsKey(projectId)) {
+      _buildNumberMap[projectId] = 0;
+    }
+    return _buildNumberMap[projectId];
+  }
+
+  @override
+  Future<bool> setBuildNumber(String projectId, int buildNumber) async {
+    _buildNumberMap[projectId] = buildNumber;
+    return true;
   }
 }

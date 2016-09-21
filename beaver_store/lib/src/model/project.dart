@@ -5,9 +5,8 @@ class Project {
   String id;
   Config config;
   Uri configFile;
-  int buildNumber;
 
-  Project(this.name) : buildNumber = 0;
+  Project(this.name);
 
   @override
   String toString() {
@@ -16,8 +15,7 @@ class Project {
       ..writeln('name: ${name}')
       ..writeln('id: ${id}')
       ..writeln('config: ${config}')
-      ..writeln('configFile: ${configFile}')
-      ..writeln('buildNumber: ${buildNumber}');
+      ..writeln('configFile: ${configFile}');
     return buffer.toString();
   }
 }

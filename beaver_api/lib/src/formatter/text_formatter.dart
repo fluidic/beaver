@@ -17,7 +17,7 @@ class TextFormatter implements Formatter {
     buffer.writeln("${_result.project.name} (${_result.project.id})");
 
     final items = {
-      "Build Number": _result.project.buildNumber.toString(),
+      "Build Number": _result.buildNumber.toString(),
       "TaskInstance Status": _result.taskInstanceRunResult.status ==
           TaskInstanceStatus.success ? "Success" : "Failure",
       "Task Status": _result.taskInstanceRunResult.taskRunResult.status ==

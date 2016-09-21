@@ -23,11 +23,10 @@ class BeaverStore {
     return _storageService.loadProject(id);
   }
 
-  Future<Project> getProjectAfterUpdatingBuildNumber(String id) async {
-    final project = await _storageService.loadProject(id);
-    project.buildNumber++;
-    await _storageService.saveProject(project);
-    return project;
+  Future<int> getAndUpdateBuildNumber(String id) async {
+    final buildNumber = await _storageService.getBuildNumber(id);
+    await _storageService.setBuildNumber(id, buildNumber + 1);
+    return buildNumber;
   }
 
   Future<Null> setConfig(String id, String yaml) async {

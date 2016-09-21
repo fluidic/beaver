@@ -36,4 +36,14 @@ class GCloudStorageService implements StorageService {
   Future<TriggerResult> getResult(String projectId, int buildNumber) {
     // TODO: implement getResult
   }
+
+  @override
+  Future<int> getBuildNumber(String projectId) {
+    // TODO: implement getBuildNumber
+  }
+
+  @override
+  Future<bool> setBuildNumber(String projectId, int buildNumber) {
+    // TODO: implement setBuildNumber
+  }
 }

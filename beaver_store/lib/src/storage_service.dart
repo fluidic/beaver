@@ -14,6 +14,9 @@ abstract class StorageService {
   Future<String> loadConfigFile(String projectId);
   Future<Uri> saveConfigFile(String projectId, String config);
 
+  Future<int> getBuildNumber(String projectId);
+  Future<bool> setBuildNumber(String projectId, int buildNumber);
+
   Future<bool> saveResult(
       String projectId, int buildNumber, TriggerResult result);
   Future<TriggerResult> getResult(String projectId, int buildNumber);

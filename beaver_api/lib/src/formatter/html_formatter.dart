@@ -44,7 +44,7 @@ class HtmlFormatter implements Formatter {
     builder.element('tbody', nest: () {
       builder.element('tr', nest: () {
         builder.element('td', nest: () {
-          builder.text(_result.project.buildNumber.toString());
+          builder.text(_result.buildNumber.toString());
         });
         builder.element('td', nest: () {
           builder.text(_result.taskInstanceRunResult.status ==

@@ -41,9 +41,10 @@ Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
 Future<int> _triggerHandler(
     Context context, Trigger trigger, String projectId) async {
   context.logger.info('TriggerHandler is started.');
-  final project =
-      await context.beaverStore.getProjectAfterUpdatingBuildNumber(projectId);
+  final project = await context.beaverStore.getProject(projectId);
   context.logger.info('Project: ${project}');
+  final buildNumber =
+      await context.beaverStore.getAndUpdateBuildNumber(projectId);
 
   final parsedTrigger = parseTrigger(context, trigger);
   context.logger.info('Trigger: ${parsedTrigger}');
@@ -57,12 +58,11 @@ Future<int> _triggerHandler(
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstanceRunResult: ${result}');
 
-  final triggerResult =
-      new TriggerResult(project, trigger, parsedTrigger, taskInstance, result);
-  await context.beaverStore
-      .saveResult(projectId, project.buildNumber, triggerResult);
+  final triggerResult = new TriggerResult(
+      project, buildNumber, trigger, parsedTrigger, taskInstance, result);
+  await context.beaverStore.saveResult(projectId, buildNumber, triggerResult);
   context.logger.info('Result is saved.');
-  return project.buildNumber;
+  return buildNumber;
 }
 
 Future<int> triggerHandler(Trigger trigger, String projectId) async {
@@ -78,11 +78,12 @@ Future<int> triggerHandler(Trigger trigger, String projectId) async {
 
 class TriggerResult {
   final Project project;
+  final int buildNumber;
   final Trigger trigger;
   final ParsedTrigger parsedTrigger;
   final Map<String, Object> taskInstance;
   final TaskInstanceRunResult taskInstanceRunResult;
 
-  TriggerResult(this.project, this.trigger, this.parsedTrigger,
-      this.taskInstance, this.taskInstanceRunResult);
+  TriggerResult(this.project, this.buildNumber, this.trigger,
+      this.parsedTrigger, this.taskInstance, this.taskInstanceRunResult);
 }
