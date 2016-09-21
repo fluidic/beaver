@@ -8,10 +8,10 @@ import './storage_service.dart';
 
 enum StorageServiceType { localMachine, gCloud }
 
-class ConfigStore {
+class BeaverStore {
   final StorageService _storageService;
 
-  ConfigStore(StorageServiceType storageServiceType)
+  BeaverStore(StorageServiceType storageServiceType)
       : _storageService = getStorageService(storageServiceType);
 
   /// Return the id of Project.

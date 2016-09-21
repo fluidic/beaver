@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
-import './beaver_config_store_base.dart';
+import './beaver_store_base.dart';
 import './model/project.dart';
 import './storage_service/gcloud_storage_service.dart';
 import './storage_service/local_machine_storage_service.dart';

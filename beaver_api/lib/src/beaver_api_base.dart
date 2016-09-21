@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:beaver_config_store/beaver_config_store.dart';
+import 'package:beaver_store/beaver_store.dart';
 
 import './formatter/html_formatter.dart';
 import './formatter/text_formatter.dart';
@@ -36,21 +36,21 @@ Future<Map<String, Object>> apiHandler(
 }
 
 // FIXME: Don't use StorageServiceType.localMachine here.
-final _configStore = new ConfigStore(StorageServiceType.localMachine);
+final _beaverStore = new BeaverStore(StorageServiceType.localMachine);
 
 /// Set new project. Returns the id of the registered project.
 Future<String> _registerProject(String projectName, String config) async {
-  final projectId = await _configStore.setNewProject(projectName);
-  await _configStore.setConfig(projectId, config);
+  final projectId = await _beaverStore.setNewProject(projectName);
+  await _beaverStore.setConfig(projectId, config);
   return projectId;
 }
 
 Future<Null> _uploadConfigFile(String projectId, String config) =>
-    _configStore.setConfig(projectId, config);
+    _beaverStore.setConfig(projectId, config);
 
 Future<String> _getResult(
     String projectId, int buildNumber, String format) async {
-  final result = await _configStore.getResult(projectId, buildNumber);
+  final result = await _beaverStore.getResult(projectId, buildNumber);
   switch (format) {
     case 'html':
       final formatter = new HtmlFormatter(result);

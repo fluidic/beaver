@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:beaver_config_store/beaver_config_store.dart';
+import 'package:beaver_store/beaver_store.dart';
 
 main() async {
-  final store = new ConfigStore(StorageServiceType.localMachine);
+  final store = new BeaverStore(StorageServiceType.localMachine);
 
   final id = await store.setNewProject('beaver');
   print(id);

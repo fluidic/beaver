@@ -1,5 +1,5 @@
-name: beaver_config_store
-description: Store for beaver configuration.
+name: beaver_store
+description: Store for beaver configuration and task's result.
 version: 0.1.0
 author: Fluidic Team <dev@fluidic.io>
 #homepage: https://www.example.com
