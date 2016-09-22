@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:mirrors';
 
+import 'package:googleapis/compute/v1.dart';
+import 'package:uuid/uuid.dart';
+
 import './annotation.dart';
 import './base.dart';
 import './context.dart';
@@ -94,7 +97,47 @@ Future<Context> _createGCloudContext(Config config) async {
   return context;
 }
 
-Future<TaskRunResult> runBeaver(String taskName, List<String> taskArgs, Config config) async {
+Future createVM(GCloudContext context) async {
+  final name = 'beaver-worker-${new Uuid().v4()}';
+  final instance = new Instance.fromJson({
+    'name': name,
+    'machineType':
+        'projects/beaver-ci/zones/us-central1-a/machineTypes/n1-standard-1',
+    "disks": [
+      {
+        "type": "PERSISTENT",
+        "boot": true,
+        "mode": "READ_WRITE",
+        "autoDelete": true,
+        "deviceName": name,
+        "initializeParams": {
+          "sourceImage":
+              "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
+          "diskType":
+              "projects/beaver-ci/zones/us-central1-a/diskTypes/pd-standard",
+          "diskSizeGb": "10"
+        }
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "network": "projects/beaver-ci/global/networks/default",
+        "subnetwork":
+            "projects/beaver-ci/regions/us-central1/subnetworks/default",
+        "accessConfigs": [
+          {"name": "External NAT", "type": "ONE_TO_ONE_NAT"}
+        ]
+      }
+    ],
+  });
+  // FIXME: Check error
+  return context.compute.instances
+      .insert(instance, 'beaver-ci', 'us-central1-a');
+}
+
+Future<TaskRunResult> runBeaver(
+    String taskName, List<String> taskArgs, Config config,
+    {bool newVM: false}) async {
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 
@@ -107,6 +150,13 @@ Future<TaskRunResult> runBeaver(String taskName, List<String> taskArgs, Config c
       throw new AssertionError(); // Unreachable
   }
 
-  final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
-  return _runTask(context, task);
+  if (newVM) {
+    await createVM(context);
+    // FIXME: Execute the task in the vm and return the result.
+    return null;
+  } else {
+    final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
+    return _runTask(context, task);
+  }
 }
+
