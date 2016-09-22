@@ -11,7 +11,7 @@ dependencies:
   beaver_task:
     path: ../beaver_task
   gcloud: '>=0.3.0 <0.4.0'
-  googleapis_auth: '>=0.2.3 <0.3.0'
+  googleapis_auth: any
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
