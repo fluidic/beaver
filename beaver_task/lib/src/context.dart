@@ -5,12 +5,14 @@ import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:gcloud/db.dart';
 import 'package:gcloud/storage.dart';
 import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
+import 'package:googleapis/compute/v1.dart';
 
 import './base.dart';
 
 class GCloudContext implements Context {
   Storage _storage;
   DatastoreDB _db;
+  ComputeApi _compute;
 
   final Config _config;
   final Logger _logger;
@@ -19,6 +21,8 @@ class GCloudContext implements Context {
   Storage get storage => _storage;
 
   DatastoreDB get db => _db;
+
+  ComputeApi get compute => _compute;
 
   @override
   Config get config => _config;
@@ -38,7 +42,7 @@ class GCloudContext implements Context {
 
     final credentials =
         new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
-    final scopes = []
+    final scopes = [ComputeApi.ComputeScope]
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
     var client = await auth.clientViaServiceAccount(credentials, scopes);
@@ -46,5 +50,6 @@ class GCloudContext implements Context {
     _db =
         new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
     _storage = new Storage(client, projectName);
+    _compute = new ComputeApi(client);
   }
 }
