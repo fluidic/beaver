@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
@@ -35,8 +36,7 @@ Future<shelf.Response> _handleRun(shelf.Request request) async {
 void main() {
   var myRouter = router()..post('/run', _handleRun);
 
-  io.serve(myRouter.handler, 'localhost', 8080).then((server) {
+  io.serve(myRouter.handler, InternetAddress.ANY_IP_V4, 8080).then((server) {
     print('Serving at http://${server.address.host}:${server.port}');
   });
 }
-
