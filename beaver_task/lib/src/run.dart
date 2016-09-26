@@ -112,8 +112,7 @@ class CreateVMResult {
   CreateVMResult(this.status, this.name, this.zone);
 }
 
-Future<CreateVMResult> createVM(GCloudContext context) async {
-  const zone = 'us-central1-a';
+Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
   final name = 'beaver-worker-${new Uuid().v4()}';
 
   final instance = new Instance.fromJson({
@@ -186,9 +185,10 @@ Future<TaskRunResult> runBeaver(
   }
 
   if (newVM) {
-    CreateVMResult result = await createVM(context);
+    const zone = 'us-central1-a';
+    CreateVMResult result = await createVM(context, zone);
     // FIXME: Execute the task in the vm and return the result.
-    await deleteVM(context, result.name, 'us-central1-a');
+    await deleteVM(context, result.name, zone);
     return null;
   } else {
     final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
