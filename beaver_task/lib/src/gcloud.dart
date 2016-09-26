@@ -11,11 +11,11 @@ class CreateVMResult {
   // Status of CreateVM.
   final CreateVMStatus status;
 
-  // Name of the instance resource.
-  final String name;
-
   // The name of the zone for the instance.
   final String zone;
+
+  // Name of the instance resource.
+  final String name;
 
   // List of network IP addresses.
   final List<String> networkIPs;
@@ -83,7 +83,7 @@ class DeleteVMResult {
 }
 
 Future<DeleteVMResult> deleteVM(
-    GCloudContext context, String name, String zone) async {
+    GCloudContext context, String zone, String name) async {
   Operation op =
       await context.compute.instances.delete('beaver-ci', zone, name);
   DeleteVMStatus status =
