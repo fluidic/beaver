@@ -36,12 +36,9 @@ class GCloudContext implements Context {
   GCloudContext(this._config, this._logger, this._partMap);
 
   Future<Null> setUp() async {
-    final jsonCredentialsPath = _config['service_account_credentials_path'];
     final projectName = _config['project_name'];
-    final jsonCredentials = await new File(jsonCredentialsPath).readAsString();
-
-    final credentials =
-        new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
+    final jsonCredentials = _config['service_account_credentials'];
+    final credentials = new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
     final scopes = [ComputeApi.ComputeScope]
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
