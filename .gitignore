@@ -24,5 +24,9 @@ doc/api/
 # Mac
 .DS_Store
 
-# beaver cli config
+# beaver_cli config
 .beaverconfig
+
+# beaver_frontend_gcf
+node_modules
+packages_for_gcf
