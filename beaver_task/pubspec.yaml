@@ -26,6 +26,8 @@ dependencies:
 dev_dependencies:
   beaver_dart_task:
     path: ../beaver_dart_task
+  beaver_gcloud:
+    path: ../beaver_gcloud
   beaver_gcloud_task:
     path: ../beaver_gcloud_task
   shelf: '>=0.6.5+3 <0.7.0'

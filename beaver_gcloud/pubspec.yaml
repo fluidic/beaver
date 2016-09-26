@@ -1,5 +1,5 @@
-name: beaver_gcloud_task
-description: Collection of Beaver Google Cloud tasks
+name: beaver_gcloud
+description: GCloud helpers
 version: 0.1.0
 author: Fluidic Team <dev@fluidic.io>
 #homepage: https://www.example.com
@@ -8,11 +8,8 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
-  beaver_gcloud:
-    path: ../beaver_gcloud
-  beaver_task:
-    path: ../beaver_task
   gcloud: '>=0.3.0 <0.4.0'
+  googleapis: any
   googleapis_auth: any
 
 dev_dependencies:
