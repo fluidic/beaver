@@ -2,7 +2,7 @@ library beaver_task;
 
 export 'src/annotation.dart';
 export 'src/base.dart';
-export 'src/context.dart';
+export 'src/gcloud_context.dart';
 export 'src/exception.dart';
 export 'src/logger.dart' show NoneLogger, ConsoleLogger;
 export 'src/task/copy_task.dart';

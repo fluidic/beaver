@@ -3,7 +3,7 @@ import 'dart:mirrors';
 
 import './annotation.dart';
 import './base.dart';
-import './context.dart';
+import './gcloud_context.dart';
 import './gcloud.dart';
 import './logger.dart';
 import './utils/reflection.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:googleapis/compute/v1.dart';
 import 'package:uuid/uuid.dart';
 
-import './context.dart';
+import './gcloud_context.dart';
 
 enum CreateVMStatus { Success, Error }
 
