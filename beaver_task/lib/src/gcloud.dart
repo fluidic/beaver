@@ -26,7 +26,7 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
   final instance = new Instance.fromJson({
     'name': name,
     'machineType':
-    'projects/beaver-ci/zones/${zone}/machineTypes/n1-standard-1',
+        'projects/beaver-ci/zones/${zone}/machineTypes/n1-standard-1',
     "disks": [
       {
         "type": "PERSISTENT",
@@ -36,7 +36,7 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
         "deviceName": name,
         "initializeParams": {
           "sourceImage":
-          "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
+              "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
           "diskType": "projects/beaver-ci/zones/${zone}/diskTypes/pd-standard",
           "diskSizeGb": "10"
         }
@@ -46,7 +46,7 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
       {
         "network": "projects/beaver-ci/global/networks/default",
         "subnetwork":
-        "projects/beaver-ci/regions/us-central1/subnetworks/default",
+            "projects/beaver-ci/regions/us-central1/subnetworks/default",
         "accessConfigs": [
           {"name": "External NAT", "type": "ONE_TO_ONE_NAT"}
         ]
@@ -54,9 +54,9 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
     ],
   });
   Operation op =
-  await context.compute.instances.insert(instance, 'beaver-ci', zone);
+      await context.compute.instances.insert(instance, 'beaver-ci', zone);
   CreateVMStatus status =
-  op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
+      op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
   return new CreateVMResult(status, name, zone);
 }
 
@@ -69,11 +69,11 @@ class DeleteVMResult {
   DeleteVMResult(this.status);
 }
 
-Future<DeleteVMResult> deleteVM(GCloudContext context, String name, String zone) async {
+Future<DeleteVMResult> deleteVM(
+    GCloudContext context, String name, String zone) async {
   Operation op =
-  await context.compute.instances.delete('beaver-ci', zone, name);
+      await context.compute.instances.delete('beaver-ci', zone, name);
   DeleteVMStatus status =
-  op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
+      op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
   return new DeleteVMResult(status);
 }
-
