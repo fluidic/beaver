@@ -8,15 +8,19 @@ class HtmlFormatter implements Formatter {
   @override
   String get type => 'html';
 
-  final TriggerResult _result;
+  final List<TriggerResult> _results;
 
-  HtmlFormatter(this._result);
+  HtmlFormatter(this._results);
 
   void _buildTable(XmlBuilder builder) {
     builder.element('table', nest: () {
       builder.attribute('class', 'pure-table');
       _buildTableHeader(builder);
-      _buildTableBody(builder);
+      builder.element('tbody', nest: () {
+        _results.forEach((result) {
+          _buildTableBodyRow(result, builder);
+        });
+      });
     });
   }
 
@@ -40,29 +44,27 @@ class HtmlFormatter implements Formatter {
     });
   }
 
-  void _buildTableBody(XmlBuilder builder) {
-    builder.element('tbody', nest: () {
-      builder.element('tr', nest: () {
-        builder.element('td', nest: () {
-          builder.text(_result.buildNumber.toString());
-        });
-        builder.element('td', nest: () {
-          builder.text(_result.taskInstanceRunResult.status ==
-              TaskInstanceStatus.success ? "Success" : "Failure");
-        });
-        builder.element('td', nest: () {
-          builder.text(_result.taskInstanceRunResult.taskRunResult.status ==
-              TaskStatus.Success ? "Success" : "Failure");
-        });
-        builder.element('td', nest: () {
-          builder.text(_result.parsedTrigger.event);
-        });
-        builder.element('td', nest: () {
-          builder.text(_result.parsedTrigger.url);
-        });
-        builder.element('td', nest: () {
-          builder.text(_result.taskInstanceRunResult.taskRunResult.log);
-        });
+  void _buildTableBodyRow(TriggerResult result, XmlBuilder builder) {
+    builder.element('tr', nest: () {
+      builder.element('td', nest: () {
+        builder.text(result.buildNumber.toString());
+      });
+      builder.element('td', nest: () {
+        builder.text(result.taskInstanceRunResult.status ==
+            TaskInstanceStatus.success ? "Success" : "Failure");
+      });
+      builder.element('td', nest: () {
+        builder.text(result.taskInstanceRunResult.taskRunResult.status ==
+            TaskStatus.Success ? "Success" : "Failure");
+      });
+      builder.element('td', nest: () {
+        builder.text(result.parsedTrigger.event);
+      });
+      builder.element('td', nest: () {
+        builder.text(result.parsedTrigger.url);
+      });
+      builder.element('td', nest: () {
+        builder.text(result.taskInstanceRunResult.taskRunResult.log);
       });
     });
   }
@@ -79,7 +81,8 @@ class HtmlFormatter implements Formatter {
       });
       builder.element('body', nest: () {
         builder.element('h1', nest: () {
-          builder.text('${_result.project.name} (${_result.project.id})');
+          builder
+              .text('${_results[0].project.name} (${_results[0].project.id})');
         });
         _buildTable(builder);
       });
