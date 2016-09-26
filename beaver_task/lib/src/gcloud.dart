@@ -17,7 +17,10 @@ class CreateVMResult {
   // The name of the zone for the instance.
   final String zone;
 
-  CreateVMResult(this.status, this.name, this.zone);
+  // List of network IP addresses.
+  final List<String> networkIPs;
+
+  CreateVMResult(this.status, this.name, this.zone, this.networkIPs);
 }
 
 Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
@@ -57,7 +60,17 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
       await context.compute.instances.insert(instance, 'beaver-ci', zone);
   CreateVMStatus status =
       op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
-  return new CreateVMResult(status, name, zone);
+
+  // IP addresses are not available in PROVISIONING status.
+  // FIXME: Avoid polling if possible.
+  Instance ins;
+  do {
+    await new Future.delayed(new Duration(seconds: 1));
+    ins = await context.compute.instances.get('beaver-ci', zone, name);
+  } while (ins.status == 'PROVISIONING');
+
+  List<String> networkIPs = ins.networkInterfaces.map((ni) => ni.networkIP);
+  return new CreateVMResult(status, name, zone, networkIPs);
 }
 
 enum DeleteVMStatus { Success, Error }
