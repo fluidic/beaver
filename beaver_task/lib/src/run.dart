@@ -111,9 +111,12 @@ Future<TaskRunResult> runBeaver(
   }
 
   if (newVM) {
-    CreateVMResult result = await createVM(context, config['zone']);
+    String project = config['project_name'];
+    String zone = config['zone'];
+
+    CreateVMResult result = await createVM(context, project, zone);
     // FIXME: Execute the task in the vm and return the result.
-    await deleteVM(context, config['zone'], result.name);
+    await deleteVM(context, project, zone, result.name);
     return null;
   } else {
     final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);

@@ -23,7 +23,7 @@ class CreateVMResult {
   CreateVMResult(this.status, this.name, this.zone, this.networkIPs);
 }
 
-Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
+Future<CreateVMResult> createVM(GCloudContext context, String project, String zone) async {
   final name = 'beaver-worker-${new Uuid().v4()}';
 
   final instance = new Instance.fromJson({
@@ -57,7 +57,7 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
     ],
   });
   Operation op =
-      await context.compute.instances.insert(instance, 'beaver-ci', zone);
+      await context.compute.instances.insert(instance, project, zone);
   CreateVMStatus status =
       op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
 
@@ -66,7 +66,7 @@ Future<CreateVMResult> createVM(GCloudContext context, String zone) async {
   Instance ins;
   do {
     await new Future.delayed(new Duration(seconds: 1));
-    ins = await context.compute.instances.get('beaver-ci', zone, name);
+    ins = await context.compute.instances.get(project, zone, name);
   } while (ins.status == 'PROVISIONING');
 
   List<String> networkIPs = ins.networkInterfaces.map((ni) => ni.networkIP);
@@ -83,9 +83,9 @@ class DeleteVMResult {
 }
 
 Future<DeleteVMResult> deleteVM(
-    GCloudContext context, String zone, String name) async {
+    GCloudContext context, String project, String zone, String name) async {
   Operation op =
-      await context.compute.instances.delete('beaver-ci', zone, name);
+      await context.compute.instances.delete(project, zone, name);
   DeleteVMStatus status =
       op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
   return new DeleteVMResult(status);
