@@ -153,6 +153,23 @@ Future<CreateVMResult> createVM(GCloudContext context) async {
   return new CreateVMResult(status, name, zone);
 }
 
+enum DeleteVMStatus { Success, Error }
+
+class DeleteVMResult {
+  // Status of DeleteVM.
+  final DeleteVMStatus status;
+
+  DeleteVMResult(this.status);
+}
+
+Future<DeleteVMResult> deleteVM(GCloudContext context, String name, String zone) async {
+  Operation op =
+      await context.compute.instances.delete('beaver-ci', zone, name);
+  DeleteVMStatus status =
+      op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
+  return new DeleteVMResult(status);
+}
+
 Future<TaskRunResult> runBeaver(
     String taskName, List<String> taskArgs, Config config,
     {bool newVM: false}) async {
@@ -169,8 +186,9 @@ Future<TaskRunResult> runBeaver(
   }
 
   if (newVM) {
-    await createVM(context);
+    CreateVMResult result = await createVM(context);
     // FIXME: Execute the task in the vm and return the result.
+    await deleteVM(context, result.name, 'us-central1-a');
     return null;
   } else {
     final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
