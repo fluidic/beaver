@@ -97,12 +97,29 @@ Future<Context> _createGCloudContext(Config config) async {
   return context;
 }
 
-Future createVM(GCloudContext context) async {
+enum CreateVMStatus { Success, Error }
+
+class CreateVMResult {
+  // Status of CreateVM.
+  final CreateVMStatus status;
+
+  // Name of the instance resource.
+  final String name;
+
+  // The name of the zone for the instance.
+  final String zone;
+
+  CreateVMResult(this.status, this.name, this.zone);
+}
+
+Future<CreateVMResult> createVM(GCloudContext context) async {
+  const zone = 'us-central1-a';
   final name = 'beaver-worker-${new Uuid().v4()}';
+
   final instance = new Instance.fromJson({
     'name': name,
     'machineType':
-        'projects/beaver-ci/zones/us-central1-a/machineTypes/n1-standard-1',
+        'projects/beaver-ci/zones/${zone}/machineTypes/n1-standard-1',
     "disks": [
       {
         "type": "PERSISTENT",
@@ -113,8 +130,7 @@ Future createVM(GCloudContext context) async {
         "initializeParams": {
           "sourceImage":
               "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
-          "diskType":
-              "projects/beaver-ci/zones/us-central1-a/diskTypes/pd-standard",
+          "diskType": "projects/beaver-ci/zones/${zone}/diskTypes/pd-standard",
           "diskSizeGb": "10"
         }
       }
@@ -130,9 +146,11 @@ Future createVM(GCloudContext context) async {
       }
     ],
   });
-  // FIXME: Check error
-  return context.compute.instances
-      .insert(instance, 'beaver-ci', 'us-central1-a');
+  Operation op =
+      await context.compute.instances.insert(instance, 'beaver-ci', zone);
+  CreateVMStatus status =
+      op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
+  return new CreateVMResult(status, name, zone);
 }
 
 Future<TaskRunResult> runBeaver(
@@ -159,4 +177,3 @@ Future<TaskRunResult> runBeaver(
     return _runTask(context, task);
   }
 }
-
