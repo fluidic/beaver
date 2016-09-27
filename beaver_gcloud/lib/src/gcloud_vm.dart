@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:googleapis/compute/v1.dart';
 import 'package:uuid/uuid.dart';
 
-import './gcloud_context.dart';
+import './gcloud_mixin.dart';
 
 enum CreateVMStatus { Success, Error }
 
@@ -23,7 +23,8 @@ class CreateVMResult {
   CreateVMResult(this.status, this.name, this.zone, this.networkIPs);
 }
 
-Future<CreateVMResult> createVM(GCloudContext context, String project, String zone) async {
+Future<CreateVMResult> createVM(
+    GCloudMixin context, String project, String zone) async {
   final name = 'beaver-worker-${new Uuid().v4()}';
 
   final instance = new Instance.fromJson({
@@ -83,9 +84,8 @@ class DeleteVMResult {
 }
 
 Future<DeleteVMResult> deleteVM(
-    GCloudContext context, String project, String zone, String name) async {
-  Operation op =
-      await context.compute.instances.delete(project, zone, name);
+    GCloudMixin context, String project, String zone, String name) async {
+  Operation op = await context.compute.instances.delete(project, zone, name);
   DeleteVMStatus status =
       op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
   return new DeleteVMResult(status);

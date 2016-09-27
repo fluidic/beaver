@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:mirrors';
 
+import 'package:beaver_gcloud/beaver_gcloud.dart';
+
 import './annotation.dart';
 import './base.dart';
 import './gcloud_context.dart';
-import './gcloud.dart';
 import './logger.dart';
 import './utils/reflection.dart';
 
@@ -101,7 +102,7 @@ Future<TaskRunResult> runBeaver(
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 
-  Context context;
+  GCloudContext context;
   switch (config['cloud_type']) {
     case 'gcloud':
       context = await _createGCloudContext(config);
