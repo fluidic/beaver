@@ -6,6 +6,6 @@
 /// More dartdocs go here.
 library beaver_gcloud;
 
-export 'src/beaver_gcloud_base.dart';
+export 'src/gcloud_mixin.dart';
 
 // TODO: Export any libraries intended for clients of this package.
