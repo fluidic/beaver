@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
+import './http_command.dart';
 
-import '../config.dart';
-
-class TestCommand extends Command {
+class TestCommand extends HttpCommand {
   @override
   String get description => 'Test the trigger.';
 
@@ -14,36 +12,6 @@ class TestCommand extends Command {
   String get name => 'test';
 
   TestCommand() : super() {
-    argParser.addOption('address', abbr: 'A', callback: (value) {
-      if (value == null) {
-        final config = getConfig();
-        address = config?.get('server', 'address');
-      } else {
-        address = value;
-      }
-
-      if (address == null) {
-        print('address is required.');
-        exit(0);
-      }
-    }, help: 'Address will be requested.');
-
-    argParser.addOption('port', abbr: 'P', callback: (value) {
-      var portStr;
-      if (value == null) {
-        final config = getConfig();
-        portStr = config?.get('server', 'port');
-      } else {
-        portStr = value;
-      }
-
-      if (portStr == null) {
-        port = 80;
-      } else {
-        port = int.parse(portStr);
-      }
-    }, help: 'Port number will be used to request.');
-
     argParser.addOption('project-id', abbr: 'p', callback: (value) {
       if (value == null) {
         print('project-id is required.');
@@ -70,9 +38,8 @@ class TestCommand extends Command {
 
   static const _triggerPath = const {'github': '/github'};
 
+  @override
   String get api => _triggerPath[argResults['trigger-type']];
-  String address;
-  int port;
 
   @override
   Future<Null> run() async {

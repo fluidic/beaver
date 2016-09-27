@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
+import './http_command.dart';
 
-import '../config.dart';
-
-class UploadCommand extends Command {
+class UploadCommand extends HttpCommand {
   @override
   String get description => 'Upload config file for the existing project.';
 
@@ -14,36 +12,6 @@ class UploadCommand extends Command {
   String get name => 'upload';
 
   UploadCommand() : super() {
-    argParser.addOption('address', abbr: 'A', callback: (value) {
-      if (value == null) {
-        final config = getConfig();
-        address = config?.get('server', 'address');
-      } else {
-        address = value;
-      }
-
-      if (address == null) {
-        print('address is required.');
-        exit(0);
-      }
-    }, help: 'Address will be requested.');
-
-    argParser.addOption('port', abbr: 'P', callback: (value) {
-      var portStr;
-      if (value == null) {
-        final config = getConfig();
-        portStr = config?.get('server', 'port');
-      } else {
-        portStr = value;
-      }
-
-      if (portStr == null) {
-        port = 80;
-      } else {
-        port = int.parse(portStr);
-      }
-    }, help: 'Port number will be used to request.');
-
     argParser.addOption('config-file',
         abbr: 'c',
         defaultsTo: './beaver.yaml',
@@ -57,9 +25,8 @@ class UploadCommand extends Command {
     }, help: 'The config file is uploaded to this project.');
   }
 
+  @override
   String get api => '/api/upload';
-  String address;
-  int port;
 
   @override
   Future<Null> run() async {
@@ -68,7 +35,7 @@ class UploadCommand extends Command {
         JSON.encode({'id': argResults['project-id'], 'config': config});
 
     final httpClient = new HttpClient();
-    final request = await httpClient.open('POST', address, port, api);
+    final request = await httpClient.openUrl('POST', getServerUrl());
     request.headers.add('Content-Type', 'application/json');
     request.write(data);
     final response = await request.close();

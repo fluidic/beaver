@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
+import './http_command.dart';
 
-import '../config.dart';
-
-class ResultCommand extends Command {
+class ResultCommand extends HttpCommand {
   @override
   String get description => 'Show the result of the build.';
 
@@ -14,36 +12,6 @@ class ResultCommand extends Command {
   String get name => 'result';
 
   ResultCommand() : super() {
-    argParser.addOption('address', abbr: 'A', callback: (value) {
-      if (value == null) {
-        final config = getConfig();
-        address = config?.get('server', 'address');
-      } else {
-        address = value;
-      }
-
-      if (address == null) {
-        print('address is required.');
-        exit(0);
-      }
-    }, help: 'Address will be requested.');
-
-    argParser.addOption('port', abbr: 'P', callback: (value) {
-      var portStr;
-      if (value == null) {
-        final config = getConfig();
-        portStr = config?.get('server', 'port');
-      } else {
-        portStr = value;
-      }
-
-      if (portStr == null) {
-        port = 80;
-      } else {
-        port = int.parse(portStr);
-      }
-    }, help: 'Port number will be used to request.');
-
     argParser.addOption('project-id', abbr: 'p', callback: (value) {
       if (value == null) {
         print('project-id is required.');
@@ -65,14 +33,11 @@ class ResultCommand extends Command {
         help: 'The result format.');
 
     argParser.addOption('count',
-        abbr: 'n',
-        defaultsTo: '1',
-        help: 'Number of results to output.');
+        abbr: 'n', defaultsTo: '1', help: 'Number of results to output.');
   }
 
+  @override
   String get api => '/api/result';
-  String address;
-  int port;
 
   @override
   Future<Null> run() async {
@@ -84,7 +49,7 @@ class ResultCommand extends Command {
     });
 
     final httpClient = new HttpClient();
-    var request = await httpClient.open('POST', address, port, api);
+    var request = await httpClient.openUrl('POST', getServerUrl());
     request.headers.add('Content-Type', 'application/json');
     request.write(data);
     var response = await request.close();
