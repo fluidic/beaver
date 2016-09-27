@@ -1,0 +1,15 @@
+name: beaver_admin_cli
+description: Command line admin interface for the Beaver.
+version: 0.1.0
+author: Fluidic Team <dev@fluidic.io>
+#homepage: https://www.example.com
+
+environment:
+  args: '>=0.13.5 <0.14.0'
+  sdk: '>=1.0.0 <2.0.0'
+
+#dependencies:
+#  lib_name: any
+
+dev_dependencies:
+  test: '>=0.12.0 <0.13.0'
