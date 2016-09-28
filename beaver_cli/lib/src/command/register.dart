@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
-import './http_command.dart';
+import './http.dart';
 
 class RegisterCommand extends HttpCommand {
   @override

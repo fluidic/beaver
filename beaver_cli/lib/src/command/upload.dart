@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import './http_command.dart';
+import './http.dart';
 
 class UploadCommand extends HttpCommand {
   @override

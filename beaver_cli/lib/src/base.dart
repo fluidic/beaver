@@ -1,9 +1,9 @@
 import 'package:args/command_runner.dart';
 
-import './command/register_command.dart';
-import './command/result_command.dart';
-import './command/test_command.dart';
-import './command/upload_command.dart';
+import './command/register.dart';
+import './command/result.dart';
+import './command/test.dart';
+import './command/upload.dart';
 
 CommandRunner getRunner() {
   final runner = new CommandRunner('beaver', 'CLI for beaver CI.');
