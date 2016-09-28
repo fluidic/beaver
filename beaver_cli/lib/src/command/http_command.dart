@@ -58,22 +58,10 @@ abstract class HttpCommand extends Command {
     }, help: 'Path prefix.');
   }
 
-  Uri getServerUrl() {
-    final url = new StringBuffer();
-
-    if (secure) {
-      url.write('https://');
-    } else {
-      url.write('http://');
-    }
-    url.write(address);
-    url.write(':');
-    url.write(port);
-    if (pathPrefix != null) {
-      url.write(pathPrefix);
-    }
-    url.write(api);
-
-    return Uri.parse(url.toString());
-  }
+  Uri getServerUrl() => new Uri(
+      scheme: secure ? 'https' : 'http',
+      host: address,
+      port: port,
+      path: '${pathPrefix}${api}');
 }
+
