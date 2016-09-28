@@ -7,4 +7,5 @@
 library gsutil_wrapper;
 
 export 'src/mb.dart';
+export 'src/rb.dart';
 export 'src/top_level.dart';
