@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
@@ -28,9 +30,23 @@ class TaskInstanceRunner {
       }
     });
 
-    final result = await runBeaver(_task['name'], args, _config);
+    // FIXME: Change this logic after implementing setup(init) command.
+    // FIXME: Passing this to runBeaver causes type error if check mode is on.
+    final config = {
+      'cloud_type': _config['cloud_type'],
+      'service_account_credentials': await _serviceAccountCredentials(
+          _config['service_account_credentials_path']),
+      'project_name': _config['cloud_project_name'],
+      'zone': _config['zone']
+    };
+
+    final result = await runBeaver(_task['name'], args, config);
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
+  }
+
+  Future<Map<String, String>> _serviceAccountCredentials(String path) async {
+    return JSON.decode(await new File(path).readAsString());
   }
 }
 

@@ -1,7 +1,11 @@
 project_name: test
 description: "hello world"
-cloud_type: "gcloud"
-service_account_credentials_path: "/Users/maniagoon/.gcloud/my-project.json"
+
+# FIXME: Remove after implementing setup(init) command.
+cloud_type: gcloud
+service_account_credentials_path: "/Users/maniagoon/.gcloud/maniagoon-test-beaver-ci.json"
+zone: us-central1-a
+cloud_project_name: beaver-ci
 
 triggers:
   - url: "https://github.com/fluidic/beaver"
