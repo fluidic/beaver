@@ -2,15 +2,15 @@ import 'dart:async';
 
 import './top_level.dart';
 
-enum StorageClass { Standard, DurableReducedAvailability, Nearline }
+enum StorageClass { standard, durableReducedAvailability, nearline }
 
 String _storageClassToString(StorageClass clazz) {
   switch (clazz) {
-    case StorageClass.Standard:
+    case StorageClass.standard:
       return 'standard';
-    case StorageClass.Nearline:
+    case StorageClass.nearline:
       return 'nearline';
-    case StorageClass.DurableReducedAvailability:
+    case StorageClass.durableReducedAvailability:
       return 'dra';
   }
   return 'standard';
