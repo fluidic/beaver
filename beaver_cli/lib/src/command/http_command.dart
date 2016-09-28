@@ -15,7 +15,7 @@ abstract class HttpCommand extends Command {
     argParser.addOption('address', abbr: 'A', callback: (value) {
       if (value == null) {
         final config = getConfig();
-        address = config?.get('server', 'address');
+        address = config['server']['address'];
       } else {
         address = value;
       }
@@ -27,36 +27,33 @@ abstract class HttpCommand extends Command {
     }, help: 'Address will be requested.');
 
     argParser.addOption('port', abbr: 'P', callback: (value) {
-      var portStr;
       if (value == null) {
         final config = getConfig();
-        portStr = config?.get('server', 'port');
+        port = config['server']['port'];
       } else {
-        portStr = value;
+        port = value;
       }
 
-      if (portStr == null) {
+      if (port == null) {
         final config = getConfig();
-        final secure = config?.get('server', 'secure') == 'true';
-        if (secure) {
+        if (config['server']['secure']) {
           port = 443;
         } else {
           port = 80;
         }
-      } else {
-        port = int.parse(portStr);
       }
     }, help: 'Port number will be used to request.');
 
     argParser.addFlag('secure', abbr: 'S', callback: (value) {
       final config = getConfig();
-      secure = config?.get('server', 'secure') == 'true';
+      secure = config['server'][secure] ?? false;
     }, help: 'If \'true\', HTTPS will be used.');
 
     argParser.addOption('path-prefix', abbr: 'a', callback: (value) {
       if (value == null) {
         final config = getConfig();
-        pathPrefix = config?.get('server', 'path_prefix');
+        pathPrefix = config['server']['path_prefix'] ?? '';
+        print(pathPrefix);
       }
     }, help: 'Path prefix.');
   }

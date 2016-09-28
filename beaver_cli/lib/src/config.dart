@@ -1,19 +1,18 @@
 import 'dart:io';
 
-import 'package:ini/ini.dart';
+import 'package:path/path.dart' as path;
+import 'package:yaml/yaml.dart';
 
-Config getConfig() {
-  return _loadConfig();
-}
+String _userHome() =>
+    Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
 
-Config _loadConfig() {
-  var file = new File('./.beaverconfig');
+getConfig() {
+  var file = new File('beaver-config.yaml');
   if (!file.existsSync()) {
-    file = new File('~/.beaverconfig');
+    file = new File(path.join(_userHome(), '.beaver-config.yaml'));
     if (!file.existsSync()) {
       return null;
     }
   }
-  final ini = file.readAsStringSync();
-  return new Config.fromString(ini);
+  return loadYaml(file.readAsStringSync());
 }
