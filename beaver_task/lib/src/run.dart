@@ -18,7 +18,7 @@ class TaskRunResult {
 
   final String log;
 
-  TaskRunResult._internal(this.config, this.status, this.log);
+  TaskRunResult(this.config, this.status, this.log);
 }
 
 Future<TaskRunResult> _runTask(
@@ -35,7 +35,7 @@ Future<TaskRunResult> _runTask(
     logger.error(e);
     status = TaskStatus.Failure;
   }
-  return new TaskRunResult._internal(context.config, status, logger.toString());
+  return new TaskRunResult(context.config, status, logger.toString());
 }
 
 String taskStatusToString(TaskStatus status) {
