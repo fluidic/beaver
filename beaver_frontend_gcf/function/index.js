@@ -1,3 +1,5 @@
+'use strict';
+
 const spawn = require('child_process').spawn;
 
 exports.beaver = function beaver(req, res) {
