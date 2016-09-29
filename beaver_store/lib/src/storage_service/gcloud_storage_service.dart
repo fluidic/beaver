@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:beaver_gcloud/src/gcloud_mixin.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 import '../model/project.dart';
 import '../storage_service.dart';
 
-class GCloudStorageService implements StorageService {
+class GCloudStorageService extends Object
+    with GCloudMixin
+    implements StorageService {
   @override
   Future<String> loadConfigFile(String projectId) {
     // TODO: implement loadConfigFile
@@ -48,5 +51,5 @@ class GCloudStorageService implements StorageService {
   }
 
   @override
-  Future<Null> init(Map<String, String> config) => null;
+  Future<Null> init(Map<String, String> config) => super.init(config);
 }
