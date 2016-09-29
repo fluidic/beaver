@@ -46,7 +46,7 @@ abstract class HttpCommand extends Command {
 
     argParser.addFlag('secure', abbr: 'S', callback: (value) {
       final config = getConfig();
-      secure = config['server'][secure] ?? false;
+      secure = config['server']['secure'] ?? false;
     }, help: 'If \'true\', HTTPS will be used.');
 
     argParser.addOption('path-prefix', abbr: 'a', callback: (value) {
