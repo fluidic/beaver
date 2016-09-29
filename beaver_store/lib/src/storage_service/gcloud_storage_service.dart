@@ -68,13 +68,16 @@ class GCloudStorageService extends Object
   }
 
   @override
-  Future<int> getBuildNumber(String projectId) {
-    // TODO: implement getBuildNumber
+  Future<int> getBuildNumber(String projectId) async {
+    return (await _queryProjectModel(projectId)).buildNumber;
   }
 
   @override
-  Future<bool> setBuildNumber(String projectId, int buildNumber) {
-    // TODO: implement setBuildNumber
+  Future<bool> setBuildNumber(String projectId, int buildNumber) async {
+    final projectModel = await _queryProjectModel(projectId);
+    projectModel.buildNumber = buildNumber;
+    await db.commit(inserts: [projectModel]);
+    return true;
   }
 
   @override
