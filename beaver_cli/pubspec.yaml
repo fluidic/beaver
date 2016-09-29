@@ -14,4 +14,5 @@ dependencies:
   yaml: '>=2.1.10 <2.2.0'
 
 dev_dependencies:
+  edit_distance: '>=0.1.0 <0.2.0'
   test: '>=0.12.0 <0.13.0'

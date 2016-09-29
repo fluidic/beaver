@@ -4,3 +4,4 @@ main(List<String> arguments) {
   final runner = beaver_cli.getRunner();
   runner.run(arguments);
 }
+
