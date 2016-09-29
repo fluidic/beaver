@@ -15,4 +15,6 @@ dependencies:
     path: ../beaver_trigger_handler
 
 dev_dependencies:
+  file_helper:
+    path: ../file_helper
   test: '>=0.12.0 <0.13.0'

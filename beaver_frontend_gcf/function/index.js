@@ -3,8 +3,7 @@ const spawn = require('child_process').spawn;
 exports.beaver = function beaver(req, res) {
     const child = spawn('./third_party/dart-linux-x64/dart',
         [
-            '--package-root=./packages_for_gcf',
-            './bin/beaver_ci.dart',
+            'beaver_ci.dart.snapshot',
             req.path,
             JSON.stringify(req.headers),
             JSON.stringify(req.body)

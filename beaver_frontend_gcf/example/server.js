@@ -3,7 +3,7 @@ const app = express();
 
 const bodyParser = require('body-parser');
 
-const index = require('../index');
+const index = require('../upload/index');
 
 app.use(bodyParser.json());
 
