@@ -52,8 +52,9 @@ Future<Null> _uploadConfigFile(String projectId, String config) =>
 
 Future<String> _getResult(
     String projectId, int buildNumber, String format, int count) async {
-  final targetBuildNumbers =
-      new Iterable.generate(min(buildNumber, count), (i) => buildNumber - i);
+  // FIXME: When count is bigger than buildNumber + 1, minus value is created.
+  final targetBuildNumbers = new Iterable.generate(
+      min(buildNumber + 1, count), (i) => buildNumber - i);
   final results = await Future.wait(targetBuildNumbers
       .map((targetNumber) => _beaverStore.getResult(projectId, targetNumber)));
   switch (format) {
