@@ -29,7 +29,7 @@ exports.beaver = function beaver(req, res) {
     child.stderr.on('data', (data) => {
         data = String(data);
         console.log(`stderr: ${data}`);
-        res.send({'status':'failure', 'reason': data});
+        res.send({'status': 'failure', 'reason': data});
     });
 
     child.on('exit', (code) => {
