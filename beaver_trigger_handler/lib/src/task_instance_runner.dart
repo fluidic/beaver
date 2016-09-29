@@ -59,7 +59,6 @@ class TaskInstanceRunResult {
       ..writeln('status: ${taskInstanceStatus}')
       ..writeln('TaskRunResult')
       ..writeln('status: ${taskStatus}')
-      ..writeln('config: ${taskRunResult.config.toString()}')
       ..writeln('log: ${taskRunResult.log}');
     return buffer.toString();
   }
