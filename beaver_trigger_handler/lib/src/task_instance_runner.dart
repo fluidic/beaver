@@ -41,6 +41,7 @@ class TaskInstanceRunner {
     };
 
     final result = await runBeaver(_task['name'], args, config);
+    result.config.clear();
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
   }
