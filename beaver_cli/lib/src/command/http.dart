@@ -53,7 +53,6 @@ abstract class HttpCommand extends Command {
       if (value == null) {
         final config = getConfig();
         pathPrefix = config['server']['path_prefix'] ?? '';
-        print(pathPrefix);
       }
     }, help: 'Path prefix.');
   }
