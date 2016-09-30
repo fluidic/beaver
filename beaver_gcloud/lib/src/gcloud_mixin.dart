@@ -16,7 +16,7 @@ abstract class GCloudMixin {
   ComputeApi get compute => _compute;
 
   Future<Null> init(Map<String, String> config) async {
-    final projectName = config['project_name'];
+    final project = config['project_name'];
     final jsonCredentials = config['service_account_credentials'];
     final credentials =
         new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
@@ -25,10 +25,8 @@ abstract class GCloudMixin {
       ..addAll(Storage.SCOPES);
     var client = await auth.clientViaServiceAccount(credentials, scopes);
 
-    _db =
-        new DatastoreDB(new datastore_impl.DatastoreImpl(client, projectName));
-    _storage = new Storage(client, projectName);
+    _db = new DatastoreDB(new datastore_impl.DatastoreImpl(client, project));
+    _storage = new Storage(client, project);
     _compute = new ComputeApi(client);
   }
 }
-

@@ -27,7 +27,7 @@ Future<CreateVMResult> createVM(
     GCloudMixin context, String project, String zone) async {
   final name = 'beaver-worker-${uniqueName()}';
 
-  final instance = new Instance.fromJson({
+  var instance = new Instance.fromJson({
     'name': name,
     'machineType':
         'projects/beaver-ci/zones/${zone}/machineTypes/n1-standard-1',
@@ -64,13 +64,13 @@ Future<CreateVMResult> createVM(
 
   // IP addresses are not available in PROVISIONING status.
   // FIXME: Avoid polling if possible.
-  Instance ins;
   do {
     await new Future.delayed(new Duration(seconds: 1));
-    ins = await context.compute.instances.get(project, zone, name);
-  } while (ins.status == 'PROVISIONING');
+    instance = await context.compute.instances.get(project, zone, name);
+  } while (instance.status == 'PROVISIONING');
 
-  List<String> networkIPs = ins.networkInterfaces.map((ni) => ni.networkIP);
+  List<String> networkIPs =
+      instance.networkInterfaces.map((ni) => ni.networkIP);
   return new CreateVMResult(status, name, zone, networkIPs);
 }
 
