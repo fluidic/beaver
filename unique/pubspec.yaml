@@ -1,0 +1,14 @@
+name: unique
+description: Create unique identifiers
+version: 0.1.0
+author: Fluidic Team <dev@fluidic.io>
+#homepage: https://www.example.com
+
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+#dependencies:
+#  lib: any
+
+dev_dependencies:
+  test: '>=0.12.0 <0.13.0'
