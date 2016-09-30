@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:googleapis/compute/v1.dart';
-import 'package:uuid/uuid.dart';
+import 'package:unique/unique.dart';
 
 import './gcloud_mixin.dart';
 
@@ -25,7 +25,7 @@ class CreateVMResult {
 
 Future<CreateVMResult> createVM(
     GCloudMixin context, String project, String zone) async {
-  final name = 'beaver-worker-${new Uuid().v4()}';
+  final name = 'beaver-worker-${uniqueName()}';
 
   final instance = new Instance.fromJson({
     'name': name,
