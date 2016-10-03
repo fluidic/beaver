@@ -16,15 +16,18 @@ import 'gcloud_model/project.dart';
 class GCloudStorageService extends Object
     with GCloudMixin
     implements StorageService {
-  Future<String> _allocateProjectId() async {
+  Future<int> _allocateProjectId() async {
     final keyElement = new datastore.KeyElement('BeaverProject', null);
     final key = new datastore.Key([keyElement]);
     final populatedKey = (await db.datastore.allocateIds([key])).first;
-    return populatedKey.elements.first.id.toString();
+    return populatedKey.elements.first.id;
   }
 
   Future<BeaverProject> _queryProjectModel(String projectId) async {
-    final query = db.query(BeaverProject)..filter('projectId =', projectId);
+    final datastoreKey =
+        new datastore.Key.fromParent('BeaverProject', int.parse(projectId));
+    final key = db.modelDB.fromDatastoreKey(datastoreKey);
+    final query = db.query(BeaverProject, ancestorKey: key);
     return query.run().first;
   }
 
@@ -51,7 +54,7 @@ class GCloudStorageService extends Object
   Future<Project> loadProject(String projectId) async {
     final projectModel = await _queryProjectModel(projectId);
     return new Project(projectModel.name)
-      ..id = projectModel.projectId
+      ..id = projectModel.id.toString()
       ..config = new YamlConfig(projectModel.config);
   }
 
@@ -59,14 +62,14 @@ class GCloudStorageService extends Object
   Future<String> saveProject(Project project) async {
     final projectModel = project.id == null
         ? (new BeaverProject()
-          ..projectId = await _allocateProjectId()
+          ..id = await _allocateProjectId()
           ..buildNumber = 0)
         : await _queryProjectModel(project.id);
     projectModel
       ..name = project.name
       ..config = project.config.toString();
     await db.commit(inserts: [projectModel]);
-    return projectModel.projectId;
+    return projectModel.id.toString();
   }
 
   @override
