@@ -40,6 +40,10 @@ Future<Map<String, Object>> apiHandler(
 // FIXME: Don't use StorageServiceType.localMachine here.
 final _beaverStore = new BeaverStore(StorageServiceType.localMachine);
 
+Future<Null> initApiHandler() async {
+  await _beaverStore.init();
+}
+
 /// Set new project. Returns the id of the registered project.
 Future<String> _registerProject(String projectName, String config) async {
   final projectId = await _beaverStore.setNewProject(projectName);

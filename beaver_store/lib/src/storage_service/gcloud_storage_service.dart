@@ -46,4 +46,7 @@ class GCloudStorageService implements StorageService {
   Future<bool> setBuildNumber(String projectId, int buildNumber) {
     // TODO: implement setBuildNumber
   }
+
+  @override
+  Future<Null> init(Map<String, String> config) => null;
 }
