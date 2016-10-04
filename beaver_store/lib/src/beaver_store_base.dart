@@ -14,6 +14,10 @@ class BeaverStore {
   BeaverStore(StorageServiceType storageServiceType)
       : _storageService = getStorageService(storageServiceType);
 
+  Future<Null> init() async {
+    await _storageService.init(new Map());
+  }
+
   /// Return the id of Project.
   Future<String> setNewProject(String name) {
     return _storageService.saveProject(new Project(name));

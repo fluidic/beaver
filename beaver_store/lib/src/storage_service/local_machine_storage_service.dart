@@ -79,4 +79,7 @@ class LocalMachineStorageService implements StorageService {
     _buildNumberMap[projectId] = buildNumber;
     return true;
   }
+
+  @override
+  Future<Null> init(Map<String, String> config) => null;
 }

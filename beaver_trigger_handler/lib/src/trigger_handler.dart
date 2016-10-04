@@ -18,10 +18,11 @@ Logger _createLogger() {
   return logger;
 }
 
-Context _createContext() {
+Future<Context> _createContext() async {
   final logger = _createLogger();
   // FIXME: Don't hardcode.
   final beaverStore = new BeaverStore(StorageServiceType.localMachine);
+  await beaverStore.init();
   return new Context(logger, beaverStore);
 }
 
@@ -66,7 +67,7 @@ Future<int> _triggerHandler(
 }
 
 Future<int> triggerHandler(Trigger trigger, String projectId) async {
-  final context = _createContext();
+  final context = await _createContext();
 
   try {
     return await _triggerHandler(context, trigger, projectId);

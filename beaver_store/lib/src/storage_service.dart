@@ -20,6 +20,8 @@ abstract class StorageService {
   Future<TriggerResult> loadResult(String projectId, int buildNumber);
   Future<bool> saveResult(
       String projectId, int buildNumber, TriggerResult result);
+
+  Future<Null> init(Map<String, String> config);
 }
 
 final Map<StorageServiceType, CreateStorageService> _map = {
