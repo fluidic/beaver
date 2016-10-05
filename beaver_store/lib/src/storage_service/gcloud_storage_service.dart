@@ -41,16 +41,6 @@ class GCloudStorageService extends Object
   }
 
   @override
-  Future<String> loadConfigFile(String projectId) {
-    // TODO: implement loadConfigFile
-  }
-
-  @override
-  Future<Uri> saveConfigFile(String projectId, String config) {
-    // TODO: implement saveConfigFile
-  }
-
-  @override
   Future<Project> loadProject(String projectId) async {
     final projectModel = await _queryProjectModel(projectId);
     return new Project(projectModel.name)

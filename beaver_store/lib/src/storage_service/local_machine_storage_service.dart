@@ -31,23 +31,6 @@ class LocalMachineStorageService implements StorageService {
   }
 
   @override
-  Future<String> loadConfigFile(String projectId) async {
-    final project = await loadProject(projectId);
-    final file = new File(project.configFile.path);
-    final config = await file.readAsString();
-    return config;
-  }
-
-  @override
-  Future<Uri> saveConfigFile(String projectId, String config) async {
-    final dir = await _getProjectDir(projectId);
-    final filePath = path.join(dir.path, 'beaver.yaml');
-    final file = await new File(filePath).create();
-    await file.writeAsString(config);
-    return Uri.parse(filePath);
-  }
-
-  @override
   Future<bool> saveResult(
       String projectId, int buildNumber, TriggerResult result) async {
     final key = projectId + '__' + buildNumber.toString();
