@@ -49,7 +49,7 @@ class TestCommand extends HttpCommand {
     request.headers
         .add('Content-Type', 'application/' + argResults['data-format']);
     if (argResults['trigger-type'] == 'github') {
-      request.headers.add('X-Github-Event', argResults['event']);
+      request.headers.add('X-GitHub-Event', argResults['event']);
     }
     request.write(argResults['data']);
     final response = await request.close();

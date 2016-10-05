@@ -21,7 +21,7 @@ main(List<String> args) async {
     response = await _apiHandler(path.basename(urlPath), data);
   } else if (urlPath.startsWith('/github')) {
     response =
-        await _githubTriggerHandler(path.basename(urlPath), headers, data);
+        await _gitHubTriggerHandler(path.basename(urlPath), headers, data);
   } else {
     throw new Exception('Not Found.');
   }
@@ -43,7 +43,7 @@ Future _apiHandler(String api, Map<String, Object> data) async {
   return {'status': status}..addAll(result);
 }
 
-Future _githubTriggerHandler(String projectId, Map<String, String> headers,
+Future _gitHubTriggerHandler(String projectId, Map<String, String> headers,
     Map<String, Object> data) async {
   var status = 'success';
   var buildNumber;

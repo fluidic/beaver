@@ -1,5 +1,5 @@
 import './base.dart';
-/// For [GithubTriggerParser].
+/// For [GitHubTriggerParser].
 import './trigger_parser/github_trigger_parser.dart';
 import './utils/reflection.dart';
 

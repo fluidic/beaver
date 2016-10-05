@@ -14,10 +14,10 @@ final Map<String, List<String>> _eventMap = {
 };
 
 @TriggerParserClass('github')
-class GithubTriggerParser implements TriggerParser {
+class GitHubTriggerParser implements TriggerParser {
   @override
   ParsedTrigger parse(Context context, Trigger trigger) {
-    context.logger.fine('GithubTriggerParser started.');
+    context.logger.fine('GitHubTriggerParser started.');
     final event = _getEvent(trigger.headers, trigger.data);
     final url = _getUrl(trigger.data);
     return new ParsedTrigger(event, url, trigger.data);
@@ -26,13 +26,13 @@ class GithubTriggerParser implements TriggerParser {
   String _getEvent(Map<String, String> headers, Map<String, Object> data) {
     final mainEvent = headers['x-github-event'];
     if (mainEvent == null) {
-      throw new Exception('This is not the Github event.');
+      throw new Exception('This is not the GitHub event.');
     }
 
     final subEventMap = _eventMap[mainEvent];
     final subEvent = data[subEventMap['key']];
     if (subEvent == null || !subEventMap['values'].contains(subEvent)) {
-      throw new Exception('Not supported Github event.');
+      throw new Exception('Not supported GitHub event.');
     }
 
     return 'github_event_' + mainEvent + '_' + subEvent;

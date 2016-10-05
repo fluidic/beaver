@@ -12,7 +12,7 @@ main() async {
   await initApiHandler();
   final router = shelf_route.router()
     ..add('/api', ['POST'], _apiHandler, exactMatch: false)
-    ..add('/github', ['POST'], _githubTriggerHandler, exactMatch: false);
+    ..add('/github', ['POST'], _gitHubTriggerHandler, exactMatch: false);
   var server =
       await shelf_io.serve(router.handler, InternetAddress.ANY_IP_V4, 8080);
   print('Serving at http://${server.address.host}:${server.port}');
@@ -35,7 +35,7 @@ Future _apiHandler(shelf.Request request) async {
   return new shelf.Response.ok(JSON.encode(responseBody));
 }
 
-Future _githubTriggerHandler(shelf.Request request) async {
+Future _gitHubTriggerHandler(shelf.Request request) async {
   final projectId = request.url.pathSegments.last;
   final requestBody = JSON.decode(await request.readAsString());
 
