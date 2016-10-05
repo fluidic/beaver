@@ -5,4 +5,3 @@
 library unique;
 
 export 'src/unique_base.dart';
-
