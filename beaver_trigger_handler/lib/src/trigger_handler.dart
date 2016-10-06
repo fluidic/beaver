@@ -32,10 +32,18 @@ List _getTriggerConfigs(Project project) {
 
 Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
   return triggerConfigs.firstWhere((triggerConfig) {
-    if (triggerConfig['url'] == parsedTrigger.url &&
-        triggerConfig['events'].contains(parsedTrigger.event)) {
+    if (triggerConfig['url'] != parsedTrigger.url) {
+      return false;
+    }
+    final event = triggerConfig['events'].firstWhere((event) {
+      if (event == parsedTrigger.event || parsedTrigger.event.contains(event)) {
+        return true;
+      }
+    }, orElse: () => null);
+    if (event != null) {
       return true;
     }
+    return false;
   });
 }
 
