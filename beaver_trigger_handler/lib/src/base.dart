@@ -27,6 +27,7 @@ class Event {
   Event(this.type, this.main, {this.sub});
 
   factory Event.fromString(String event) {
+    // FIXME: a better way?
     final list = event.split('_event_');
     final type = list[0];
     final rest = list[1];
@@ -103,6 +104,7 @@ class ParsedTrigger {
       throw new Exception('Not a trigger data.');
     }
 
+    // FIXME: a better way?
     var keys;
     try {
       keys = str.split(':')[1];
