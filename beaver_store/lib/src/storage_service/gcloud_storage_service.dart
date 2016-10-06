@@ -100,7 +100,9 @@ class GCloudStorageService extends Object
     final trigger = new Trigger(buildModel.triggerType,
         JSON.decode(buildModel.triggerHeaders), triggerData);
     final parsedTrigger = new ParsedTrigger(
-        buildModel.triggerEvent, buildModel.triggerUrl, triggerData);
+        new Event.fromString(buildModel.triggerEvent),
+        buildModel.triggerUrl,
+        triggerData);
     final taskInstance = JSON.decode(buildModel.taskInstance);
     final taskConfig = new YamlConfig(buildModel.taskConfig);
     final taskRunResult = new TaskRunResult(
