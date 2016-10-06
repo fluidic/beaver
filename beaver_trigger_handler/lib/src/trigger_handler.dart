@@ -35,15 +35,10 @@ Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
     if (triggerConfig['url'] != parsedTrigger.url) {
       return false;
     }
-    final event = triggerConfig['events'].firstWhere((event) {
-      if (event == parsedTrigger.event || parsedTrigger.event.contains(event)) {
-        return true;
-      }
-    }, orElse: () => null);
-    if (event != null) {
-      return true;
+    for (final eventStr in triggerConfig['events']) {
+      final event = new Event.fromString(eventStr);
+      return event.isMatch(parsedTrigger.event);
     }
-    return false;
   });
 }
 

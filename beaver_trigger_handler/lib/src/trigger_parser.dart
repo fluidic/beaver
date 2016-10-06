@@ -5,10 +5,11 @@ import './utils/reflection.dart';
 
 abstract class TriggerParser {
   ParsedTrigger parse(Context context, Trigger trigger);
+  Iterable<String> getMainEvents();
 }
 
 class ParsedTrigger {
-  final String event;
+  final Event event;
   // FIXME: Url is valid and unique even though trigger is not the repository?
   // e.g. For GCloud Pub/Sub, can we use the url as a parameter here?
   final String url;
@@ -65,9 +66,18 @@ class TriggerParserClass {
   const TriggerParserClass(this.name);
 }
 
-ParsedTrigger parseTrigger(Context context, Trigger trigger) {
+TriggerParser _getTriggerParser(String type) {
   final triggerParserClassMap = loadClassMapByAnnotation(TriggerParserClass);
-  final triggerParserClass = triggerParserClassMap[trigger.type];
-  final triggerParser = newInstance(triggerParserClass, []);
+  final triggerParserClass = triggerParserClassMap[type];
+  return newInstance(triggerParserClass, []);
+}
+
+ParsedTrigger parseTrigger(Context context, Trigger trigger) {
+  final triggerParser = _getTriggerParser(trigger.type);
   return triggerParser.parse(context, trigger);
+}
+
+Iterable<String> getMainEvents(String type) {
+  final triggerParser = _getTriggerParser(type);
+  return triggerParser.getMainEvents();
 }

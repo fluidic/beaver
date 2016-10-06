@@ -115,6 +115,11 @@ final Map<String, Map<String, Object>> _eventMap = {
 @TriggerParserClass('github')
 class GitHubTriggerParser implements TriggerParser {
   @override
+  Iterable<String> getMainEvents() {
+    return _eventMap.keys;
+  }
+
+  @override
   ParsedTrigger parse(Context context, Trigger trigger) {
     context.logger.fine('GitHubTriggerParser started.');
     final event = _getEvent(trigger.headers, trigger.data);
@@ -122,7 +127,7 @@ class GitHubTriggerParser implements TriggerParser {
     return new ParsedTrigger(event, url, trigger.data);
   }
 
-  String _getEvent(Map<String, String> headers, Map<String, Object> data) {
+  Event _getEvent(Map<String, String> headers, Map<String, Object> data) {
     final mainEvent = headers['x-github-event'];
     if (mainEvent == null) {
       throw new Exception('This is not the GitHub event.');
@@ -130,12 +135,12 @@ class GitHubTriggerParser implements TriggerParser {
 
     final subEventMap = _eventMap[mainEvent]['sub'];
     if (subEventMap == null) {
-      return 'github_event_' + mainEvent;
+      return new Event('github', mainEvent);
     }
 
     final subEvent = data[subEventMap['key']];
     // FIXME: Need to validate subEvent?
-    return 'github_event_' + mainEvent + '_' + subEvent;
+    return new Event('github', mainEvent, sub: subEvent);
   }
 
   String _getUrl(Map<String, Object> data) {
