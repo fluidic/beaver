@@ -79,15 +79,3 @@ Future<int> triggerHandler(Trigger trigger, String projectId) async {
     throw e;
   }
 }
-
-class TriggerResult {
-  final Project project;
-  final int buildNumber;
-  final Trigger trigger;
-  final ParsedTrigger parsedTrigger;
-  final Map<String, Object> taskInstance;
-  final TaskInstanceRunResult taskInstanceRunResult;
-
-  TriggerResult(this.project, this.buildNumber, this.trigger,
-      this.parsedTrigger, this.taskInstance, this.taskInstanceRunResult);
-}
