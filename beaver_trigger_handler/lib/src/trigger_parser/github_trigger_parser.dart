@@ -1,15 +1,88 @@
 import '../base.dart';
 import '../trigger_parser.dart';
 
-// FIXME: Add more events from https://developer.github.com/v3/activity/events/types/.
+// Refered from https://developer.github.com/v3/activity/events/types/.
 final Map<String, List<String>> _eventMap = {
+  'commit_comment': {
+    'key': 'action',
+    'values': ['created']
+  },
   'create': {
+    'key': 'ref_type',
+    'values': ['repository', 'branch', 'tag']
+  },
+  'delete': {
     'key': 'ref_type',
     'values': ['branch', 'tag']
   },
+  'deployment': {},
+  'deployment_status': {},
+  'follow': {},
+  'fork': {},
+  'gist': {
+    'key': 'action',
+    'values': ['create', 'update']
+  },
+  'gollum': {},
+  'issue_comment': {
+    'key': 'action',
+    'values': ['created', 'edited', 'deleted']
+  },
+  'issue': {
+    'key': 'action',
+    'values': [
+      'assigned',
+      'unassigned',
+      'labeled',
+      'unlabeled',
+      'opened',
+      'edited',
+      'closed',
+      'reopened'
+    ]
+  },
+  'member': {
+    'key': 'action',
+    'values': ['added']
+  },
+  'membership': {
+    'key': 'action',
+    'values': ['added', 'removed']
+  },
+  'page_build': {},
+  'public': {},
   'pull_request': {
     'key': 'action',
-    'values': ['opened', 'reopened', 'synchronized']
+    'values': [
+      'assigned',
+      'unassigned',
+      'labeled',
+      'unlabeled',
+      'opened',
+      'edited',
+      'closed',
+      'reopened',
+      'synchronize'
+    ]
+  },
+  'pull_request_review_comment': {
+    'key': 'action',
+    'values': ['created', 'edited', 'deleted']
+  },
+  'push': {},
+  'release': {
+    'key': 'action',
+    'values': ['published']
+  },
+  'repository': {
+    'key': 'action',
+    'values': ['created', 'deleted', 'publicized', 'privatized']
+  },
+  'status': {},
+  'team_add': {},
+  'watch': {
+    'key': 'action',
+    'values': ['started']
   }
 };
 
