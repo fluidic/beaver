@@ -43,7 +43,6 @@ class BeaverStore {
       throw new Exception('Project name is not valid.');
     }
     project.config = config;
-    project.configFile = await _storageService.saveConfigFile(project.id, yaml);
     await _storageService.saveProject(project);
   }
 

@@ -4,7 +4,6 @@ class Project {
   final String name;
   String id;
   Config config;
-  Uri configFile;
 
   Project(this.name);
 
@@ -14,8 +13,7 @@ class Project {
     buffer
       ..writeln('name: ${name}')
       ..writeln('id: ${id}')
-      ..writeln('config: ${config}')
-      ..writeln('configFile: ${configFile}');
+      ..writeln('config: ${config}');
     return buffer.toString();
   }
 }
