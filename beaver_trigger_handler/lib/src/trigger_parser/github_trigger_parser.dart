@@ -1,88 +1,114 @@
 import '../base.dart';
 import '../trigger_parser.dart';
 
-// Refered from https://developer.github.com/v3/activity/events/types/.
-final Map<String, List<String>> _eventMap = {
+// Referred from https://developer.github.com/v3/activity/events/types/.
+final Map<String, Map<String, Object>> _eventMap = {
   'commit_comment': {
-    'key': 'action',
-    'values': ['created']
+    'sub': {
+      'key': 'action',
+      'values': ['created']
+    }
   },
   'create': {
-    'key': 'ref_type',
-    'values': ['repository', 'branch', 'tag']
+    'sub': {
+      'key': 'ref_type',
+      'values': ['repository', 'branch', 'tag']
+    }
   },
   'delete': {
-    'key': 'ref_type',
-    'values': ['branch', 'tag']
+    'sub': {
+      'key': 'ref_type',
+      'values': ['branch', 'tag']
+    }
   },
   'deployment': {},
   'deployment_status': {},
   'follow': {},
   'fork': {},
   'gist': {
-    'key': 'action',
-    'values': ['create', 'update']
+    'sub': {
+      'key': 'action',
+      'values': ['create', 'update']
+    }
   },
   'gollum': {},
   'issue_comment': {
-    'key': 'action',
-    'values': ['created', 'edited', 'deleted']
+    'sub': {
+      'key': 'action',
+      'values': ['created', 'edited', 'deleted']
+    }
   },
   'issue': {
-    'key': 'action',
-    'values': [
-      'assigned',
-      'unassigned',
-      'labeled',
-      'unlabeled',
-      'opened',
-      'edited',
-      'closed',
-      'reopened'
-    ]
+    'sub': {
+      'key': 'action',
+      'values': [
+        'assigned',
+        'unassigned',
+        'labeled',
+        'unlabeled',
+        'opened',
+        'edited',
+        'closed',
+        'reopened'
+      ]
+    }
   },
   'member': {
-    'key': 'action',
-    'values': ['added']
+    'sub': {
+      'key': 'action',
+      'values': ['added']
+    }
   },
   'membership': {
-    'key': 'action',
-    'values': ['added', 'removed']
+    'sub': {
+      'key': 'action',
+      'values': ['added', 'removed']
+    }
   },
   'page_build': {},
   'public': {},
   'pull_request': {
-    'key': 'action',
-    'values': [
-      'assigned',
-      'unassigned',
-      'labeled',
-      'unlabeled',
-      'opened',
-      'edited',
-      'closed',
-      'reopened',
-      'synchronize'
-    ]
+    'sub': {
+      'key': 'action',
+      'values': [
+        'assigned',
+        'unassigned',
+        'labeled',
+        'unlabeled',
+        'opened',
+        'edited',
+        'closed',
+        'reopened',
+        'synchronize'
+      ]
+    }
   },
   'pull_request_review_comment': {
-    'key': 'action',
-    'values': ['created', 'edited', 'deleted']
+    'sub': {
+      'key': 'action',
+      'values': ['created', 'edited', 'deleted']
+    }
   },
   'push': {},
   'release': {
-    'key': 'action',
-    'values': ['published']
+    'sub': {
+      'key': 'action',
+      'values': ['published']
+    }
   },
   'repository': {
-    'key': 'action',
-    'values': ['created', 'deleted', 'publicized', 'privatized']
+    'sub': {
+      'key': 'action',
+      'values': ['created', 'deleted', 'publicized', 'privatized']
+    }
   },
   'status': {},
   'team_add': {},
   'watch': {
-    'key': 'action',
-    'values': ['started']
+    'sub': {
+      'key': 'action',
+      'values': ['started']
+    }
   }
 };
 
@@ -102,12 +128,13 @@ class GitHubTriggerParser implements TriggerParser {
       throw new Exception('This is not the GitHub event.');
     }
 
-    final subEventMap = _eventMap[mainEvent];
-    final subEvent = data[subEventMap['key']];
-    if (subEvent == null || !subEventMap['values'].contains(subEvent)) {
-      throw new Exception('Not supported GitHub event.');
+    final subEventMap = _eventMap[mainEvent]['sub'];
+    if (subEventMap == null) {
+      return 'github_event_' + mainEvent;
     }
 
+    final subEvent = data[subEventMap['key']];
+    // FIXME: Need to validate subEvent?
     return 'github_event_' + mainEvent + '_' + subEvent;
   }
 
