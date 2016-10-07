@@ -5,8 +5,7 @@ import 'dart:math';
 
 final Random _rnd = new Random.secure();
 
-final List<int> _letters =
-    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.codeUnits;
+final List<int> _letters = 'abcdefghijklmnopqrstuvwxyz'.codeUnits;
 
 const int _defaultLength = 10;
 
