@@ -32,8 +32,12 @@ class ResultCommand extends HttpCommand {
         allowed: ['text', 'html'],
         help: 'The result format.');
 
-    argParser.addOption('count',
-        abbr: 'n', defaultsTo: '1', help: 'Number of results to output.');
+    argParser.addOption('count', abbr: 'n', defaultsTo: '1', callback: (value) {
+      if (int.parse(value, onError: (source) => -1) <= 0) {
+        print('The option -n requires a positive integer.');
+        exit(0);
+      }
+    }, help: 'Number of results to output.');
   }
 
   @override
