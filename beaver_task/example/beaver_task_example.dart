@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:beaver_task/beaver_task.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
@@ -18,19 +16,12 @@ class MyTask implements Task {
       ]).execute(context);
 }
 
-Map<String, String> serviceAccountCredentials() {
-  final jsonCredentialsPath =
-      Platform.environment['SERVICE_ACCOUNT_CREDENTIALS_PATH'];
-  return JSON.decode(new File(jsonCredentialsPath).readAsStringSync());
-}
-
 // FIXME: Get the task name from the message
 main(args, message) => runBeaver(
     'my_task',
     [],
     {
       'cloud_type': 'gcloud',
-      'service_account_credentials': serviceAccountCredentials(),
       'project_name': 'beaver-ci',
       'zone': 'us-central1-a'
     },

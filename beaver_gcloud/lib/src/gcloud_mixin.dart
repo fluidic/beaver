@@ -1,10 +1,12 @@
 import 'dart:async';
 
-import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis_auth_default_credentials/googleapis_auth_default_credentials.dart';
 import 'package:gcloud/db.dart';
 import 'package:gcloud/storage.dart';
 import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
 import 'package:googleapis/compute/v1.dart';
+import 'package:http/http.dart' as http;
 
 abstract class GCloudMixin {
   Storage _storage;
@@ -17,16 +19,19 @@ abstract class GCloudMixin {
 
   Future<Null> init(Map<String, String> config) async {
     final project = config['project_name'];
-    final jsonCredentials = config['service_account_credentials'];
-    final credentials =
-        new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
+
+    final client = new http.Client();
     final scopes = [ComputeApi.ComputeScope]
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
-    var client = await auth.clientViaServiceAccount(credentials, scopes);
+    AccessCredentials credentials =
+        await obtainDefaultAccessCredentials(scopes, client);
+    AuthClient authClient = authenticatedClient(client, credentials);
 
-    _db = new DatastoreDB(new datastore_impl.DatastoreImpl(client, project));
-    _storage = new Storage(client, project);
-    _compute = new ComputeApi(client);
+    _db =
+        new DatastoreDB(new datastore_impl.DatastoreImpl(authClient, project));
+    _storage = new Storage(authClient, project);
+    _compute = new ComputeApi(authClient);
   }
 }
+

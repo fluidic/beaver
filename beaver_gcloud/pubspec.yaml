@@ -11,8 +11,13 @@ dependencies:
   gcloud: '>=0.3.0 <0.4.0'
   googleapis: any
   googleapis_auth: any
+  http: '>=0.11.3 <0.12.0'
   unique:
     path: ../unique
+  googleapis_auth_default_credentials:
+    git:
+      url: https://github.com/kseo/googleapis_auth_default_credentials.git
+      ref: gcf
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
