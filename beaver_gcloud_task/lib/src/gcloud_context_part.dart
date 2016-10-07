@@ -7,7 +7,7 @@ import 'package:beaver_task/beaver_task.dart';
 class GCloudContextPart extends ContextPart with GCloudMixin {
   GCloudContextPart();
 
-  Future<Null> setUp(Config config) => super.init(config);
+  Future<Null> setUp(Config config) =>
+      super.init(config['project_name'], config['zone']);
   Future<Null> tearDown() async {}
 }
-

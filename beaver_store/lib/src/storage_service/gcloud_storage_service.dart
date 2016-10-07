@@ -131,7 +131,4 @@ class GCloudStorageService extends Object
     await db.commit(inserts: [projectModel]);
     return true;
   }
-
-  @override
-  Future<Null> init(Map<String, String> config) => super.init(config);
 }

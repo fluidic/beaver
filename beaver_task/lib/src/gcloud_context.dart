@@ -4,7 +4,7 @@ import 'package:beaver_gcloud/beaver_gcloud.dart';
 
 import './base.dart';
 
-class GCloudContext extends GCloudMixin implements Context {
+class GCloudContext extends GCloudBase implements Context {
   final Config _config;
   final Logger _logger;
   final Map<String, ContextPart> _partMap;
@@ -20,5 +20,5 @@ class GCloudContext extends GCloudMixin implements Context {
 
   GCloudContext(this._config, this._logger, this._partMap);
 
-  Future<Null> setUp() => super.init(_config);
+  Future<Null> setUp() => super.init(_config['project_name'], _config['zone']);
 }

@@ -7,19 +7,61 @@ import 'package:gcloud/storage.dart';
 import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
 import 'package:googleapis/compute/v1.dart';
 import 'package:http/http.dart' as http;
+import 'package:unique/unique.dart';
 
-abstract class GCloudMixin {
+enum CreateVMStatus { Success, Error }
+
+class CreateVMResult {
+  // Status of CreateVM.
+  final CreateVMStatus status;
+
+  // The name of the zone for the instance.
+  final String zone;
+
+  // Name of the instance resource.
+  final String name;
+
+  // List of network IP addresses.
+  final List<String> networkIPs;
+
+  CreateVMResult(this.status, this.name, this.zone, this.networkIPs);
+}
+
+enum DeleteVMStatus { Success, Error }
+
+class DeleteVMResult {
+  // Status of DeleteVM.
+  final DeleteVMStatus status;
+
+  DeleteVMResult(this.status);
+}
+
+abstract class GCloud {
+  Storage get storage;
+  DatastoreDB get db;
+  ComputeApi get compute;
+
+  Future<CreateVMResult> createVM();
+  Future<DeleteVMResult> deleteVM(String instanceName);
+}
+
+abstract class GCloudMixin implements GCloud {
   Storage _storage;
   DatastoreDB _db;
   ComputeApi _compute;
+  String _project;
+  String _zone;
 
+  @override
   Storage get storage => _storage;
+
+  @override
   DatastoreDB get db => _db;
+
+  @override
   ComputeApi get compute => _compute;
 
-  Future<Null> init(Map<String, String> config) async {
-    final project = config['project_name'];
-
+  Future<Null> init(String project, String zone) async {
     final client = new http.Client();
     final scopes = [ComputeApi.ComputeScope]
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
@@ -32,6 +74,69 @@ abstract class GCloudMixin {
         new DatastoreDB(new datastore_impl.DatastoreImpl(authClient, project));
     _storage = new Storage(authClient, project);
     _compute = new ComputeApi(authClient);
+    _project = project;
+    _zone = zone;
+  }
+
+  @override
+  Future<CreateVMResult> createVM() async {
+    final name = 'beaver-worker-${uniqueName()}';
+
+    var instance = new Instance.fromJson({
+      'name': name,
+      'machineType':
+          'projects/beaver-ci/zones/${_zone}/machineTypes/n1-standard-1',
+      "disks": [
+        {
+          "type": "PERSISTENT",
+          "boot": true,
+          "mode": "READ_WRITE",
+          "autoDelete": true,
+          "deviceName": name,
+          "initializeParams": {
+            "sourceImage":
+                "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
+            "diskType":
+                "projects/beaver-ci/zones/${_zone}/diskTypes/pd-standard",
+            "diskSizeGb": "10"
+          }
+        }
+      ],
+      "networkInterfaces": [
+        {
+          "network": "projects/beaver-ci/global/networks/default",
+          "subnetwork":
+              "projects/beaver-ci/regions/us-central1/subnetworks/default",
+          "accessConfigs": [
+            {"name": "External NAT", "type": "ONE_TO_ONE_NAT"}
+          ]
+        }
+      ],
+    });
+    Operation op = await compute.instances.insert(instance, _project, _zone);
+    CreateVMStatus status =
+        op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
+
+    // IP addresses are not available in PROVISIONING status.
+    // FIXME: Avoid polling if possible.
+    do {
+      await new Future.delayed(new Duration(seconds: 1));
+      instance = await compute.instances.get(_project, _zone, name);
+    } while (instance.status == 'PROVISIONING');
+
+    List<String> networkIPs =
+        instance.networkInterfaces.map((ni) => ni.networkIP);
+    return new CreateVMResult(status, name, _zone, networkIPs);
+  }
+
+  @override
+  Future<DeleteVMResult> deleteVM(String instanceName) async {
+    Operation op =
+        await compute.instances.delete(_project, _zone, instanceName);
+    DeleteVMStatus status =
+        op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
+    return new DeleteVMResult(status);
   }
 }
 
+abstract class GCloudBase extends Object with GCloudMixin {}
