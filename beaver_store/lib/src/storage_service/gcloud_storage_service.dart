@@ -73,7 +73,7 @@ class GCloudStorageService extends Object
       ..triggerData = JSON.encode(result.trigger.data)
       ..triggerType = result.trigger.type
       ..triggerHeaders = JSON.encode(result.trigger.headers)
-      ..triggerEvent = result.parsedTrigger.event
+      ..triggerEvent = result.parsedTrigger.event.toString()
       ..triggerUrl = result.parsedTrigger.url
       ..taskInstance = JSON.encode(result.taskInstance)
       ..taskInstanceStatus =
