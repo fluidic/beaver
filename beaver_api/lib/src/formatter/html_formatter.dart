@@ -50,12 +50,16 @@ class HtmlFormatter implements Formatter {
         builder.text(result.buildNumber.toString());
       });
       builder.element('td', nest: () {
-        builder.text(result.taskInstanceRunResult.status ==
-            TaskInstanceStatus.success ? "Success" : "Failure");
+        builder.text(
+            result.taskInstanceRunResult.status == TaskInstanceStatus.success
+                ? "Success"
+                : "Failure");
       });
       builder.element('td', nest: () {
         builder.text(result.taskInstanceRunResult.taskRunResult.status ==
-            TaskStatus.Success ? "Success" : "Failure");
+                TaskStatus.Success
+            ? "Success"
+            : "Failure");
       });
       builder.element('td', nest: () {
         builder.text(result.parsedTrigger.event);
