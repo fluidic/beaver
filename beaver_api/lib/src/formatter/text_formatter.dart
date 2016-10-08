@@ -33,6 +33,9 @@ class TextFormatter implements Formatter {
 
   String toText() {
     final buffer = new StringBuffer();
+    if (_results.length == 0) {
+      return "No results found.";
+    }
 
     buffer.writeln("${_results[0].project.name} (${_results[0].project.id})");
     _results.forEach((result) {

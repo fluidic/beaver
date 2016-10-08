@@ -80,10 +80,16 @@ class HtmlFormatter implements Formatter {
         });
       });
       builder.element('body', nest: () {
-        builder.element('h1', nest: () {
-          builder
-              .text('${_results[0].project.name} (${_results[0].project.id})');
-        });
+        if (_results.length == 0) {
+          builder.element('h1', nest: () {
+            builder.text('No results found.');
+          });
+        } else {
+          builder.element('h1', nest: () {
+            builder.text(
+                '${_results[0].project.name} (${_results[0].project.id})');
+          });
+        }
         _buildTable(builder);
       });
     });
