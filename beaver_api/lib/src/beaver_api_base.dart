@@ -41,6 +41,7 @@ Future<Map<String, Object>> apiHandler(
 }
 
 class Context {
+  // FIXME: Add logger.
   final BeaverStore beaverStore;
   Context(this.beaverStore);
 }
