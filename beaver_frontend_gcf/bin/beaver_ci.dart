@@ -16,6 +16,8 @@ main(List<String> args) async {
   print(headers);
   print(data);
 
+  await initApiHandler();
+
   var response;
   if (urlPath.startsWith('/api')) {
     response = await _apiHandler(path.basename(urlPath), data);

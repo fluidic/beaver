@@ -57,5 +57,5 @@ class LocalMachineStorageService implements StorageService {
   }
 
   @override
-  Future<Null> init(Map<String, String> config) => null;
+  Future<Null> initialize(Map<String, String> config) => null;
 }

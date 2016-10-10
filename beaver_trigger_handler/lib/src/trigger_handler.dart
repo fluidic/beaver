@@ -22,7 +22,7 @@ Future<Context> _createContext() async {
   final logger = _createLogger();
   // FIXME: Don't hardcode.
   final beaverStore = new BeaverStore(StorageServiceType.localMachine);
-  await beaverStore.init();
+  await beaverStore.initialize();
   return new Context(logger, beaverStore);
 }
 

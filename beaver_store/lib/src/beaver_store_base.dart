@@ -14,8 +14,10 @@ class BeaverStore {
   BeaverStore(StorageServiceType storageServiceType)
       : _storageService = getStorageService(storageServiceType);
 
-  Future<Null> init() async {
-    await _storageService.init(new Map());
+  Future<Null> initialize() async {
+    // FIXME: Don't hardcode.
+    await _storageService
+        .initialize({'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
   }
 
   /// Return the id of Project.
