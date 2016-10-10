@@ -53,11 +53,11 @@ class ResultCommand extends HttpCommand {
     });
 
     final httpClient = new HttpClient();
-    var request = await httpClient.openUrl('POST', getServerUrl());
+    final request = await httpClient.openUrl('POST', getServerUrl());
     request.headers.add('Content-Type', 'application/json');
     request.write(data);
-    var response = await request.close();
-    var responseBody = await response.transform(UTF8.decoder).join();
+    final response = await request.close();
+    final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
     final jsonBody = JSON.decode(responseBody);
