@@ -47,8 +47,7 @@ class Context {
 
 Future<Context> _createContext() async {
   // FIXME: Don't use StorageServiceType.localMachine here.
-  final beaverStore = new BeaverStore(StorageServiceType.localMachine);
-  await beaverStore.initialize(null);
+  final beaverStore = await getBeaverStore(StorageServiceType.localMachine);
   return new Context(beaverStore);
 }
 
