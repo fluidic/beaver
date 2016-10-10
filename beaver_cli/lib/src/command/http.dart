@@ -57,10 +57,9 @@ abstract class HttpCommand extends Command {
     }, help: 'Path prefix.');
   }
 
-  Uri getServerUrl() => new Uri(
+  Uri getServerUrl({String additionalPath: ''}) => new Uri(
       scheme: secure ? 'https' : 'http',
       host: address,
       port: port,
-      path: '${pathPrefix}${api}');
+      path: '${pathPrefix}${api}${additionalPath}');
 }
-
