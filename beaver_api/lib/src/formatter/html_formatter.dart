@@ -50,12 +50,16 @@ class HtmlFormatter implements Formatter {
         builder.text(result.buildNumber.toString());
       });
       builder.element('td', nest: () {
-        builder.text(result.taskInstanceRunResult.status ==
-            TaskInstanceStatus.success ? "Success" : "Failure");
+        builder.text(
+            result.taskInstanceRunResult.status == TaskInstanceStatus.success
+                ? "Success"
+                : "Failure");
       });
       builder.element('td', nest: () {
         builder.text(result.taskInstanceRunResult.taskRunResult.status ==
-            TaskStatus.Success ? "Success" : "Failure");
+                TaskStatus.Success
+            ? "Success"
+            : "Failure");
       });
       builder.element('td', nest: () {
         builder.text(result.parsedTrigger.event);
@@ -80,10 +84,16 @@ class HtmlFormatter implements Formatter {
         });
       });
       builder.element('body', nest: () {
-        builder.element('h1', nest: () {
-          builder
-              .text('${_results[0].project.name} (${_results[0].project.id})');
-        });
+        if (_results.length == 0) {
+          builder.element('h1', nest: () {
+            builder.text('No results found.');
+          });
+        } else {
+          builder.element('h1', nest: () {
+            builder.text(
+                '${_results[0].project.name} (${_results[0].project.id})');
+          });
+        }
         _buildTable(builder);
       });
     });

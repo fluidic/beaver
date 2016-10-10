@@ -14,10 +14,14 @@ class TextFormatter implements Formatter {
   void _writeResult(TriggerResult result, StringBuffer buffer) {
     final items = {
       "Build Number": result.buildNumber.toString(),
-      "TaskInstance Status": result.taskInstanceRunResult.status ==
-          TaskInstanceStatus.success ? "Success" : "Failure",
+      "TaskInstance Status":
+          result.taskInstanceRunResult.status == TaskInstanceStatus.success
+              ? "Success"
+              : "Failure",
       "Task Status": result.taskInstanceRunResult.taskRunResult.status ==
-          TaskStatus.Success ? "Success" : "Failure",
+              TaskStatus.Success
+          ? "Success"
+          : "Failure",
       "Trigger Event": result.parsedTrigger.event,
       "Trigger URL": result.parsedTrigger.url,
       "Log": result.taskInstanceRunResult.taskRunResult.log,
@@ -33,6 +37,9 @@ class TextFormatter implements Formatter {
 
   String toText() {
     final buffer = new StringBuffer();
+    if (_results.length == 0) {
+      return "No results found.";
+    }
 
     buffer.writeln("${_results[0].project.name} (${_results[0].project.id})");
     _results.forEach((result) {

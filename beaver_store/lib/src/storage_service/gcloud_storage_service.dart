@@ -94,7 +94,13 @@ class GCloudStorageService extends Object
   @override
   Future<TriggerResult> loadResult(String projectId, int buildNumber) async {
     final buildModel = await _queryBuildModel(projectId, buildNumber);
+    if (buildModel == null) {
+      throw new NullThrownError();
+    }
     final project = await loadProject(projectId);
+    if (project == null) {
+      throw new NullThrownError();
+    }
     final triggerData = JSON.decode(buildModel.triggerData);
     final trigger = new Trigger(buildModel.triggerType,
         JSON.decode(buildModel.triggerHeaders), triggerData);
