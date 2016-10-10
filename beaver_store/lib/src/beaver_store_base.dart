@@ -14,10 +14,8 @@ class BeaverStore {
   BeaverStore(StorageServiceType storageServiceType)
       : _storageService = getStorageService(storageServiceType);
 
-  Future<Null> initialize() async {
-    // FIXME: Don't hardcode.
-    await _storageService
-        .initialize({'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
+  Future<Null> initialize(Map<String, Object> config) async {
+    await _storageService.initialize(config);
   }
 
   /// Return the id of Project.
@@ -55,4 +53,11 @@ class BeaverStore {
 
   Future<TriggerResult> getResult(String id, int buildNumber) =>
       _storageService.loadResult(id, buildNumber);
+}
+
+Future<BeaverStore> getBeaverStore(
+    StorageServiceType type, {Map<String, Object> config}) async {
+  final beaverStore = new BeaverStore(type);
+  await beaverStore.initialize(config);
+  return beaverStore;
 }
