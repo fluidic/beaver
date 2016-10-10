@@ -6,6 +6,14 @@ import 'package:beaver_store/beaver_store.dart';
 import './formatter/html_formatter.dart';
 import './formatter/text_formatter.dart';
 
+StorageServiceType _storageServiceType;
+Map<String, Object> _storageServiceConfig;
+
+void initApiHandler(StorageServiceType type, {Map<String, Object> config}) {
+  _storageServiceConfig = config;
+  _storageServiceType = type;
+}
+
 Future<Map<String, Object>> apiHandler(
     String api, Map<String, Object> data) async {
   final context = await _createContext();
@@ -47,8 +55,8 @@ class Context {
 }
 
 Future<Context> _createContext() async {
-  // FIXME: Don't use StorageServiceType.localMachine here.
-  final beaverStore = await getBeaverStore(StorageServiceType.localMachine);
+  final beaverStore =
+      await getBeaverStore(_storageServiceType, config: _storageServiceConfig);
   return new Context(beaverStore);
 }
 

@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:beaver_api/beaver_api.dart';
+import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_route/shelf_route.dart' as shelf_route;
 
 main() async {
+  initApiHandler(StorageServiceType.localMachine);
   final router = shelf_route.router()
     ..add('/api', ['POST'], _apiHandler, exactMatch: false)
     ..add('/github', ['POST'], _gitHubTriggerHandler, exactMatch: false);

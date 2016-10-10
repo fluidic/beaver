@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:beaver_api/beaver_api.dart';
+import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:path/path.dart' as path;
 
@@ -15,6 +16,10 @@ main(List<String> args) async {
   print(urlPath);
   print(headers);
   print(data);
+
+  // FIXME: Don't hardcode.
+  initApiHandler(StorageServiceType.gCloud,
+      config: {'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
 
   var response;
   if (urlPath.startsWith('/api')) {
