@@ -11,6 +11,7 @@ import 'package:shelf_route/shelf_route.dart' as shelf_route;
 
 main() async {
   initApiHandler(StorageServiceType.localMachine);
+  initTriggerHandler(StorageServiceType.localMachine);
   final router = shelf_route.router()
     ..add('/api', ['POST'], _apiHandler, exactMatch: false)
     ..add('/github', ['POST'], _gitHubTriggerHandler, exactMatch: false);

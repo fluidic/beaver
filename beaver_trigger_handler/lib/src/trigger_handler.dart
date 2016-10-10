@@ -8,6 +8,14 @@ import './base.dart';
 import './task_instance_runner.dart';
 import './trigger_parser.dart';
 
+StorageServiceType _storageServiceType;
+Map<String, Object> _storageServiceConfig;
+
+void initTriggerHandler(StorageServiceType type, {Map<String, Object> config}) {
+  _storageServiceConfig = config;
+  _storageServiceType = type;
+}
+
 Logger _createLogger() {
   final logger = Logger.root;
   logger.level = Level.ALL;
@@ -20,8 +28,8 @@ Logger _createLogger() {
 
 Future<Context> _createContext() async {
   final logger = _createLogger();
-  // FIXME: Don't hardcode.
-  final beaverStore = await getBeaverStore(StorageServiceType.localMachine);
+  final beaverStore =
+      await getBeaverStore(_storageServiceType, config: _storageServiceConfig);
   return new Context(logger, beaverStore);
 }
 

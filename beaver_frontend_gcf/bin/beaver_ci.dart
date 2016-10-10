@@ -17,14 +17,16 @@ main(List<String> args) async {
   print(headers);
   print(data);
 
-  // FIXME: Don't hardcode.
-  initApiHandler(StorageServiceType.gCloud,
-      config: {'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
-
   var response;
   if (urlPath.startsWith('/api')) {
+    // FIXME: Don't hardcode.
+    initApiHandler(StorageServiceType.gCloud,
+        config: {'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
     response = await _apiHandler(path.basename(urlPath), data);
   } else if (urlPath.startsWith('/github')) {
+    // FIXME: Don't hardcode.
+    initTriggerHandler(StorageServiceType.gCloud,
+        config: {'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
     response =
         await _gitHubTriggerHandler(path.basename(urlPath), headers, data);
   } else {
