@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
-import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
 import '../model/project.dart';
@@ -42,11 +40,6 @@ class LocalMachineStorageService implements StorageService {
   Future<TriggerResult> loadResult(String projectId, int buildNumber) async {
     final key = projectId + '__' + buildNumber.toString();
     return _resultMap[key];
-  }
-
-  Future<Directory> _getProjectDir(String projectId) async {
-    final dirPath = path.join(Directory.systemTemp.path, projectId);
-    return await new Directory(dirPath).create(recursive: true);
   }
 
   @override
