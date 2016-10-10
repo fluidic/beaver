@@ -9,7 +9,6 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_route/shelf_route.dart' as shelf_route;
 
 main() async {
-  await initApiHandler();
   final router = shelf_route.router()
     ..add('/api', ['POST'], _apiHandler, exactMatch: false)
     ..add('/github', ['POST'], _gitHubTriggerHandler, exactMatch: false);
