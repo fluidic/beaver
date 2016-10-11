@@ -59,7 +59,7 @@ Future _gitHubTriggerHandler(String projectId, Map<String, String> headers,
     result = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
     print(e);
-    result = result = {'status': 'failure', 'reason': e.toString()};
+    result = {'status': 'failure', 'reason': e.toString()};
   }
 
   return result;
