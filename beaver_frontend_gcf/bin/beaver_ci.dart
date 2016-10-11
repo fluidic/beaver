@@ -52,15 +52,15 @@ Future _apiHandler(String api, Map<String, Object> data) async {
 
 Future _gitHubTriggerHandler(String projectId, Map<String, String> headers,
     Map<String, Object> data) async {
-  var status = 'success';
-  var buildNumber;
+  var result;
   try {
     final trigger = new Trigger('github', headers, data);
-    buildNumber = await triggerHandler(trigger, projectId);
+    final buildNumber = await triggerHandler(trigger, projectId);
+    result = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
     print(e);
-    status = 'failure';
+    result = result = {'status': 'failure', 'reason': e.toString()};
   }
 
-  return {'status': status, 'build_number': buildNumber};
+  return result;
 }
