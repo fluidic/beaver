@@ -8,7 +8,7 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_route/shelf_route.dart' as shelf_route;
 
 main() async {
-  initApiHandler(StorageServiceType.localMachine);
+  initApiHandler(await getBeaverStore(StorageServiceType.localMachine));
   final router = shelf_route.router()
     ..add('/api', ['POST'], handler, exactMatch: false);
   var server = await shelf_io.serve(router.handler, 'localhost', 8081);

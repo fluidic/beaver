@@ -11,6 +11,8 @@ main() async {
   await bs.setConfig(projectId, new File('./beaver.yaml').readAsStringSync());
   print(projectId);
 
+  initTriggerHandler(bs);
+
   final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8080);
   await for (final req in server) {
     ContentType contentType = req.headers.contentType;
