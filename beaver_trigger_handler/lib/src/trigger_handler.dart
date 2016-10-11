@@ -43,7 +43,7 @@ Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
       final event = new Event.fromString(eventStr);
       return event.isMatch(parsedTrigger.event);
     }
-  });
+  }, orElse: () => throw new Exception('No config for ${parsedTrigger}'));
 }
 
 Future<int> _triggerHandler(
