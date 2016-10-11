@@ -1,6 +1,6 @@
 # Beaver CI User Guide
 ## Overview
-Beaver is a continuous integration and delivery (CI/CD) system. CI is a practice of integrating changes in a software frequently possibly performing build and test on every change or commit. And CD is to ensure that a software is deliverable at any time in doing so. A CI/CD system assists implementation of such a practice by performing automated build, test, and deployment of software in response to various events including code changes.
+Beaver is an open source continuous integration and delivery (CI/CD) system. CI is a practice of integrating changes in a software frequently possibly performing build and test on every change or commit. And CD is to ensure that a software is deliverable at any time in doing so. A CI/CD system assists implementation of such a practice by performing automated build, test, and deployment of software in response to various events including code changes.
 
 ## Why Beaver?
 Beaver is different from other CI/CD systems in the following aspects:
@@ -27,5 +27,41 @@ Beaver is designed to make construction of flexible pipelines possible. It suppo
 ### Extensible
 Beaver is designed to be extensible. The extensibility also comes with reusability. Other CI systems rely on shell scripts in describing jobs to be done and don't provide a means to create and share with other users reusable packages of codes that extend various aspects of the CI systems.
 
-Beaver is different in that regard, since it is written and designed to be extended in high level languages including Dart instead of shell scripts. So extensions can manage its external dependencies such as external libraries, and shared on a package server for other users both within and outside your organization.
+Beaver is different in that regard, since it is written and designed to be extended in high level languages including Dart instead of shell scripts. So extensions can manage its external dependencies such as external libraries, and shared on a package server for other users both within and outside your organization. Also we have ensured that extensions built in different languages can be composed with each other in a seamless way.
 
+## Key Concepts
+There are a few key concepts to understand before using Beaver:
+* Trigger
+* Task
+* Context
+* Project
+
+### Trigger
+A trigger is an external event notified to Beaver that initiates an execution of tasks. A typical trigger type is a webhook delivered to Beaver on a source code change from GitHub. Examples of triggers are as follows:
+* GitHub webhooks: creation of branches, tags, and pull requests. Push of new commits.
+* Periodic triggers (like cron)
+* Changes in files stored in cloud storage
+
+Underneath, triggers are delivered to Beaver via either HTTP(S) or periodic checks, even though other mechnisms supported by the underlying serverless facility can be leveraged. For the two standard trigger delivery mechanisms, `TriggerParser` can be implemented to extend the set of trigger types supported by Beaver.
+
+After being parsed, a trigger is comprised of the following components:
+* Event: an identifier telling the type of the trigger
+* URL: a URL from which the trigger is originated (e.g. URL to source repository)
+* Payload: key-value pairs containing specifics of the trigger, which are referenced when configuring which tasks to be executed
+
+### Task
+A task is a composable action in CI/CD workflows. In Beaver, every action is a task ranging from a simple action of deleting a file to a composite action of performing an idiomatic build and test procedure for a C++ project. Even accesses to Beaver-provided services are modeled as tasks.
+
+Currently a task can only be written in Dart. As such one of the major ways to create a composite task (that is, composing tasks) is also via Dart code. But this practice is likely to change in the near future. We plan to provide DSLs (Domain Specific Languages) for composing tasks.
+
+For convenience, tasks can be composed in sequence or parallel or various other ways using combinator tasks in configuration files written in YAML. See the [Project Configuration](#project-configuration).    
+
+### Context
+A context is the environment where tasks are executed. It provides access to cloud services running Beaver such as databaase, storage, and virtual machines. 
+
+### Project
+A project is a collection of related triggers and tasks. Since triggers may originate from and tasks act on multiple source code repositories, a project may involve more than one source repositories.
+
+There is a configuration file in YAML associated with every project. It is where triggers and tasks are wired. For details, see [Project Configuration](#project-configuration)
+
+## Project Configuration
