@@ -57,7 +57,7 @@ Currently a task can only be written in Dart. As such one of the major ways to c
 For convenience, tasks can be composed in sequence or parallel or various other ways using combinator tasks in configuration files written in YAML. See the [Project Configuration](#project-configuration).    
 
 ### Context
-A context is the environment where tasks are executed. It provides access to cloud services running Beaver such as databaase, storage, and virtual machines. 
+A context is the environment where tasks are executed. It carries around various states common to some or all of tasks, such as ways to access cloud services running Beaver such as databaase, storage, and virtual machines.
 
 ### Project
 A project is a collection of related triggers and tasks. Since triggers may originate from and tasks act on multiple source code repositories, a project may involve more than one source repositories.
