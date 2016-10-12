@@ -21,6 +21,8 @@ class GCloudStorageUploadTask extends Task {
 
   GCloudStorageUploadTask(this.src, this.bucketName);
 
+  GCloudStorageUploadTask.fromArgs(List<String> args) : this(args[0], args[1]);
+
   /// Return a download link for the uploaded file.
   @override
   Future<Uri> execute(Context context) async {
