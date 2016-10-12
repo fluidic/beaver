@@ -50,6 +50,9 @@ Future<int> _triggerHandler(
     Context context, Trigger trigger, String projectId) async {
   context.logger.info('TriggerHandler is started.');
   final project = await context.beaverStore.getProject(projectId);
+  if (project == null) {
+    throw new Exception('No project for id \'${projectId}\'.');
+  }
   context.logger.info('Project: ${project}');
   final buildNumber =
       await context.beaverStore.getAndUpdateBuildNumber(projectId);
