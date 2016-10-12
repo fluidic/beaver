@@ -39,13 +39,11 @@ class GCloudStorageUploadTask extends Task {
     }
     final storage = part.storage;
 
-    var bucket;
     if (!await storage.bucketExists(bucketName)) {
-      bucket = await storage.createBucket(bucketName);
-    } else {
-      bucket = await storage.bucket(bucketName);
+      await storage.createBucket(bucketName);
     }
 
+    final bucket = await storage.bucket(bucketName);
     final objectName = _getSuggestedObjectName(src);
     await file.openRead().pipe(bucket.write(objectName));
 
