@@ -41,9 +41,6 @@ class GCloudStorageUploadTask extends Task {
 
     var bucket;
     if (!await storage.bucketExists(bucketName)) {
-      // FIXME: This line fails with the following error.
-      //     DetailedApiRequestError(status: 403, message: The account for
-      //     the specified project has been disabled.)
       bucket = await storage.createBucket(bucketName);
     } else {
       bucket = await storage.bucket(bucketName);
