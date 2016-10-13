@@ -14,18 +14,14 @@ class BeaverStore {
   BeaverStore(StorageServiceType storageServiceType)
       : _storageService = getStorageService(storageServiceType);
 
-  Future<Null> initialize(Map<String, Object> config) async {
-    await _storageService.initialize(config);
-  }
+  Future<Null> initialize(Map<String, Object> config) =>
+      _storageService.initialize(config);
 
   /// Return the id of Project.
-  Future<String> setNewProject(String name) {
-    return _storageService.saveProject(new Project(name));
-  }
+  Future<String> setNewProject(String name) =>
+      _storageService.saveProject(new Project(name));
 
-  Future<Project> getProject(String id) {
-    return _storageService.loadProject(id);
-  }
+  Future<Project> getProject(String id) => _storageService.loadProject(id);
 
   Future<int> getAndUpdateBuildNumber(String id) async {
     final buildNumber = await _storageService.getBuildNumber(id);
@@ -55,8 +51,8 @@ class BeaverStore {
       _storageService.loadResult(id, buildNumber);
 }
 
-Future<BeaverStore> getBeaverStore(
-    StorageServiceType type, {Map<String, Object> config}) async {
+Future<BeaverStore> getBeaverStore(StorageServiceType type,
+    {Map<String, Object> config}) async {
   final beaverStore = new BeaverStore(type);
   await beaverStore.initialize(config);
   return beaverStore;
