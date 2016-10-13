@@ -140,5 +140,5 @@ class GCloudStorageService extends Object
 
   @override
   Future<Null> initialize(Map<String, String> config) =>
-      init(config['project_name'], config['zone']);
+      init(config['cloud_project_name'], config['zone']);
 }

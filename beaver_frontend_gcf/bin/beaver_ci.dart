@@ -19,7 +19,7 @@ main(List<String> args) async {
 
   // FIXME: Don't hardcode.
   final beaverStore = await getBeaverStore(StorageServiceType.gCloud,
-      config: {'project_name': 'beaver-ci', 'zone': 'us-central1-a'});
+      config: {'cloud_project_name': 'beaver-ci', 'zone': 'us-central1-a'});
 
   var response;
   if (urlPath.startsWith('/api')) {
