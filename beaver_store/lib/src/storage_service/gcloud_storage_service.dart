@@ -27,7 +27,7 @@ class GCloudStorageService extends Object
         new datastore.Key.fromParent('BeaverProject', int.parse(projectId));
     final key = db.modelDB.fromDatastoreKey(datastoreKey);
     final query = db.query(BeaverProject, ancestorKey: key);
-    return query.run().first;
+    return await query.run().first;
   }
 
   Future<BeaverBuild> _queryBuildModel(
