@@ -53,8 +53,7 @@ class Context {
 }
 
 Future<Context> _createContext() async {
-  final beaverStore = _beaverStore;
-  return new Context(beaverStore);
+  return new Context(_beaverStore);
 }
 
 /// Set new project. Returns the id of the registered project.
