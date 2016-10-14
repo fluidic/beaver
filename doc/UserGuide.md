@@ -33,7 +33,6 @@ Beaver is different in that regard, since it is written and designed to be exten
 There are a few key concepts to understand before using Beaver:
 * Trigger
 * Task
-* Context
 * Project
 
 ### Trigger
@@ -44,9 +43,9 @@ A trigger is an external event notified to Beaver that initiates an execution of
 
 Underneath, triggers are delivered to Beaver via either HTTP(S) or periodic checks, even though other mechnisms supported by the underlying serverless facility can be leveraged. For the two standard trigger delivery mechanisms, `TriggerParser` can be implemented to extend the set of trigger types supported by Beaver.
 
-After being parsed, a trigger is comprised of the following components:
-* Event: an identifier telling the type of the trigger
-* URL: a URL from which the trigger is originated (e.g. URL to source repository)
+After being parsed, a trigger is represented with the following components:
+* Event: an identifier telling type of the trigger
+* URL: a URL from which the trigger is originated (e.g. URL to the source repository)
 * Payload: key-value pairs containing specifics of the trigger, which are referenced when configuring which tasks to be executed
 
 ### Task
@@ -56,12 +55,48 @@ Currently a task can only be written in Dart. As such one of the major ways to c
 
 For convenience, tasks can be composed in sequence or parallel or various other ways using combinator tasks in configuration files written in YAML. See the [Project Configuration](#project-configuration).    
 
-### Context
-A context is the environment where tasks are executed. It carries around various states common to some or all of tasks, such as ways to access cloud services running Beaver such as databaase, storage, and virtual machines.
-
 ### Project
 A project is a collection of related triggers and tasks. Since triggers may originate from and tasks act on multiple source code repositories, a project may involve more than one source repositories.
 
 There is a configuration file in YAML associated with every project. It is where triggers and tasks are wired. For details, see [Project Configuration](#project-configuration)
 
+## Basic Workflows
+### Setting Up Beaver to the Cloud
+
+### Setting up Beaver Client
+
+### Creating Project
+
+### Preparing Project Configuration
+
+### Uploading Project Configuration
+
+### Checking Build Result
+
+### Listing All Projects
+
+### Getting Project details
+
+### Deleting Projects   
+
 ## Project Configuration
+
+## Bundled Tasks
+### Archiving
+### File Operations
+### HTTP
+### Executing shell
+### Accessing Cloud Services
+### Dart Language Supports
+### Notifications
+
+## Extending Beaver
+There are two types of extensions in Beaver. One is `TriggerParser`. The other is `Task`.
+
+### Writing `TriggerParser`
+
+### Writing `Task`
+
+#### Understanding Context
+A context is the environment where tasks are executed. It carries around various states common to some or all of tasks, such as ways to access cloud services running Beaver such as databaase, storage, and virtual machines.
+
