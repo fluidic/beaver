@@ -13,5 +13,6 @@ export 'src/task/move_task.dart';
 export 'src/task/post_task.dart';
 export 'src/task/rename_task.dart';
 export 'src/task/shell_task.dart';
+export 'src/task/tempfile_task.dart';
 export 'src/task/touch_task.dart';
 export 'src/task_combinators.dart';
