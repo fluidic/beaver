@@ -12,11 +12,16 @@ import './utils/reflection.dart';
 
 enum TaskStatus { Success, Failure, InternalError }
 
+/// [TaskRunResult] contains information about the result of task execution
+/// submitted to [runBeaver].
 class TaskRunResult {
+  /// The [Config] instance used to run the task.
   final Config config;
 
+  /// The task execution status.
   final TaskStatus status;
 
+  /// The '\n' delimited task log.
   final String log;
 
   TaskRunResult(this.config, this.status, this.log);
