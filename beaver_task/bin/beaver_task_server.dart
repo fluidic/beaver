@@ -26,7 +26,12 @@ Future<shelf.Response> _handleRun(shelf.Request request) async {
   }
   List<String> taskArgs = (params['taskArgs'] ?? []) as List<String>;
 
-  final config = new Config.fromJson(configJson);
+  var config;
+  try {
+    config = new Config.fromJson(configJson);
+  } catch (e) {
+    return new shelf.Response(400);
+  }
   final result = await runBeaver(taskName, taskArgs, config);
   final jsonResponse = JSON.encode(result);
 
