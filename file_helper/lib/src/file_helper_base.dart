@@ -191,7 +191,7 @@ Future<bool> rm(Iterable<String> paths,
             result = false;
           }
         } else if (directory) {
-          result = rmdir([entity.path]);
+          result = await rmdir([entity.path]);
         } else {
           result = false;
         }
