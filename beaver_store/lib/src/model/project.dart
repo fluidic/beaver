@@ -1,4 +1,4 @@
-import 'package:beaver_task/beaver_task.dart';
+import './config.dart';
 
 class Project {
   final String name;

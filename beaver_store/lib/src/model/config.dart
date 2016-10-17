@@ -1,6 +1,7 @@
-import 'package:beaver_task/beaver_task.dart';
 import 'package:quiver_collection/collection.dart';
 import 'package:yaml/yaml.dart';
+
+abstract class Config implements Map {}
 
 class YamlConfig extends DelegatingMap implements Config {
   final YamlMap _yaml;

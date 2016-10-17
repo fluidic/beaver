@@ -2,14 +2,15 @@ import 'dart:async';
 
 /// [GCloudStorageUploadTask] import.
 import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
-import 'package:beaver_task/beaver_task.dart' as beaver_task;
+import 'package:beaver_store/beaver_store.dart' as beaver_store;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
 
+
 class TaskInstanceRunner {
   final Context _context;
-  final beaver_task.Config _config;
+  final beaver_store.Config _config;
   final ParsedTrigger _parsedTrigger;
   final Map _task;
 
