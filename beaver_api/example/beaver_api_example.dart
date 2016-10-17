@@ -17,9 +17,10 @@ main() async {
 
 Future handler(shelf.Request request) async {
   final api = request.url.pathSegments.last;
-  final requestBody = JSON.decode(await request.readAsString());
+  final requestBody =
+      JSON.decode(await request.readAsString()) as Map<String, Object>;
 
-  var result;
+  Map<String, Object> result;
   try {
     result = await apiHandler(api, requestBody);
   } catch (e) {
