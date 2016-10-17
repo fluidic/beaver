@@ -1,5 +1,4 @@
-import 'package:beaver_task/beaver_task_runner.dart';
-import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
+import 'package:beaver_store/beaver_store.dart';
 import 'package:xml/xml.dart';
 
 import '../formatter.dart';
@@ -8,9 +7,10 @@ class HtmlFormatter implements Formatter {
   @override
   String get type => 'html';
 
+  final Project _project;
   final List<TriggerResult> _results;
 
-  HtmlFormatter(this._results);
+  HtmlFormatter(this._project, this._results);
 
   void _buildTable(XmlBuilder builder) {
     builder.element('table', nest: () {
@@ -50,25 +50,19 @@ class HtmlFormatter implements Formatter {
         builder.text(result.buildNumber.toString());
       });
       builder.element('td', nest: () {
-        builder.text(
-            result.taskInstanceRunResult.status == TaskInstanceStatus.success
-                ? "Success"
-                : "Failure");
+        builder.text(result.taskInstanceStatus);
       });
       builder.element('td', nest: () {
-        builder.text(result.taskInstanceRunResult.taskRunResult.status ==
-                TaskStatus.Success
-            ? "Success"
-            : "Failure");
+        builder.text(result.taskStatus);
       });
       builder.element('td', nest: () {
-        builder.text(result.parsedTrigger.event);
+        builder.text(result.parsedTriggerEvent);
       });
       builder.element('td', nest: () {
-        builder.text(result.parsedTrigger.url);
+        builder.text(result.parsedTriggerUrl);
       });
       builder.element('td', nest: () {
-        builder.text(result.taskInstanceRunResult.taskRunResult.log);
+        builder.text(result.taskLog);
       });
     });
   }
@@ -90,8 +84,7 @@ class HtmlFormatter implements Formatter {
           });
         } else {
           builder.element('h1', nest: () {
-            builder.text(
-                '${_results[0].project.name} (${_results[0].project.id})');
+            builder.text('${_project.name} (${_project.id})');
           });
         }
         _buildTable(builder);

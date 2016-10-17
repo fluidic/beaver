@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
-import 'package:beaver_task/beaver_task_runner.dart';
-import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:gcloud/datastore.dart' as datastore;
 
 import '../model/config.dart';
 import '../model/project.dart';
+import '../model/trigger_result.dart';
 import '../storage_service.dart';
 import 'gcloud_model/build.dart';
 import 'gcloud_model/project.dart';
@@ -70,23 +69,17 @@ class GCloudStorageService extends Object
           ..projectId = projectId;
     // TODO: consider serialization.
     buildModel
-      ..triggerData = JSON.encode(result.trigger.data)
-      ..triggerType = result.trigger.type
-      ..triggerHeaders = JSON.encode(result.trigger.headers)
-      ..triggerEvent = result.parsedTrigger.event.toString()
-      ..triggerUrl = result.parsedTrigger.url
+      ..triggerData = JSON.encode(result.triggerData)
+      ..triggerType = result.triggerType
+      ..triggerHeaders = JSON.encode(result.triggerHeaders)
+      ..parsedTriggerEvent = result.parsedTriggerEvent
+      ..parsedTriggerUrl = result.parsedTriggerUrl
       ..taskInstance = JSON.encode(result.taskInstance)
-      ..taskInstanceStatus =
-          result.taskInstanceRunResult.status == TaskInstanceStatus.success
-              ? "success"
-              : "failure"
-      ..taskStatus = result.taskInstanceRunResult.taskRunResult.status ==
-              TaskStatus.Success
-          ? "success"
-          : "failure"
-      ..taskConfig =
-          result.taskInstanceRunResult.taskRunResult.config.toString()
-      ..log = result.taskInstanceRunResult.taskRunResult.log.toString();
+      ..taskInstanceStatus = result.taskInstanceStatus
+      ..taskStatus = result.taskStatus
+      ..taskConfigCloudType = result.taskConfigCloudType
+      ..taskConfigCloudSettings = JSON.encode(result.taskConfigCloudSettings)
+      ..taskLog = result.taskLog;
     await db.commit(inserts: [buildModel]);
     return true;
   }
@@ -97,36 +90,29 @@ class GCloudStorageService extends Object
     if (buildModel == null) {
       throw new NullThrownError();
     }
-    final project = await loadProject(projectId);
-    if (project == null) {
-      throw new NullThrownError();
-    }
+
     final triggerHeaders =
         JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
     final triggerData =
         JSON.decode(buildModel.triggerData) as Map<String, Object>;
-    final trigger =
-        new Trigger(buildModel.triggerType, triggerHeaders, triggerData);
-    final parsedTrigger = new ParsedTrigger(
-        new Event.fromString(buildModel.triggerEvent),
-        buildModel.triggerUrl,
-        triggerData);
     final taskInstance =
         JSON.decode(buildModel.taskInstance) as Map<String, Object>;
-    final taskConfig = new YamlConfig(buildModel.taskConfig);
-    final taskRunResult = new TaskRunResult(
-        taskConfig,
-        buildModel.taskStatus == "success"
-            ? TaskStatus.Success
-            : TaskStatus.Failure,
-        buildModel.log);
-    final taskInstanceRunResult = new TaskInstanceRunResult(
-        buildModel.taskInstanceStatus == "success"
-            ? TaskInstanceStatus.success
-            : TaskInstanceStatus.failure,
-        taskRunResult);
-    return new TriggerResult(project, buildModel.number, trigger, parsedTrigger,
-        taskInstance, taskInstanceRunResult);
+    final taskConfigCloudSettings =
+        JSON.decode(buildModel.taskConfigCloudSettings) as Map<String, Object>;
+    return new TriggerResult.fromGCloud(
+        projectId,
+        buildNumber,
+        buildModel.triggerType,
+        triggerHeaders,
+        triggerData,
+        buildModel.parsedTriggerEvent,
+        buildModel.parsedTriggerUrl,
+        taskInstance,
+        buildModel.taskInstanceStatus,
+        buildModel.taskStatus,
+        buildModel.taskConfigCloudType,
+        taskConfigCloudSettings,
+        buildModel.taskLog);
   }
 
   @override

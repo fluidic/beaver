@@ -70,6 +70,7 @@ Future<Null> _uploadConfigFile(
 
 Future<String> _getResult(Context context, String projectId, int buildNumber,
     String format, int count) async {
+  final project = await context.beaverStore.getProject(projectId);
   final resultBuildNumbers =
       new Iterable.generate(max(count, 0), (i) => buildNumber + i);
   final results = (await Future.wait(resultBuildNumbers.map((number) async {
@@ -83,11 +84,11 @@ Future<String> _getResult(Context context, String projectId, int buildNumber,
 
   switch (format) {
     case 'html':
-      final formatter = new HtmlFormatter(results);
+      final formatter = new HtmlFormatter(project, results);
       return formatter.toHtml();
     case 'text':
     default:
-      final formatter = new TextFormatter(results);
+      final formatter = new TextFormatter(project, results);
       return formatter.toText();
   }
 }

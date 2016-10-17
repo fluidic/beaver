@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/project.dart';
+import '../model/trigger_result.dart';
 import '../storage_service.dart';
 
 final Map<String, Project> _projectMap = {};

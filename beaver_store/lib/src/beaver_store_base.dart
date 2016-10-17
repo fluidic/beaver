@@ -4,6 +4,7 @@ import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 import './model/config.dart';
 import './model/project.dart';
+import './model/trigger_result.dart';
 import './storage_service.dart';
 
 enum StorageServiceType { localMachine, gCloud }
@@ -43,7 +44,14 @@ class BeaverStore {
   }
 
   Future<Null> saveResult(
-      String id, int buildNumber, TriggerResult result) async {
+      String id,
+      int buildNumber,
+      Trigger trigger,
+      ParsedTrigger parsedTrigger,
+      Map<String, Object> taskInstance,
+      TaskInstanceRunResult taskInstanceRunResult) async {
+    final result = new TriggerResult.fromTriggerHandler(id, buildNumber,
+        trigger, parsedTrigger, taskInstance, taskInstanceRunResult);
     await _storageService.saveResult(id, buildNumber, result);
   }
 

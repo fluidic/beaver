@@ -18,10 +18,10 @@ class BeaverBuild extends Model {
   String triggerHeaders;
 
   @StringProperty()
-  String triggerEvent;
+  String parsedTriggerEvent;
 
   @StringProperty()
-  String triggerUrl;
+  String parsedTriggerUrl;
 
   @StringProperty()
   String taskInstance;
@@ -33,8 +33,11 @@ class BeaverBuild extends Model {
   String taskStatus;
 
   @StringProperty()
-  String taskConfig;
+  String taskConfigCloudType;
 
   @StringProperty()
-  String log;
+  String taskConfigCloudSettings;
+
+  @StringProperty()
+  String taskLog;
 }
