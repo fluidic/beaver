@@ -10,7 +10,7 @@ import './gcloud_context.dart';
 import './logger.dart';
 import './utils/reflection.dart';
 
-enum TaskStatus { Success, Failure }
+enum TaskStatus { Success, Failure, InternalError }
 
 class TaskRunResult {
   final Config config;
@@ -34,7 +34,7 @@ Future<TaskRunResult> _runTask(
     status = TaskStatus.Failure;
   } catch (e) {
     logger.shout(e);
-    status = TaskStatus.Failure;
+    status = TaskStatus.InternalError;
   }
   return new TaskRunResult(context.config, status, logger.toString());
 }
@@ -45,6 +45,8 @@ String taskStatusToString(TaskStatus status) {
       return 'success';
     case TaskStatus.Failure:
       return 'failure';
+    case TaskStatus.InternalError:
+      return 'internalError';
   }
   throw new AssertionError();
 }
