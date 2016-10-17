@@ -10,8 +10,8 @@ main(List<String> args) async {
   print('beaver-ci started.');
 
   final urlPath = args[0];
-  final headers = JSON.decode(args[1]);
-  final data = JSON.decode(args[2]);
+  final headers = JSON.decode(args[1]) as Map<String, String>;
+  final data = JSON.decode(args[2]) as Map<String, Object>;
 
   print(urlPath);
   print(headers);
@@ -38,7 +38,7 @@ main(List<String> args) async {
 
 Future _apiHandler(String api, Map<String, Object> data) async {
   var status = 'success';
-  var result;
+  Map<String, Object> result;
   try {
     result = await apiHandler(api, data);
   } catch (e) {
