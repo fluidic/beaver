@@ -108,7 +108,7 @@ Future<TaskRunResult> runBeaver(
       context = await _createGCloudContext(config);
       break;
     default:
-      throw new AssertionError(); // Unreachable
+      throw new ArgumentError('Unknown cloud_type ${config['cloud_type']}');
   }
 
   if (newVM) {
