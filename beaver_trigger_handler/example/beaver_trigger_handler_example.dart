@@ -43,11 +43,11 @@ main() async {
 
 Future<String> handler(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();
-  Map jsonData = JSON.decode(jsonString);
+  final jsonData = JSON.decode(jsonString) as Map<String, Object>;
 
   final projectId = request.uri.pathSegments.last;
 
-  final headers = {};
+  final headers = new Map<String, String>();
   request.headers.forEach((name, value) {
     headers[name] = value.first;
   });

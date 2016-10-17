@@ -60,8 +60,10 @@ Future<int> _triggerHandler(
   final parsedTrigger = parseTrigger(context, trigger);
   context.logger.info('Trigger: ${parsedTrigger}');
 
-  final triggerConfig = _getTriggerConfigs(project);
-  final taskInstance = _findTriggerConfig(triggerConfig, parsedTrigger);
+  final triggerConfig =
+      _getTriggerConfigs(project) as List<Map<String, Object>>;
+  final taskInstance =
+      _findTriggerConfig(triggerConfig, parsedTrigger) as Map<String, Object>;
   context.logger.info('TriggerConfig: ${triggerConfig}');
 
   final taskInstanceRunner = new TaskInstanceRunner(

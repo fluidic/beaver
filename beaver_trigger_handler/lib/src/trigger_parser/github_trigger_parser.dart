@@ -133,7 +133,7 @@ class GitHubTriggerParser implements TriggerParser {
       throw new Exception('This is not the GitHub event.');
     }
 
-    final subEventMap = _eventMap[mainEvent]['sub'];
+    final subEventMap = _eventMap[mainEvent]['sub'] as Map<String, Object>;
     if (subEventMap == null) {
       return new Event('github', mainEvent);
     }

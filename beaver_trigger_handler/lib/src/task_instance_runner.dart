@@ -21,7 +21,7 @@ class TaskInstanceRunner {
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final args = [];
+    final args = new List<String>();
     _task['args'].forEach((arg) {
       if (_parsedTrigger.isTriggerData(arg)) {
         args.add(_parsedTrigger.getTriggerData(arg));

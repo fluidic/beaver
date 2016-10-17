@@ -114,7 +114,7 @@ class ParsedTrigger {
     }
 
     try {
-      var value = data;
+      dynamic value = data;
       for (final key in keys) {
         value = value[key];
       }
