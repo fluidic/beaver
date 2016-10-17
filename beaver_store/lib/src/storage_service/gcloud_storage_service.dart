@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:beaver_gcloud/src/gcloud_mixin.dart';
-import 'package:beaver_store/src/model/config.dart';
+import 'package:beaver_gcloud/beaver_gcloud.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 import 'package:gcloud/datastore.dart' as datastore;
 
+import '../model/config.dart';
 import '../model/project.dart';
 import '../storage_service.dart';
 import 'gcloud_model/build.dart';
