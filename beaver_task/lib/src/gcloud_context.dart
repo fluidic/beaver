@@ -20,5 +20,6 @@ class GCloudContext extends GCloudBase implements Context {
 
   GCloudContext(this._config, this._logger, this._partMap);
 
-  Future<Null> setUp() => super.init(_config['project_name'], _config['zone']);
+  Future<Null> setUp() => super.init(
+      _config.cloudSettings['project_name'], _config.cloudSettings['zone']);
 }

@@ -20,9 +20,6 @@ class MyTask implements Task {
 main(args, message) => runBeaver(
     'my_task',
     [],
-    {
-      'cloud_type': 'gcloud',
-      'project_name': 'beaver-ci',
-      'zone': 'us-central1-a'
-    },
+    new Config(
+        'gcloud', {'project_name': 'beaver-ci', 'zone': 'us-central1-a'}),
     newVM: true);

@@ -103,12 +103,12 @@ Future<TaskRunResult> runBeaver(
   _dumpClassMap('List of Task classes:', taskClassMap);
 
   GCloudContext context;
-  switch (config['cloud_type']) {
+  switch (config.cloudType) {
     case 'gcloud':
       context = await _createGCloudContext(config);
       break;
     default:
-      throw new ArgumentError('Unknown cloud_type ${config['cloud_type']}');
+      throw new ArgumentError('Unknown cloud_type ${config.cloudType}');
   }
 
   if (newVM) {

@@ -38,7 +38,16 @@ abstract class Logger {
   void error(message) => log(LogLevel.ERROR, message);
 }
 
-abstract class Config implements Map {}
+/// Config contains information required to run tasks on the cloud.
+class Config {
+  /// The type of cloud service. Currently, only 'gcloud' is supported.
+  final String cloudType;
+
+  /// The settings for the cloud. The keys are specific to each cloud type.
+  final Map<String, String> cloudSettings;
+
+  Config(this.cloudType, this.cloudSettings);
+}
 
 abstract class Task {
   const Task();
@@ -63,4 +72,3 @@ class _LambdaTask implements Task {
 abstract class Reporter {
   String get type;
 }
-
