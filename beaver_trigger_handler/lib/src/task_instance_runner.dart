@@ -3,10 +3,10 @@ import 'dart:async';
 /// [GCloudStorageUploadTask] import.
 import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
 import 'package:beaver_store/beaver_store.dart' as beaver_store;
+import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
-
 
 class TaskInstanceRunner {
   final Context _context;
@@ -31,15 +31,11 @@ class TaskInstanceRunner {
     });
 
     // FIXME: Change this logic after implementing setup(init) command.
-    // FIXME: Passing this to runBeaver causes type error if check mode is on.
-    final config = {
-      'cloud_type': _config['cloud_type'],
+    final config = new beaver_task.Config(_config['cloud_type'], {
       'project_name': _config['cloud_project_name'],
       'zone': _config['zone']
-    };
-
+    });
     final result = await runBeaver(_task['name'], args, config);
-    result.config.clear();
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
   }
