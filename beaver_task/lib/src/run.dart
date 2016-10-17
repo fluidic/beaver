@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:mirrors';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
+import 'package:logging/logging.dart';
 
 import './annotation.dart';
 import './base.dart';
@@ -29,10 +30,10 @@ Future<TaskRunResult> _runTask(
   try {
     await task.execute(context);
   } on TaskException catch (e) {
-    logger.error(e);
+    logger.shout(e);
     status = TaskStatus.Failure;
   } catch (e) {
-    logger.error(e);
+    logger.shout(e);
     status = TaskStatus.Failure;
   }
   return new TaskRunResult(context.config, status, logger.toString());
@@ -81,14 +82,8 @@ Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
   return partMap;
 }
 
-Future<Logger> _createLogger() async {
-  // FIXME: Don't hardcode logger
-  final logger = new ConsoleLogger();
-  return new MemoryLogger(logger);
-}
-
 Future<Context> _createGCloudContext(Config config) async {
-  final logger = await _createLogger();
+  final logger = new BeaverLogger();
   final partMap = await _createContextPartMap(config);
   final context = new GCloudContext(config, logger, partMap);
   await context.setUp();
@@ -99,6 +94,9 @@ Future<Context> _createGCloudContext(Config config) async {
 Future<TaskRunResult> runBeaver(
     String taskName, List<String> taskArgs, Config config,
     {bool newVM: false}) async {
+  // Turn on all logging levels.
+  Logger.root.level = Level.ALL;
+
   final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
   _dumpClassMap('List of Task classes:', taskClassMap);
 

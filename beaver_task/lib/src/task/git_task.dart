@@ -24,7 +24,7 @@ class GitTask extends Task {
     }
     final errorMessage = result.stderr.toString();
     if (errorMessage.isNotEmpty) {
-      context.logger.error(errorMessage);
+      context.logger.shout(errorMessage);
     }
   }
 }

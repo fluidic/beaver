@@ -18,7 +18,7 @@ class PubTask extends Task {
       context.logger.info(line);
     }
     for (final line in result.stdout) {
-      context.logger.error(line);
+      context.logger.shout(line);
     }
   }
 }

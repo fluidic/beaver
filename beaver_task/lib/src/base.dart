@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import './annotation.dart';
 
 // An exception class for exceptions that are intended to be seen by the user.
@@ -23,19 +25,6 @@ abstract class Context {
 abstract class ContextPart {
   Future<Null> setUp(Config conf);
   Future<Null> tearDown();
-}
-
-enum LogLevel { INFO, WARN, ERROR }
-
-// FIXME: Add more methods from https://www.dartdocs.org/documentation/logging
-abstract class Logger {
-  const Logger();
-
-  void log(LogLevel level, message);
-
-  void info(message) => log(LogLevel.INFO, message);
-  void warn(message) => log(LogLevel.WARN, message);
-  void error(message) => log(LogLevel.ERROR, message);
 }
 
 /// Config contains information required to run tasks on the cloud.

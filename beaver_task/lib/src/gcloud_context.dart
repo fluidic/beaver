@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
+import 'package:logging/logging.dart';
 
 import './base.dart';
 

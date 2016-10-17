@@ -4,7 +4,6 @@ export 'src/annotation.dart';
 export 'src/base.dart';
 export 'src/gcloud_context.dart';
 export 'src/exception.dart';
-export 'src/logger.dart' show NoneLogger, ConsoleLogger;
 export 'src/task/copy_task.dart';
 export 'src/task/delete_task.dart';
 export 'src/task/download_task.dart';

@@ -30,7 +30,7 @@ class ShellTask extends Task {
     }
     final errorMessage = result.stderr.toString();
     if (errorMessage.isNotEmpty) {
-      context.logger.error(errorMessage);
+      context.logger.shout(errorMessage);
     }
     if (result.exitCode != 0) {
       throw new ShellException(executable, result.exitCode);
