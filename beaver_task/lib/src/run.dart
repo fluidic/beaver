@@ -24,7 +24,7 @@ class TaskRunResult {
   /// The '\n' delimited task log.
   final String log;
 
-  TaskRunResult(this.config, this.status, this.log);
+  TaskRunResult._internal(this.config, this.status, this.log);
 }
 
 Future<TaskRunResult> _runTask(
@@ -41,7 +41,7 @@ Future<TaskRunResult> _runTask(
     logger.shout(e);
     status = TaskStatus.InternalError;
   }
-  return new TaskRunResult(context.config, status, logger.toString());
+  return new TaskRunResult._internal(context.config, status, logger.toString());
 }
 
 String taskStatusToString(TaskStatus status) {
