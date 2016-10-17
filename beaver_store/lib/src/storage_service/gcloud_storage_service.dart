@@ -101,14 +101,18 @@ class GCloudStorageService extends Object
     if (project == null) {
       throw new NullThrownError();
     }
-    final triggerData = JSON.decode(buildModel.triggerData);
-    final trigger = new Trigger(buildModel.triggerType,
-        JSON.decode(buildModel.triggerHeaders), triggerData);
+    final triggerHeaders =
+        JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
+    final triggerData =
+        JSON.decode(buildModel.triggerData) as Map<String, Object>;
+    final trigger =
+        new Trigger(buildModel.triggerType, triggerHeaders, triggerData);
     final parsedTrigger = new ParsedTrigger(
         new Event.fromString(buildModel.triggerEvent),
         buildModel.triggerUrl,
         triggerData);
-    final taskInstance = JSON.decode(buildModel.taskInstance);
+    final taskInstance =
+        JSON.decode(buildModel.taskInstance) as Map<String, Object>;
     final taskConfig = new YamlConfig(buildModel.taskConfig);
     final taskRunResult = new TaskRunResult(
         taskConfig,
