@@ -44,18 +44,6 @@ Future<TaskRunResult> _runTask(
   return new TaskRunResult._internal(context.config, status, logger.toString());
 }
 
-String taskStatusToString(TaskStatus status) {
-  switch (status) {
-    case TaskStatus.Success:
-      return 'success';
-    case TaskStatus.Failure:
-      return 'failure';
-    case TaskStatus.InternalError:
-      return 'internalError';
-  }
-  throw new AssertionError();
-}
-
 Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
   Map<String, ClassMirror> taskClassMap = {};
   final cms = queryClassesByAnnotation(annotation);
