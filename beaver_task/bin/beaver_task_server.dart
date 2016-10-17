@@ -6,6 +6,7 @@ import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_route/shelf_route.dart';
 
+import 'package:beaver_task/beaver_task.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
 
 Future<shelf.Response> _handleRun(shelf.Request request) async {
@@ -19,13 +20,13 @@ Future<shelf.Response> _handleRun(shelf.Request request) async {
   }
 
   final taskName = params['taskName'];
-  // FIXME: Check if config is valid.
-  final config = params['config'];
-  if (taskName == null || config == null) {
+  final configJson = params['config'];
+  if (taskName == null || configJson == null) {
     return new shelf.Response(400);
   }
   List<String> taskArgs = (params['taskArgs'] ?? []) as List<String>;
 
+  final config = new Config.fromJson(configJson);
   final result = await runBeaver(taskName, taskArgs, config);
   final jsonResponse = JSON.encode(result);
 

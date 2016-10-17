@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:logging/logging.dart';
 
@@ -36,6 +37,22 @@ class Config {
   final Map<String, String> cloudSettings;
 
   Config(this.cloudType, this.cloudSettings);
+
+  factory Config.fromJson(json) {
+    if (json is String) {
+      json = JSON.decode(json);
+    }
+    if (json is! Map) {
+      throw new ArgumentError('json must be a Map or a String encoding a Map.');
+    }
+
+    final cloudType = json['cloud_type'];
+    final cloudSettings = json['cloud_settings'] as Map<String, String>;
+    if (cloudType == null || cloudSettings == null) {
+      throw new ArgumentError('The given json does not contain all the fields');
+    }
+    return new Config(cloudType, cloudSettings);
+  }
 }
 
 abstract class Task {
@@ -57,5 +74,3 @@ class _LambdaTask implements Task {
   @override
   Future<Object> execute(Context context) => _func(context);
 }
-
-
