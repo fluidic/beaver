@@ -25,7 +25,7 @@ class TextFormatter implements Formatter {
       "Trigger Event": result.parsedTrigger.event,
       "Trigger URL": result.parsedTrigger.url,
       "Log": result.taskInstanceRunResult.taskRunResult.log,
-    };
+    } as Map<String, String>;
     final longestKeyLength = items.keys.fold(0, (num max, String keyString) {
       return keyString.length > max ? keyString.length : max;
     });
