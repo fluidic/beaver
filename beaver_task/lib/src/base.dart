@@ -58,6 +58,4 @@ class _LambdaTask implements Task {
   Future<Object> execute(Context context) => _func(context);
 }
 
-abstract class Reporter {
-  String get type;
-}
+
