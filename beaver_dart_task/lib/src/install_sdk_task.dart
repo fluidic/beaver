@@ -18,7 +18,7 @@ class InstallDartSdkTask extends Task {
   @override
   Future<Null> execute(Context context) async {
     if (Platform.isMacOS) {
-      final installOptions = [];
+      List<String> installOptions = [];
       if (dev) {
         installOptions.add('--devel');
       }
@@ -32,10 +32,11 @@ class InstallDartSdkTask extends Task {
         new ShellTask('brew', ['tap', 'dart-lang/dart']),
         new ShellTask(
             'brew',
-            concat([
+            (concat([
               ['install', 'dart'],
               installOptions
-            ]).toList())
+            ]) as List<String>)
+                .toList())
       ];
       await Future.forEach(tasks, (task) => task.execute(context));
     } else {

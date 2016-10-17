@@ -11,9 +11,9 @@ import 'package:beaver_task/beaver_task_runner.dart';
 Future<shelf.Response> _handleRun(shelf.Request request) async {
   final body = await request.readAsString();
 
-  var params;
+  Map<String, dynamic> params;
   try {
-    params = JSON.decode(body);
+    params = JSON.decode(body) as Map<String, dynamic>;
   } on FormatException {
     return new shelf.Response(400);
   }
@@ -24,7 +24,7 @@ Future<shelf.Response> _handleRun(shelf.Request request) async {
   if (taskName == null || config == null) {
     return new shelf.Response(400);
   }
-  final taskArgs = params['taskArgs'] ?? [];
+  List<String> taskArgs = (params['taskArgs'] ?? []) as List<String>;
 
   final result = await runBeaver(taskName, taskArgs, config);
   final jsonResponse = JSON.encode(result);

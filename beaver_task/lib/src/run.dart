@@ -24,7 +24,7 @@ class TaskRunResult {
 
 Future<TaskRunResult> _runTask(
     Context context, /* Task|ExecuteFunc */ task) async {
-  task = task is Task ? task : new Task.fromFunc(task);
+  task = task is Task ? task : new Task.fromFunc(task as ExecuteFunc);
   var status = TaskStatus.Success;
   final logger = context.logger;
   try {
@@ -46,14 +46,15 @@ String taskStatusToString(TaskStatus status) {
     case TaskStatus.Failure:
       return 'failure';
   }
+  throw new AssertionError();
 }
 
 Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
-  final taskClassMap = {};
+  Map<String, ClassMirror> taskClassMap = {};
   final cms = queryClassesByAnnotation(annotation);
   for (final cm in cms) {
     cm.metadata.forEach((md) {
-      InstanceMirror metadata = md as InstanceMirror;
+      InstanceMirror metadata = md;
       String name = metadata.getField(#name).reflectee;
       taskClassMap[name] = cm;
     });
