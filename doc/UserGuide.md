@@ -62,22 +62,93 @@ There is a configuration file in YAML associated with every project. It is where
 
 ## Basic Workflows
 ### Setting Up Beaver to the Cloud
+#### Creating a New Beaver Instance in the Cloud
+```
+$ beaver_admin_cli setup -c credentials_path cloud_project_name
+```
+
+#### Getting Beaver Endpoint
+```
+$ beaver_admin_cli describe cloud_project_name
+https://us-central1-beaver-ci.cloudfunctions.net/beaver
+```
 
 ### Setting up Beaver Client
+```
+$ beaver_cli setup https://us-central1-beaver-ci.cloudfunctions.net/beaver
+```
 
 ### Creating Project
+```
+$ beaver_cli create beaver_demo
+Created successfully!
+```
 
 ### Preparing Project Configuration
+Project configurations are described in YAML as shown below:
+```yaml
+project_name: beaver_demo
+description: "Demo project for beaver-ci."
+
+triggers:
+  - url: "https://github.com/fluidic/beaver_demo"
+    type: github
+    events: ["github_event_push"]
+    task:
+      name: my_build
+      args: ["beaver_demo", "trigger:payload.head_commit.id"]
+```
+The above configuration designates to run a task named `my_build` with the given arguments when there was code push to the GitHub repository at the given URL (`https://github.com/fluidic/beaver_demo`).
+
+For the details of how to write project configuration files, see [Project Configuration](#project-configuration).
 
 ### Uploading Project Configuration
+```
+$ beaver_cli upload -c beaver.yaml beaver_demo
+Uploaded successfully!
+Don't forget to add webhook https://us-central1-beaver-ci.cloudfunctions.net/beaver/github/beaver_demo \
+to the GitHub repo "https://github.com/fluidic/beaver_demo"
+```
+
+Currently Beaver does not automatically set a webhook up to the relevant GitHub repositories. So be sure to manually add the URL shown when uploading a project configuration.
 
 ### Checking Build Result
+```
+$ beaver_cli get-results -b 0 beaver_demo
+beaver_demo
+ - Build Number        : 0
+ - TaskInstance Status : success
+ - Task Status         : success
+ - Trigger Event       : github_event_create_branch
+ - Trigger URL         : https://github.com/fluidic/beaver
+ - Log                 :
+ ```
 
 ### Listing All Projects
+```
+$ beaver_cli list
+beaver_demo
+foo
+bar
+```
 
-### Getting Project details
+### Getting Project Details
+```
+$ beaver_cli describe beaver_demo
+Configuration:
+  - ...
+  - ...
+
+Endpoints:
+  - ...
+  - ...
+```
 
 ### Deleting Projects   
+```
+$ beaver_cli delete beaver_demo
+Deleted successfully!
+```
 
 ## Project Configuration
 
