@@ -218,3 +218,14 @@ class MyTask implements Task {
 #### Understanding Context
 A context is the environment where tasks are executed. It carries around various states common to some or all of tasks, such as ways to access cloud services running Beaver such as databaase, storage, and virtual machines.
 
+```Dart
+abstract class Context {
+  Config get config;
+  Logger get logger;
+  ContextPart getPart(String name);
+
+  Storage get storage;
+  DatastoreDB get db;
+  ComputeApi get compute;
+}
+```
