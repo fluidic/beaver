@@ -161,12 +161,59 @@ Deleted successfully!
 ### Dart Language Supports
 ### Notifications
 
+## Language Specifics
+### Dart
+
+
 ## Extending Beaver
 There are two types of extensions in Beaver. One is `TriggerParser`. The other is `Task`.
 
 ### Writing `TriggerParser`
+```Dart
+@TriggerParserClass('github')
+class GitHubTriggerParser implements TriggerParser {
+  @override
+  Iterable<String> getMainEvents() {
+    return _eventMap.keys;
+  }
+
+  @override
+  ParsedTrigger parse(Context context, Trigger trigger) {
+    context.logger.fine('GitHubTriggerParser started.');
+    final event = _getEvent(trigger.headers, trigger.data);
+    final url = _getUrl(trigger.data);
+    return new ParsedTrigger(event, url, trigger.data);
+  }
+  ...
+}
+```
 
 ### Writing `Task`
+
+```Dart
+typedef Future<Object> ExecuteFunc(Context context);
+```
+
+```Dart
+abstract class Task {
+  Future<Object> execute(Context context);
+}
+```
+
+### Composing Tasks
+```Dart
+@TaskClass('my_task')
+class MyTask implements Task {
+  MyTask.fromArgs(List<String> args);
+
+  @override
+  Future<Object> execute(Context context) => seq([
+        new InstallDartSdkTask(withContentShell: true, withDartium: true),
+        new PubTask(['get'], processWorkingDir: 'symbol'),
+        new PubTask(['run', 'test'], processWorkingDir: 'symbol')
+      ]).execute(context);
+}
+```
 
 #### Understanding Context
 A context is the environment where tasks are executed. It carries around various states common to some or all of tasks, such as ways to access cloud services running Beaver such as databaase, storage, and virtual machines.
