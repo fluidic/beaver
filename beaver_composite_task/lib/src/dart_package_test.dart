@@ -18,6 +18,7 @@ class DartPackageTestTask implements Task {
 
   @override
   Future<Object> execute(Context context) => seq([
+        new DeleteTask(['${packageName}']),
         new GitTask(['clone', '${packageUrl}', '${packageName}']),
         new GitTask(['checkout', '${commitHash}'],
             processWorkingDir: '${packageName}'),
