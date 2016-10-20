@@ -38,6 +38,6 @@ class BeaverBuild extends Model {
   @StringProperty()
   String taskConfigCloudSettings;
 
-  @StringProperty()
-  String taskLog;
+  @BlobProperty()
+  List<int> taskLog;
 }

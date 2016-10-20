@@ -79,7 +79,7 @@ class GCloudStorageService extends Object
       ..taskStatus = result.taskStatus
       ..taskConfigCloudType = result.taskConfigCloudType
       ..taskConfigCloudSettings = JSON.encode(result.taskConfigCloudSettings)
-      ..taskLog = result.taskLog;
+      ..taskLog = UTF8.encode(result.taskLog);
     await db.commit(inserts: [buildModel]);
     return true;
   }
@@ -112,7 +112,7 @@ class GCloudStorageService extends Object
         buildModel.taskStatus,
         buildModel.taskConfigCloudType,
         taskConfigCloudSettings,
-        buildModel.taskLog);
+        UTF8.decode(buildModel.taskLog));
   }
 
   @override
