@@ -17,7 +17,6 @@ class DartPackageTestTask implements Task {
         commitHash = args[2];
 
   @override
-  // FIXME: Use par.
   Future<Object> execute(Context context) => seq([
         new GitTask(['clone', '${packageUrl}', '${packageName}']),
         new GitTask(['checkout', '${commitHash}'],
