@@ -1,5 +1,7 @@
 import 'dart:async';
 
+/// [DartPackageTestTask] import.
+import 'package:beaver_composite_task/beaver_composite_task.dart';
 /// [GCloudStorageUploadTask] import.
 import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
 import 'package:beaver_store/beaver_store.dart' as beaver_store;
