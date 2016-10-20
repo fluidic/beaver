@@ -12,8 +12,6 @@ dependencies:
     path: ../beaver_dart_task
   beaver_task:
     path: ../beaver_task
-  pub_wrapper:
-    path: ../pub_wrapper
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
