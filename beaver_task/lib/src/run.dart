@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:mirrors';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
@@ -12,6 +13,8 @@ import './utils/reflection.dart';
 
 enum TaskStatus { Success, Failure, InternalError }
 
+EnumCodec<TaskStatus> _taskStatusCodec = new EnumCodec<TaskStatus>();
+
 /// [TaskRunResult] contains information about the result of task execution
 /// submitted to [runBeaver].
 class TaskRunResult {
@@ -23,6 +26,32 @@ class TaskRunResult {
 
   /// The '\n' delimited task log.
   final String log;
+
+  factory TaskRunResult.fromJson(json) {
+    if (json is String) {
+      json = JSON.decode(json);
+    }
+    if (json is! Map) {
+      throw new ArgumentError('json must be a Map or a String encoding a Map.');
+    }
+
+    Config configJson = json['config'];
+    String statusString = json['status'];
+    String log = json['log'];
+    if (configJson == null || statusString == null || log == null) {
+      throw new ArgumentError('The given json does not contain all the fields');
+    }
+
+    TaskStatus status = _taskStatusCodec.encode(statusString);
+    Config config = new Config.fromJson(configJson);
+    return new TaskRunResult._internal(config, status, log);
+  }
+
+  Map toJson() => {
+        'config': config.toJson(),
+        'status': _taskStatusCodec.decode(status),
+        'log': log
+      };
 
   TaskRunResult._internal(this.config, this.status, this.log);
 }

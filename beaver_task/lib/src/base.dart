@@ -53,6 +53,8 @@ class Config {
     }
     return new Config(cloudType, cloudSettings);
   }
+
+  Map toJson() => {'cloud_type': cloudType, 'cloud_settings': cloudSettings};
 }
 
 abstract class Task {
