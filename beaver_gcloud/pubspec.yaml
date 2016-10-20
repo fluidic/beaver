@@ -8,17 +8,20 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
+  command_wrapper: ^0.1.0
+  file_helper:
+    path: ../file_helper
   gcloud: '>=0.3.0 <0.4.0'
   googleapis: any
   googleapis_auth: any
   http: '>=0.11.3 <0.12.0'
-  unique:
-    path: ../unique
   googleapis_auth_default_credentials:
     git:
       url: https://github.com/kseo/googleapis_auth_default_credentials.git
       ref: gcf
-  which: '>=0.1.3 <0.2.0'
+  path: ^1.3.9
+  unique:
+    path: ../unique
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
