@@ -29,7 +29,7 @@ abstract class HttpCommand extends Command {
       if (value == null) {
         port = getConfig('server', 'port');
       } else {
-        port = value;
+        port = int.parse(value);
       }
 
       if (port == null) {
