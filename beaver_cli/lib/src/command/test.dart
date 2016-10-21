@@ -15,7 +15,7 @@ class TestCommand extends HttpCommand {
     argParser.addOption('project-id', abbr: 'p', callback: (value) {
       if (value == null) {
         print('project-id is required.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'Project ID to be tested.');
 
@@ -28,7 +28,7 @@ class TestCommand extends HttpCommand {
     argParser.addOption('data', abbr: 'd', callback: (value) {
       if (value == null) {
         print('data is required.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'Data will be sent as POST data.');
 

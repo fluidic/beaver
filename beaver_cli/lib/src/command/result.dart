@@ -15,14 +15,14 @@ class ResultCommand extends HttpCommand {
     argParser.addOption('project-id', abbr: 'p', callback: (value) {
       if (value == null) {
         print('project-id is required.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'Project ID.');
 
     argParser.addOption('build-number', abbr: 'b', callback: (value) {
       if (value == null) {
         print('build-number is required.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'Build number to be got.');
 
@@ -35,7 +35,7 @@ class ResultCommand extends HttpCommand {
     argParser.addOption('count', abbr: 'n', defaultsTo: '1', callback: (value) {
       if (int.parse(value, onError: (source) => -1) <= 0) {
         print('The option -n requires a positive integer.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'Number of results to output.');
   }

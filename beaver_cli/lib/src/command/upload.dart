@@ -20,7 +20,7 @@ class UploadCommand extends HttpCommand {
     argParser.addOption('project-id', abbr: 'p', callback: (value) {
       if (value == null) {
         print('project-id is required.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'The config file is uploaded to this project.');
   }

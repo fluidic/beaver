@@ -21,7 +21,7 @@ abstract class HttpCommand extends Command {
 
       if (address == null) {
         print('address is required.');
-        exit(0);
+        exitWithHelpMessage();
       }
     }, help: 'Address will be requested.');
 
@@ -57,4 +57,9 @@ abstract class HttpCommand extends Command {
       host: address,
       port: port,
       path: '${pathPrefix}${api}${additionalPath}');
+
+  void exitWithHelpMessage() {
+    print(argParser.usage);
+    exit(0);
+  }
 }
