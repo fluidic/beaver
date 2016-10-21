@@ -1,6 +1,8 @@
 name: beaver_cli
 version: 0.1.0
 description: Command line interface for the Beaver.
+executables:
+  beaver:
 
 author: Fluidic Team <dev@fluidic.io>
 #homepage: https://www.example.com
