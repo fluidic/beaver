@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'dart:mirrors';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:logging/logging.dart';
 
 import './annotation.dart';
 import './base.dart';
 import './gcloud_context.dart';
 import './logger.dart';
-import './utils/reflection.dart';
 
 enum TaskStatus { Success, Failure, InternalError }
 

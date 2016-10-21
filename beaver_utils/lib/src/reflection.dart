@@ -4,6 +4,19 @@ import 'dart:mirrors';
 newInstance(String constructorName, ClassMirror cm, List args) =>
     cm.newInstance(new Symbol(constructorName), args).reflectee;
 
+Map<String, ClassMirror> queryNameClassMapByAnnotation(Type annotationClassType) {
+  Map<String, ClassMirror> map = {};
+  final cms = queryClassesByAnnotation(reflectClass(annotationClassType));
+  for (final cm in cms) {
+    cm.metadata.forEach((md) {
+      InstanceMirror metadata = md;
+      String name = metadata.getField(#name).reflectee;
+      map[name] = cm;
+    });
+  }
+  return map;
+}
+
 List<ClassMirror> queryClassesByAnnotation(ClassMirror annotation) {
   List<ClassMirror> results = [];
   MirrorSystem mirrorSystem = currentMirrorSystem();
