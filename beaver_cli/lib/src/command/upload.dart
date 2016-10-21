@@ -30,6 +30,9 @@ class UploadCommand extends HttpCommand {
 
   @override
   Future<Null> run() async {
+    final url = getServerUrl();
+    print(url.toString() + ' will be requested.');
+
     final config = new File(argResults['config-file']).readAsStringSync();
     final data =
         JSON.encode({'id': argResults['project-id'], 'config': config});

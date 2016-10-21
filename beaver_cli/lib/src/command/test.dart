@@ -43,9 +43,11 @@ class TestCommand extends HttpCommand {
 
   @override
   Future<Null> run() async {
+    final url = getServerUrl(additionalPath: '/' + argResults['project-id']);
+    print(url.toString() + ' will be requested.');
+
     final httpClient = new HttpClient();
-    final request = await httpClient.openUrl(
-        'POST', getServerUrl(additionalPath: '/' + argResults['project-id']));
+    final request = await httpClient.openUrl('POST', url);
     request.headers
         .add('Content-Type', 'application/' + argResults['data-format']);
     if (argResults['trigger-type'] == 'github') {

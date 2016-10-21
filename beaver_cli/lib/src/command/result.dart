@@ -45,6 +45,9 @@ class ResultCommand extends HttpCommand {
 
   @override
   Future<Null> run() async {
+    final url = getServerUrl();
+    print(url.toString() + ' will be requested.');
+
     final data = JSON.encode({
       'id': argResults['project-id'],
       'build_number': argResults['build-number'],
@@ -53,7 +56,7 @@ class ResultCommand extends HttpCommand {
     });
 
     final httpClient = new HttpClient();
-    final request = await httpClient.openUrl('POST', getServerUrl());
+    final request = await httpClient.openUrl('POST', url);
     request.headers.add('Content-Type', 'application/json');
     request.write(data);
     final response = await request.close();

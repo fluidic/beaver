@@ -25,11 +25,14 @@ class RegisterCommand extends HttpCommand {
 
   @override
   Future<Null> run() async {
+    final url = getServerUrl();
+    print(url.toString() + ' will be requested.');
+
     final config =
         loadYaml(new File(argResults['config-file']).readAsStringSync());
 
     final httpClient = new HttpClient();
-    final request = await httpClient.openUrl('POST', getServerUrl());
+    final request = await httpClient.openUrl('POST', url);
     request.headers.add('Content-Type', 'application/json');
     final data = JSON.encode(
         {'project': config['project_name'], 'config': config.toString()});
