@@ -4,6 +4,7 @@ import 'dart:mirrors';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
 import 'package:beaver_utils/beaver_utils.dart';
+import 'package:command_wrapper/command_wrapper.dart';
 import 'package:logging/logging.dart';
 
 import './annotation.dart';
@@ -116,6 +117,31 @@ Future<Context> _createGCloudContext(Config config) async {
   return context;
 }
 
+CommandWrapper _ssh = new CommandWrapper('ssh');
+
+Future _prepareBeaverTaskServer(String remoteAddr) async {
+  String host = 'beaver@${remoteAddr}';
+  await _ssh.run([
+    '-oStrictHostKeyChecking=no',
+    '-i',
+    sshKeyPath,
+    host
+  ], stdin: [
+    'EOF',
+    'sudo apt-get update',
+    'sudo apt-get -y install apt-transport-https',
+    "sudo sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | tac | apt-key add -'",
+    "sudo sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'",
+    'sudo apt-get update',
+    'sudo apt-get -y --force-yes install dart',
+    'sudo apt-get -y install git',
+    'git clone https://github.com/fluidic/beaver',
+    'cd beaver/beaver_task',
+    '/usr/lib/dart/bin/pub get',
+    "sh -c 'nohup dart bin/beaver_task_server.dart > foo.out 2> foo.err < /dev/null &'"
+  ]);
+}
+
 Future<TaskRunResult> runBeaver(
     String taskName, List<String> taskArgs, Config config,
     {bool newVM: false}) async {
@@ -135,10 +161,9 @@ Future<TaskRunResult> runBeaver(
   }
 
   if (newVM) {
-    CreateVMResult result = await context.createVM();
-    // FIXME: Execute the task in the vm and return the result.
-    await context.deleteVM(result.name);
-    return null;
+    CreateVMResult vm = await context.createVM();
+    await _prepareBeaverTaskServer(vm.networkIPs.first);
+    await context.deleteVM(vm.name);
   } else {
     final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
     return _runTask(context, task);

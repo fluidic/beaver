@@ -10,7 +10,7 @@ environment:
 dependencies:
   beaver_task:
     path: ../beaver_task
-  command_wrapper : ^0.1.0
+  command_wrapper : ^0.2.0
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
