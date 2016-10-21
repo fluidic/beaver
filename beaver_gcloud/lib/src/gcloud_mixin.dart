@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth_default_credentials/googleapis_auth_default_credentials.dart';
@@ -9,7 +10,9 @@ import 'package:googleapis/compute/v1.dart';
 import 'package:http/http.dart' as http;
 import 'package:unique/unique.dart';
 
-enum CreateVMStatus { Success, Error }
+import 'ssh_keygen.dart';
+
+enum CreateVMStatus { Success, FailToAddSshKey, Error }
 
 class CreateVMResult {
   // Status of CreateVM.
@@ -126,6 +129,19 @@ abstract class GCloudMixin implements GCloud {
 
     List<String> networkIPs =
         instance.networkInterfaces.map((ni) => ni.networkIP);
+
+    generateSshKeyIfNotExist();
+    final sshKey = await new File(sshPublicKeyPath).readAsString();
+    MetadataItems item = new MetadataItems()
+      ..key = 'ssh-keys'
+      ..value = sshKey;
+    instance.metadata.items = [item];
+    op = await compute.instances
+        .setMetadata(instance.metadata, _project, _zone, name);
+    if (op.status != null) {
+      status = CreateVMStatus.FailToAddSshKey;
+    }
+
     return new CreateVMResult(status, name, _zone, networkIPs);
   }
 

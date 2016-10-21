@@ -9,11 +9,12 @@ final String _homePath = Platform.isWindows
     ? Platform.environment['APPDATA']
     : Platform.environment['HOME'];
 
+final CommandWrapper _sshKeygen = new CommandWrapper('ssh-keygen');
+
 final String _beaverDir = path.join(_homePath, '.beaver');
 final String _sshKeyPath = path.join(_beaverDir, 'id_rsa');
-final String _sshPublicKeyPath = '${_sshKeyPath}.pub';
 
-final CommandWrapper _sshKeygen = new CommandWrapper('ssh-keygen');
+final String sshPublicKeyPath = '${_sshKeyPath}.pub';
 
 Future<Null> generateSshKeyIfNotExist() async {
   if (await new File(_sshKeyPath).exists()) return;
@@ -29,9 +30,9 @@ Future<Null> generateSshKeyIfNotExist() async {
     throw new Exception('Fail to create ssh key');
   }
 
-  final contents = await new File(_sshPublicKeyPath).readAsString();
+  final contents = await new File(sshPublicKeyPath).readAsString();
   // If we use the API to set public SSH keys, we must prefix the key with our
   // username. See https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys
-  await new File(_sshPublicKeyPath)
+  await new File(sshPublicKeyPath)
       .writeAsString('${username}:${contents}', flush: true);
 }
