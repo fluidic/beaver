@@ -5,8 +5,8 @@ class BeaverProject extends Model {
   @StringProperty()
   String name;
 
-  @StringProperty()
-  String config;
+  @BlobProperty()
+  List<int> config;
 
   @IntProperty()
   int buildNumber;

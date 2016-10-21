@@ -43,7 +43,7 @@ class GCloudStorageService extends Object
     final projectModel = await _queryProjectModel(projectId);
     return new Project(projectModel.name)
       ..id = projectModel.id.toString()
-      ..config = new YamlConfig(projectModel.config);
+      ..config = new YamlConfig(UTF8.decode(projectModel.config));
   }
 
   @override
@@ -55,7 +55,7 @@ class GCloudStorageService extends Object
         : await _queryProjectModel(project.id);
     projectModel
       ..name = project.name
-      ..config = project.config.toString();
+      ..config = UTF8.encode(project.config.toString());
     await db.commit(inserts: [projectModel]);
     return projectModel.id.toString();
   }
@@ -69,7 +69,7 @@ class GCloudStorageService extends Object
           ..projectId = projectId;
     // TODO: consider serialization.
     buildModel
-      ..triggerData = JSON.encode(result.triggerData)
+      ..triggerData = UTF8.encode(JSON.encode(result.triggerData))
       ..triggerType = result.triggerType
       ..triggerHeaders = JSON.encode(result.triggerHeaders)
       ..parsedTriggerEvent = result.parsedTriggerEvent
@@ -94,7 +94,7 @@ class GCloudStorageService extends Object
     final triggerHeaders =
         JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
     final triggerData =
-        JSON.decode(buildModel.triggerData) as Map<String, Object>;
+        JSON.decode(UTF8.decode(buildModel.triggerData)) as Map<String, Object>;
     final taskInstance =
         JSON.decode(buildModel.taskInstance) as Map<String, Object>;
     final taskConfigCloudSettings =
