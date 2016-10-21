@@ -27,7 +27,11 @@ class CreateVMResult {
   // List of network IP addresses.
   final List<String> networkIPs;
 
-  CreateVMResult(this.status, this.name, this.zone, this.networkIPs);
+  /// The external IP address.
+  final String externalIP;
+
+  CreateVMResult(
+      this.status, this.name, this.zone, this.networkIPs, this.externalIP);
 }
 
 enum DeleteVMStatus { Success, Error }
@@ -129,6 +133,7 @@ abstract class GCloudMixin implements GCloud {
 
     List<String> networkIPs =
         instance.networkInterfaces.map((ni) => ni.networkIP);
+    String natIP = instance.networkInterfaces.first.accessConfigs.first.natIP;
 
     generateSshKeyIfNotExist();
     final sshKey = await new File(sshPublicKeyPath).readAsString();
@@ -142,7 +147,7 @@ abstract class GCloudMixin implements GCloud {
       status = CreateVMStatus.FailToAddSshKey;
     }
 
-    return new CreateVMResult(status, name, _zone, networkIPs);
+    return new CreateVMResult(status, name, _zone, networkIPs, natIP);
   }
 
   @override
