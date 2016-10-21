@@ -3,3 +3,7 @@ vm: true
 threadsafe: true
 manual_scaling:
   instances: 1
+resources:
+  cpu: 5
+  memory_gb: 15
+  disk_size_gb: 16
