@@ -14,8 +14,7 @@ abstract class HttpCommand extends Command {
   HttpCommand() : super() {
     argParser.addOption('address', abbr: 'A', callback: (value) {
       if (value == null) {
-        final config = getConfig();
-        address = config['server']['address'];
+        address = getConfig('server', 'address');
       } else {
         address = value;
       }
@@ -28,15 +27,13 @@ abstract class HttpCommand extends Command {
 
     argParser.addOption('port', abbr: 'P', callback: (value) {
       if (value == null) {
-        final config = getConfig();
-        port = config['server']['port'];
+        port = getConfig('server', 'port');
       } else {
         port = value;
       }
 
       if (port == null) {
-        final config = getConfig();
-        if (config['server']['secure']) {
+        if (getConfig('server', 'secure')) {
           port = 443;
         } else {
           port = 80;
@@ -45,14 +42,12 @@ abstract class HttpCommand extends Command {
     }, help: 'Port number will be used to request.');
 
     argParser.addFlag('secure', abbr: 'S', callback: (value) {
-      final config = getConfig();
-      secure = config['server']['secure'] ?? false;
+      secure = getConfig('server', 'secure') ?? false;
     }, help: 'If \'true\', HTTPS will be used.');
 
     argParser.addOption('path-prefix', abbr: 'a', callback: (value) {
       if (value == null) {
-        final config = getConfig();
-        pathPrefix = config['server']['path_prefix'] ?? '';
+        pathPrefix = getConfig('server', 'path_prefix') ?? '';
       }
     }, help: 'Path prefix.');
   }
