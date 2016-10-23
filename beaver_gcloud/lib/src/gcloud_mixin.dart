@@ -59,6 +59,9 @@ abstract class GCloudMixin implements GCloud {
   String _project;
   String _zone;
 
+  String get project => _project;
+  String get region => _zone.replaceAll(new RegExp(r'-[a-z]+$'), '');
+
   @override
   Storage get storage => _storage;
 
