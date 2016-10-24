@@ -23,12 +23,12 @@ main() async {
 
 Future _apiHandler(shelf.Request request) async {
   final api = request.url.pathSegments.last;
-  final requestBody =
-      JSON.decode(await request.readAsString()) as Map<String, Object>;
+  final body = await request.readAsString();
+  final json = body.isNotEmpty ? JSON.decode(body) : {};
 
   var result;
   try {
-    final ret = await apiHandler(api, requestBody);
+    final ret = await apiHandler(api, json as Map<String, Object>);
     result = {'status': 'success'}..addAll(ret);
   } catch (e) {
     print(e);

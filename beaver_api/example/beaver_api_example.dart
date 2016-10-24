@@ -17,12 +17,12 @@ main() async {
 
 Future handler(shelf.Request request) async {
   final api = request.url.pathSegments.last;
-  final requestBody =
-      JSON.decode(await request.readAsString()) as Map<String, Object>;
+  final body = await request.readAsString();
+  final json = body.isNotEmpty ? JSON.decode(body) : {};
 
   Map<String, Object> result;
   try {
-    result = await apiHandler(api, requestBody);
+    result = await apiHandler(api, json as Map<String, Object>);
   } catch (e) {
     print(e);
     return new shelf.Response.internalServerError();
