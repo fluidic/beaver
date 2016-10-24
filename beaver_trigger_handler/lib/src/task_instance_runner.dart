@@ -37,8 +37,6 @@ class TaskInstanceRunner {
       'project_name': _config['cloud_project_name'],
       'zone': _config['zone']
     });
-    // FIXME: If the multiple users call the same task in the same time,
-    // there can be conflict.
     final result = await runBeaver(_task['name'], args, config);
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
