@@ -18,10 +18,10 @@ Future<Map<String, Object>> apiHandler(
 
   final ret = {};
   switch (api) {
-    case 'register':
+    case 'create':
       final projectName = data['project'];
       final config = data['config'];
-      final id = await _registerProject(context, projectName, config);
+      final id = await _createProject(context, projectName, config: config);
       ret['project'] = projectName;
       ret['id'] = id;
       break;
@@ -57,10 +57,12 @@ Future<Context> _createContext() async {
 }
 
 /// Set new project. Returns the id of the registered project.
-Future<String> _registerProject(
-    Context context, String projectName, String config) async {
+Future<String> _createProject(
+    Context context, String projectName, {String config}) async {
   final projectId = await context.beaverStore.setNewProject(projectName);
-  await context.beaverStore.setConfig(projectId, config);
+  if (config != null) {
+    await context.beaverStore.setConfig(projectId, config);
+  }
   return projectId;
 }
 

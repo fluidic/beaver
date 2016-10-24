@@ -4,7 +4,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
-import './command/register.dart';
+import './command/create.dart';
 import './command/result.dart';
 import './command/test.dart';
 import './command/upload.dart';
@@ -44,7 +44,7 @@ class BeaverCommandRunner extends CommandRunner {
 CommandRunner getRunner() {
   final runner = new BeaverCommandRunner('beaver', 'CLI for beaver CI.');
   runner
-    ..addCommand(new RegisterCommand())
+    ..addCommand(new CreateCommand())
     ..addCommand(new UploadCommand())
     ..addCommand(new TestCommand())
     ..addCommand(new ResultCommand());
