@@ -5,6 +5,7 @@ import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
 import './command/create.dart';
+import './command/delete.dart';
 import './command/get_results.dart';
 import './command/test.dart';
 import './command/upload.dart';
@@ -47,6 +48,7 @@ CommandRunner getRunner() {
     ..addCommand(new CreateCommand())
     ..addCommand(new UploadCommand())
     ..addCommand(new TestCommand())
-    ..addCommand(new GetResultsCommand());
+    ..addCommand(new GetResultsCommand())
+    ..addCommand(new DeleteCommand());
   return runner;
 }
