@@ -8,6 +8,7 @@ exports.beaver = function beaver(req, res) {
             'beaver_ci.dart.snapshot',
             req.path,
             JSON.stringify(req.headers),
+            // FIXME: req.body can be empty.
             JSON.stringify(req.body)
         ],
         {
