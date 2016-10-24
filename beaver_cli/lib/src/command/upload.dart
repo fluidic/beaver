@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:yaml/yaml.dart';
+
 import './http.dart';
 
 class UploadCommand extends HttpCommand {
@@ -36,8 +38,12 @@ class UploadCommand extends HttpCommand {
     print(url.toString() + ' will be requested.');
 
     final config = new File(argResults['config-file']).readAsStringSync();
-    final data =
-        JSON.encode({'project_name': projectName, 'config': config});
+    final yaml = loadYaml(config);
+    if (projectName != yaml['project_name']) {
+      print('project_name is different.');
+      exit(0);
+    }
+    final data = JSON.encode({'project_name': projectName, 'config': config});
 
     final httpClient = new HttpClient();
     final request = await httpClient.openUrl('POST', getServerUrl());
