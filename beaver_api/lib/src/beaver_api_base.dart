@@ -30,7 +30,7 @@ Future<Map<String, Object>> apiHandler(
       final config = data['config'];
       await _uploadConfigFile(context, projectName, config);
       break;
-    case 'result':
+    case 'get-results':
       final projectName = data['project_name'];
       final buildNumber = int.parse(data['build_number']);
       final format = data['format'];

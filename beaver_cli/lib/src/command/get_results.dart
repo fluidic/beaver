@@ -4,14 +4,14 @@ import 'dart:io';
 
 import './http.dart';
 
-class ResultCommand extends HttpCommand {
+class GetResultsCommand extends HttpCommand {
   @override
-  String get description => 'Show the result of the build.';
+  String get description => 'Show the result of the builds.';
 
   @override
-  String get name => 'result';
+  String get name => 'get-results';
 
-  ResultCommand() : super() {
+  GetResultsCommand() : super() {
     argParser.addOption('build-number', abbr: 'b', callback: (value) {
       if (value == null) {
         print('build-number is required.');
@@ -34,7 +34,7 @@ class ResultCommand extends HttpCommand {
   }
 
   @override
-  String get api => '/api/result';
+  String get api => '/api/get-results';
 
   String projectName;
 
