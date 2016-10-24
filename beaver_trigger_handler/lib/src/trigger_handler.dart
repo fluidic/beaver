@@ -30,11 +30,13 @@ Future<Context> _createContext() async {
   return new Context(logger, beaverStore);
 }
 
-List _getTriggerConfigs(Project project) {
-  return (project.config['triggers'] as YamlList).toList(growable: false);
+List<Map<String, Object>> _getTriggerConfigs(Project project) {
+  return (project.config['triggers'] as YamlList).toList(growable: false)
+      as List<Map<String, Object>>;
 }
 
-Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
+Map<String, Object> _findTriggerConfig(
+    List<Map<String, Object>> triggerConfigs, ParsedTrigger parsedTrigger) {
   return triggerConfigs.firstWhere((triggerConfig) {
     if (triggerConfig['url'] != parsedTrigger.url) {
       return false;
@@ -60,19 +62,21 @@ Future<int> _triggerHandler(
   final parsedTrigger = parseTrigger(context, trigger);
   context.logger.info('Trigger: ${parsedTrigger}');
 
-  final triggerConfig =
-      _getTriggerConfigs(project) as List<Map<String, Object>>;
-  final taskInstance =
-      _findTriggerConfig(triggerConfig, parsedTrigger) as Map<String, Object>;
-  context.logger.info('TriggerConfig: ${triggerConfig}');
+  final triggerConfigs = _getTriggerConfigs(project);
+  final matchedTriggerConfigs =
+      _findTriggerConfig(triggerConfigs, parsedTrigger);
+  context.logger
+      .info('Matched Trigger Configuration: ${matchedTriggerConfigs}');
 
-  final taskInstanceRunner = new TaskInstanceRunner(
-      context, project.config, parsedTrigger, taskInstance);
+  final tasks = (matchedTriggerConfigs['task'] as YamlList)
+      .toList(growable: false) as List<Map<String, Object>>;
+  final taskInstanceRunner =
+      new TaskInstanceRunner(context, project.config, parsedTrigger, tasks);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskInstanceRunResult: ${result}');
 
-  await context.beaverStore.saveResult(
-      projectName, buildNumber, trigger, parsedTrigger, taskInstance, result);
+  await context.beaverStore.saveResult(projectName, buildNumber, trigger,
+      parsedTrigger, matchedTriggerConfigs, result);
   context.logger.info('Result is saved.');
   return buildNumber;
 }

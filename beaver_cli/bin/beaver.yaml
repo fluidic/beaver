@@ -12,5 +12,5 @@ triggers:
     token: token_for_test
     events: ["github_event_create_branch"]
     task:
-      name: download
-      args: ["https://raw.githubusercontent.com/fluidic/beaver/master/beaver_trigger_handler/README.md", "."]
+      - name: download
+        args: ["https://raw.githubusercontent.com/fluidic/beaver/master/beaver_trigger_handler/README.md", "."]
