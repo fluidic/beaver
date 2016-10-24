@@ -18,11 +18,15 @@ class BeaverStore {
   Future<Null> initialize(Map<String, Object> config) =>
       _storageService.initialize(config);
 
-  Future<Null> setNewProject(String name) =>
-      _storageService.saveProject(new Project(name));
+  Future<Null> setNewProject(String name) async {
+    final project = await _storageService.loadProject(name);
+    if (project != null) {
+      throw new Exception('Project \'${name}\' already exists.');
+    }
+    await _storageService.saveProject(new Project(name));
+  }
 
-  Future<Project> getProject(String name) =>
-      _storageService.loadProject(name);
+  Future<Project> getProject(String name) => _storageService.loadProject(name);
 
   Future<int> getAndUpdateBuildNumber(String id) async {
     final buildNumber = await _storageService.getBuildNumber(id);
