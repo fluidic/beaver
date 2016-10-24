@@ -40,7 +40,7 @@ class UploadCommand extends HttpCommand {
     final config = new File(argResults['config-file']).readAsStringSync();
     final yaml = loadYaml(config);
     if (projectName != yaml['project_name']) {
-      print('project_name is different.');
+      print('project_names are different.');
       exit(0);
     }
     final data = JSON.encode({'project_name': projectName, 'config': config});
