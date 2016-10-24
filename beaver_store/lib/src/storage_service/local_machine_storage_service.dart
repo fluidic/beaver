@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:quiver_iterables/iterables.dart';
+
 import '../model/project.dart';
 import '../model/trigger_result.dart';
 import '../storage_service.dart';
@@ -51,4 +53,22 @@ class LocalMachineStorageService implements StorageService {
 
   @override
   Future<Null> initialize(Map<String, String> config) => null;
+
+  @override
+  Future<Null> removeProject(String projectName) async {
+    _projectMap.remove(projectName);
+    _buildNumberMap.remove(projectName);
+  }
+
+  @override
+  Future<Null> removeResult(String projectName) async {
+    final buildNumber = await getBuildNumber(projectName);
+    if (buildNumber == null) {
+      return;
+    }
+    for (final num in range(0, buildNumber + 1)) {
+      final key = projectName + '__' + num.toString();
+      _resultMap.remove(key);
+    }
+  }
 }

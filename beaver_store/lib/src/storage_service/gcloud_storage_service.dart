@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
 import 'package:gcloud/datastore.dart' as datastore;
+import 'package:gcloud/db.dart';
 
 import '../model/config.dart';
 import '../model/project.dart';
@@ -34,6 +35,13 @@ class GCloudStorageService extends Object
       ..filter('number =', buildNumber);
     final result = await query.run().toList();
     return result.isEmpty ? null : result.first;
+  }
+
+  Future<List<BeaverBuild>> _queryBuildModels(
+      String projectName) async {
+    final query = db.query(BeaverBuild)
+      ..filter('projectName =', projectName);
+    return await query.run().toList();
   }
 
   @override
@@ -134,4 +142,18 @@ class GCloudStorageService extends Object
   @override
   Future<Null> initialize(Map<String, String> config) =>
       init(config['cloud_project_name'], config['zone']);
+
+  @override
+  Future<Null> removeProject(String projectName) async {
+    final projectModel = await _queryProjectModel(projectName);
+    await db.commit(deletes: [projectModel.key]);
+  }
+
+  @override
+  Future<Null> removeResult(String projectName) async {
+    final buildModels = await _queryBuildModels(projectName);
+    final buildModelKeys = new List<Key>();
+    buildModels.forEach((buildModel) => buildModelKeys.add(buildModel.key));
+    await db.commit(deletes: buildModelKeys);
+  }
 }

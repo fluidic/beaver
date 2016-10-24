@@ -9,6 +9,7 @@ import './storage_service/local_machine_storage_service.dart';
 abstract class StorageService {
   Future<Project> loadProject(String projectName);
   Future<Null> saveProject(Project project);
+  Future<Null> removeProject(String projectName);
 
   Future<int> getBuildNumber(String projectName);
   Future<bool> setBuildNumber(String projectName, int buildNumber);
@@ -16,6 +17,7 @@ abstract class StorageService {
   Future<TriggerResult> loadResult(String projectName, int buildNumber);
   Future<bool> saveResult(
       String projectName, int buildNumber, TriggerResult result);
+  Future<Null> removeResult(String projectName);
 
   Future<Null> initialize(Map<String, String> config);
 }

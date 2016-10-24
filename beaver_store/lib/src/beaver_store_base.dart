@@ -61,6 +61,11 @@ class BeaverStore {
 
   Future<TriggerResult> getResult(String id, int buildNumber) =>
       _storageService.loadResult(id, buildNumber);
+
+  Future<Null> deleteProject(String projectName) async {
+    await _storageService.removeResult(projectName);
+    await _storageService.removeProject(projectName);
+  }
 }
 
 Future<BeaverStore> getBeaverStore(StorageServiceType type,
