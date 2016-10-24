@@ -43,6 +43,10 @@ Future<Map<String, Object>> apiHandler(
       final projectName = data['project_name'];
       await _deleteProject(context, projectName);
       break;
+    case 'list':
+      final result = await _listProjects(context);
+      ret['project_names'] = result;
+      break;
     default:
       throw new Exception('Wrong API.');
   }
@@ -99,3 +103,8 @@ Future<String> _getResult(Context context, String projectName, int buildNumber,
 
 Future<Null> _deleteProject(Context context, String projectName) =>
     context.beaverStore.deleteProject(projectName);
+
+Future<List<String>> _listProjects(Context context) async {
+  final projects = await context.beaverStore.listProjects();
+  return projects.map((project) => project.name).toList(growable: false);
+}
