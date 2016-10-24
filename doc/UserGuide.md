@@ -151,6 +151,47 @@ Deleted successfully!
 ```
 
 ## Project Configuration
+```yaml
+- name: build_by_push
+  type: github
+  url: "https://github.com/fluidic/beaver_demo"
+  events: ["github_event_push"]
+  task:
+    - name: git
+      args: ["clone", "trigger:url"]
+    - name: git
+      args: ["checkout", "trigger:payload.head_commit.id"]
+    - name: pub
+      args: ["get"]
+    - name: pub
+      args: ["run", "test"]
+    - name: mail
+      args: ["dev@fluidic.io"]
+```
+
+```yaml
+- name: daily_build_by_cron
+  type: cron
+  task:
+    - name: git
+      args: ["clone", "trigger:url"]
+    - name: pub
+      args: ["get"]
+    - name: pub
+      args: ["run", "test"]
+    - name: mail
+      args: ["dev@fluidic.io"]
+```
+
+```yaml
+- name: sdk_version_check
+  type: cron
+  task:
+      - name: version_check
+        args: ["dart"]
+      - name: trigger
+        args: ["daily_build_by_cron"]
+```
 
 ## Bundled Tasks
 ### Archiving
