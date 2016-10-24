@@ -142,8 +142,30 @@ Future _prepareBeaverTaskServer(String remoteAddr) async {
   ]);
 }
 
-Future<TaskRunResult> runBeaver(
-    String taskName, List<String> taskArgs, Config config,
+Task _createTaskFromJson(json, Map<String, ClassMirror> taskClassMap) {
+  if (json is String) {
+    json = JSON.decode(json);
+  }
+  if (json is! Map) {
+    throw new ArgumentError('json must be a Map or a String encoding a Map.');
+  }
+
+  final name = json['name'];
+  final args = [];
+  for (final arg in json['args']) {
+    if (arg is String) {
+      args.add(arg);
+    } else if (arg is Map) {
+      args.add(_createTaskFromJson(arg, taskClassMap));
+    } else {
+      throw new ArgumentError('arg must be a Map or a String');
+    }
+  }
+
+  return newInstance('fromArgs', taskClassMap[name], [args]);
+}
+
+Future<TaskRunResult> runBeaver(json, Config config,
     {bool newVM: false}) async {
   // Turn on all logging levels.
   Logger.root.level = Level.ALL;
@@ -165,7 +187,7 @@ Future<TaskRunResult> runBeaver(
     await _prepareBeaverTaskServer(vm.networkIPs.first);
     await context.deleteVM(vm.name);
   } else {
-    final task = newInstance('fromArgs', taskClassMap[taskName], [taskArgs]);
+    Task task = _createTaskFromJson(json, taskClassMap);
     return _runTask(context, task);
   }
 }
