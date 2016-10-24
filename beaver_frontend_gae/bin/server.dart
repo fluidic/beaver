@@ -26,17 +26,16 @@ Future _apiHandler(shelf.Request request) async {
   final requestBody =
       JSON.decode(await request.readAsString()) as Map<String, Object>;
 
-  Map<String, Object> result;
+  var result;
   try {
-    result = await apiHandler(api, requestBody);
+    final ret = await apiHandler(api, requestBody);
+    result = {'status': 'success'}..addAll(ret);
   } catch (e) {
     print(e);
-    return new shelf.Response.internalServerError();
+    result = {'statuc': 'failure', 'reason': e.toString()};
   }
 
-  final responseBody = {'status': 'success'};
-  responseBody.addAll(result);
-  return new shelf.Response.ok(JSON.encode(responseBody));
+  return new shelf.Response.ok(JSON.encode(result));
 }
 
 Future _gitHubTriggerHandler(shelf.Request request) async {

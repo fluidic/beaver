@@ -37,17 +37,16 @@ main(List<String> args) async {
 }
 
 Future _apiHandler(String api, Map<String, Object> data) async {
-  var status = 'success';
-  Map<String, Object> result;
+  var result;
   try {
-    result = await apiHandler(api, data);
+    final ret = await apiHandler(api, data);
+    result = {'status': 'success'}..addAll(ret);
   } catch (e) {
     print(e);
-    status = 'failure';
-    result = {'reason': e.toString()};
+    result = {'statuc': 'failure', 'reason': e.toString()};
   }
 
-  return {'status': status}..addAll(result);
+  return result;
 }
 
 Future _gitHubTriggerHandler(String projectName, Map<String, String> headers,
