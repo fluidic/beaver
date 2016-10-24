@@ -21,52 +21,55 @@ class GCloudStorageService extends Object
     return populatedKey.elements.first.id;
   }
 
-  Future<BeaverProject> _queryProjectModel(String projectId) async {
-    final datastoreKey =
-        new datastore.Key.fromParent('BeaverProject', int.parse(projectId));
-    final key = db.modelDB.fromDatastoreKey(datastoreKey);
-    final query = db.query(BeaverProject, ancestorKey: key);
-    return await query.run().first;
+  Future<BeaverProject> _queryProjectModel(String projectName) async {
+    final query = db.query(BeaverProject)..filter('name =', projectName);
+    final result = await query.run().toList();
+    return result.isEmpty ? null : result.first;
   }
 
   Future<BeaverBuild> _queryBuildModel(
-      String projectId, int buildNumber) async {
+      String projectName, int buildNumber) async {
     final query = db.query(BeaverBuild)
-      ..filter('projectId =', projectId)
+      ..filter('projectName =', projectName)
       ..filter('number =', buildNumber);
     final result = await query.run().toList();
-    return result.length == 0 ? null : result.first as BeaverBuild;
+    return result.isEmpty ? null : result.first;
   }
 
   @override
-  Future<Project> loadProject(String projectId) async {
-    final projectModel = await _queryProjectModel(projectId);
-    return new Project(projectModel.name)
-      ..id = projectModel.id.toString()
-      ..config = new YamlConfig(UTF8.decode(projectModel.config));
+  Future<Project> loadProject(String projectName) async {
+    final projectModel = await _queryProjectModel(projectName);
+    if (projectModel == null) {
+      return null;
+    }
+    final project = new Project(projectModel.name);
+    if (projectModel.config != null) {
+      project.config = new YamlConfig(UTF8.decode(projectModel.config));
+    }
+    return project;
   }
 
   @override
-  Future<String> saveProject(Project project) async {
-    final projectModel = project.id == null
-        ? (new BeaverProject()
-          ..id = await _allocateProjectId()
-          ..buildNumber = 0)
-        : await _queryProjectModel(project.id);
+  Future<Null> saveProject(Project project) async {
+    var projectModel = await _queryProjectModel(project.name);
+    if (projectModel == null) {
+      projectModel = new BeaverProject()
+        ..id = await _allocateProjectId()
+        ..buildNumber = 0;
+    }
     projectModel
       ..name = project.name
       ..config = UTF8.encode(project.config.toString());
     await db.commit(inserts: [projectModel]);
-    return projectModel.id.toString();
   }
 
   @override
   Future<bool> saveResult(
-      String projectId, int buildNumber, TriggerResult result) async {
+      String projectName, int buildNumber, TriggerResult result) async {
     final buildModel =
-        await _queryBuildModel(projectId, buildNumber) ?? new BeaverBuild()
+        await _queryBuildModel(projectName, buildNumber) ?? new BeaverBuild()
           ..number = buildNumber
-          ..projectId = projectId;
+          ..projectName = projectName;
     // TODO: consider serialization.
     buildModel
       ..triggerData = UTF8.encode(JSON.encode(result.triggerData))
@@ -85,8 +88,8 @@ class GCloudStorageService extends Object
   }
 
   @override
-  Future<TriggerResult> loadResult(String projectId, int buildNumber) async {
-    final buildModel = await _queryBuildModel(projectId, buildNumber);
+  Future<TriggerResult> loadResult(String projectName, int buildNumber) async {
+    final buildModel = await _queryBuildModel(projectName, buildNumber);
     if (buildModel == null) {
       throw new NullThrownError();
     }
@@ -100,7 +103,7 @@ class GCloudStorageService extends Object
     final taskConfigCloudSettings =
         JSON.decode(buildModel.taskConfigCloudSettings) as Map<String, Object>;
     return new TriggerResult.fromGCloud(
-        projectId,
+        projectName,
         buildNumber,
         buildModel.triggerType,
         triggerHeaders,
@@ -116,13 +119,13 @@ class GCloudStorageService extends Object
   }
 
   @override
-  Future<int> getBuildNumber(String projectId) async {
-    return (await _queryProjectModel(projectId)).buildNumber;
+  Future<int> getBuildNumber(String projectName) async {
+    return (await _queryProjectModel(projectName)).buildNumber;
   }
 
   @override
-  Future<bool> setBuildNumber(String projectId, int buildNumber) async {
-    final projectModel = await _queryProjectModel(projectId);
+  Future<bool> setBuildNumber(String projectName, int buildNumber) async {
+    final projectModel = await _queryProjectModel(projectName);
     projectModel.buildNumber = buildNumber;
     await db.commit(inserts: [projectModel]);
     return true;

@@ -7,15 +7,15 @@ import './storage_service/gcloud_storage_service.dart';
 import './storage_service/local_machine_storage_service.dart';
 
 abstract class StorageService {
-  Future<Project> loadProject(String projectId);
-  Future<String> saveProject(Project project);
+  Future<Project> loadProject(String projectName);
+  Future<Null> saveProject(Project project);
 
-  Future<int> getBuildNumber(String projectId);
-  Future<bool> setBuildNumber(String projectId, int buildNumber);
+  Future<int> getBuildNumber(String projectName);
+  Future<bool> setBuildNumber(String projectName, int buildNumber);
 
-  Future<TriggerResult> loadResult(String projectId, int buildNumber);
+  Future<TriggerResult> loadResult(String projectName, int buildNumber);
   Future<bool> saveResult(
-      String projectId, int buildNumber, TriggerResult result);
+      String projectName, int buildNumber, TriggerResult result);
 
   Future<Null> initialize(Map<String, String> config);
 }

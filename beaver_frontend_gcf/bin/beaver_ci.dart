@@ -50,12 +50,12 @@ Future _apiHandler(String api, Map<String, Object> data) async {
   return {'status': status}..addAll(result);
 }
 
-Future _gitHubTriggerHandler(String projectId, Map<String, String> headers,
+Future _gitHubTriggerHandler(String projectName, Map<String, String> headers,
     Map<String, Object> data) async {
   var result;
   try {
     final trigger = new Trigger('github', headers, data);
-    final buildNumber = await triggerHandler(trigger, projectId);
+    final buildNumber = await triggerHandler(trigger, projectName);
     result = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
     print(e);

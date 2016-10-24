@@ -35,7 +35,7 @@ class CreateCommand extends HttpCommand {
     final url = getServerUrl();
     print(url.toString() + ' will be requested.');
 
-    final data = {'project': projectName};
+    final data = {'project_name': projectName};
     if (argResults['config-file'] != null) {
       final config =
           loadYaml(new File(argResults['config-file']).readAsStringSync());

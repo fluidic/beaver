@@ -84,7 +84,7 @@ class HtmlFormatter implements Formatter {
           });
         } else {
           builder.element('h1', nest: () {
-            builder.text('${_project.name} (${_project.id})');
+            builder.text('${_project.name}');
           });
         }
         _buildTable(builder);

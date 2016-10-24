@@ -12,13 +12,6 @@ class ResultCommand extends HttpCommand {
   String get name => 'result';
 
   ResultCommand() : super() {
-    argParser.addOption('project-id', abbr: 'p', callback: (value) {
-      if (value == null) {
-        print('project-id is required.');
-        exitWithHelpMessage();
-      }
-    }, help: 'Project ID.');
-
     argParser.addOption('build-number', abbr: 'b', callback: (value) {
       if (value == null) {
         print('build-number is required.');
@@ -43,13 +36,22 @@ class ResultCommand extends HttpCommand {
   @override
   String get api => '/api/result';
 
+  String projectName;
+
   @override
   Future<Null> run() async {
+    if (argResults.rest.length == 1) {
+      projectName = argResults.rest[0];
+    } else {
+      print('project_name is required.');
+      exitWithHelpMessage();
+    }
+
     final url = getServerUrl();
     print(url.toString() + ' will be requested.');
 
     final data = JSON.encode({
-      'id': argResults['project-id'],
+      'project_name': projectName,
       'build_number': argResults['build-number'],
       'format': argResults['format'],
       'count': argResults['count']

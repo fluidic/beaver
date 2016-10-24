@@ -3,7 +3,7 @@ import 'package:gcloud/db.dart';
 @Kind()
 class BeaverBuild extends Model {
   @StringProperty()
-  String projectId;
+  String projectName;
 
   @IntProperty()
   int number;

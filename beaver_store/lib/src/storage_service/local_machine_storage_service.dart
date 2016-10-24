@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:uuid/uuid.dart';
-
 import '../model/project.dart';
 import '../model/trigger_result.dart';
 import '../storage_service.dart';
@@ -14,45 +12,40 @@ class LocalMachineStorageService implements StorageService {
   const LocalMachineStorageService();
 
   @override
-  Future<Project> loadProject(String projectId) async {
-    return _projectMap[projectId];
+  Future<Project> loadProject(String projectName) async {
+    return _projectMap[projectName];
   }
 
   @override
-  Future<String> saveProject(Project project) async {
-    if (project.id == null) {
-      final id = new Uuid().v4();
-      project.id = id;
-    }
-    _projectMap[project.id] = project;
-    return project.id;
+  Future<Null> saveProject(Project project) async {
+    _projectMap[project.name] = project;
   }
 
   @override
   Future<bool> saveResult(
-      String projectId, int buildNumber, TriggerResult result) async {
-    final key = projectId + '__' + buildNumber.toString();
+      String projectName, int buildNumber, TriggerResult result) async {
+    final key = projectName + '__' + buildNumber.toString();
     _resultMap[key] = result;
     return true;
   }
 
   @override
-  Future<TriggerResult> loadResult(String projectId, int buildNumber) async {
-    final key = projectId + '__' + buildNumber.toString();
+  Future<TriggerResult> loadResult(String projectName, int buildNumber) async {
+    final key = projectName + '__' + buildNumber.toString();
     return _resultMap[key];
   }
 
   @override
-  Future<int> getBuildNumber(String projectId) async {
-    if (!_buildNumberMap.containsKey(projectId)) {
-      _buildNumberMap[projectId] = 0;
+  Future<int> getBuildNumber(String projectName) async {
+    if (!_buildNumberMap.containsKey(projectName)) {
+      _buildNumberMap[projectName] = 0;
     }
-    return _buildNumberMap[projectId];
+    return _buildNumberMap[projectName];
   }
 
   @override
-  Future<bool> setBuildNumber(String projectId, int buildNumber) async {
-    _buildNumberMap[projectId] = buildNumber;
+  Future<bool> setBuildNumber(String projectName, int buildNumber) async {
+    _buildNumberMap[projectName] = buildNumber;
     return true;
   }
 

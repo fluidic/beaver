@@ -18,11 +18,11 @@ class BeaverStore {
   Future<Null> initialize(Map<String, Object> config) =>
       _storageService.initialize(config);
 
-  /// Return the id of Project.
-  Future<String> setNewProject(String name) =>
+  Future<Null> setNewProject(String name) =>
       _storageService.saveProject(new Project(name));
 
-  Future<Project> getProject(String id) => _storageService.loadProject(id);
+  Future<Project> getProject(String name) =>
+      _storageService.loadProject(name);
 
   Future<int> getAndUpdateBuildNumber(String id) async {
     final buildNumber = await _storageService.getBuildNumber(id);

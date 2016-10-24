@@ -2,7 +2,7 @@ import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 class TriggerResult {
-  final String projectId;
+  final String projectName;
   final int buildNumber;
 
   // Trigger
@@ -24,7 +24,7 @@ class TriggerResult {
   final String taskLog;
 
   TriggerResult._internal(
-      this.projectId,
+      this.projectName,
       this.buildNumber,
       this.triggerType,
       this.triggerHeaders,
@@ -66,7 +66,7 @@ class TriggerResult {
   }
 
   factory TriggerResult.fromGCloud(
-      String projectId,
+      String projectName,
       int buildNumber,
       String triggerType,
       Map<String, String> triggerHeaders,
@@ -80,7 +80,7 @@ class TriggerResult {
       Map<String, Object> taskConfigCloudSettings,
       String taskLog) {
     return new TriggerResult._internal(
-        projectId,
+        projectName,
         buildNumber,
         triggerType,
         triggerHeaders,

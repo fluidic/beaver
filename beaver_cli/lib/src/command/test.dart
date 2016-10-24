@@ -12,13 +12,6 @@ class TestCommand extends HttpCommand {
   String get name => 'test';
 
   TestCommand() : super() {
-    argParser.addOption('project-id', abbr: 'p', callback: (value) {
-      if (value == null) {
-        print('project-id is required.');
-        exitWithHelpMessage();
-      }
-    }, help: 'Project ID to be tested.');
-
     argParser.addOption('trigger-type',
         abbr: 't', defaultsTo: 'github', help: 'Trigger\'s type to be tested.');
 
@@ -41,9 +34,18 @@ class TestCommand extends HttpCommand {
   @override
   String get api => _triggerPath[argResults['trigger-type']];
 
+  String projectName;
+
   @override
   Future<Null> run() async {
-    final url = getServerUrl(additionalPath: '/' + argResults['project-id']);
+    if (argResults.rest.length == 1) {
+      projectName = argResults.rest[0];
+    } else {
+      print('project_name is required.');
+      exitWithHelpMessage();
+    }
+
+    final url = getServerUrl(additionalPath: '/' + projectName);
     print(url.toString() + ' will be requested.');
 
     final httpClient = new HttpClient();

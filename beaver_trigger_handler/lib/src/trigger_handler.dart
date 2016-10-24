@@ -47,15 +47,15 @@ Map _findTriggerConfig(List<Map> triggerConfigs, ParsedTrigger parsedTrigger) {
 }
 
 Future<int> _triggerHandler(
-    Context context, Trigger trigger, String projectId) async {
+    Context context, Trigger trigger, String projectName) async {
   context.logger.info('TriggerHandler is started.');
-  final project = await context.beaverStore.getProject(projectId);
+  final project = await context.beaverStore.getProject(projectName);
   if (project == null) {
-    throw new Exception('No project for id \'${projectId}\'.');
+    throw new Exception('No project for \'${projectName}\'.');
   }
   context.logger.info('Project: ${project}');
   final buildNumber =
-      await context.beaverStore.getAndUpdateBuildNumber(projectId);
+      await context.beaverStore.getAndUpdateBuildNumber(projectName);
 
   final parsedTrigger = parseTrigger(context, trigger);
   context.logger.info('Trigger: ${parsedTrigger}');
@@ -72,16 +72,16 @@ Future<int> _triggerHandler(
   context.logger.info('TaskInstanceRunResult: ${result}');
 
   await context.beaverStore.saveResult(
-      projectId, buildNumber, trigger, parsedTrigger, taskInstance, result);
+      projectName, buildNumber, trigger, parsedTrigger, taskInstance, result);
   context.logger.info('Result is saved.');
   return buildNumber;
 }
 
-Future<int> triggerHandler(Trigger trigger, String projectId) async {
+Future<int> triggerHandler(Trigger trigger, String projectName) async {
   final context = await _createContext();
 
   try {
-    return await _triggerHandler(context, trigger, projectId);
+    return await _triggerHandler(context, trigger, projectName);
   } catch (e) {
     context.logger.severe(e.toString());
     throw e;

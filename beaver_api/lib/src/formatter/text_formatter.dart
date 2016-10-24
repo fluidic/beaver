@@ -35,7 +35,7 @@ class TextFormatter implements Formatter {
       return "No results found.";
     }
 
-    buffer.writeln("${_project.name} (${_project.id})");
+    buffer.writeln("${_project.name}");
     _results.forEach((result) {
       _writeResult(result, buffer);
     });

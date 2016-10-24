@@ -7,9 +7,9 @@ import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
 main() async {
   final BeaverStore bs = await getBeaverStore(StorageServiceType.localMachine);
-  final projectId = await bs.setNewProject('test');
-  await bs.setConfig(projectId, new File('./beaver.yaml').readAsStringSync());
-  print(projectId);
+  final projectName = 'test';
+  await bs.setNewProject('projectName');
+  await bs.setConfig(projectName, new File('./beaver.yaml').readAsStringSync());
 
   initTriggerHandler(bs);
 
@@ -45,7 +45,7 @@ Future<String> handler(HttpRequest request) async {
   final jsonString = await request.transform(UTF8.decoder).join();
   final jsonData = JSON.decode(jsonString) as Map<String, Object>;
 
-  final projectId = request.uri.pathSegments.last;
+  final projectName = request.uri.pathSegments.last;
 
   final headers = new Map<String, String>();
   request.headers.forEach((name, value) {
@@ -55,7 +55,7 @@ Future<String> handler(HttpRequest request) async {
   var resp;
   try {
     final trigger = new Trigger('github', headers, jsonData);
-    final buildNumber = await triggerHandler(trigger, projectId);
+    final buildNumber = await triggerHandler(trigger, projectName);
     resp = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
     resp = {'status': 'failure', 'reason': e.toString()};

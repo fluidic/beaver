@@ -16,26 +16,28 @@ class UploadCommand extends HttpCommand {
         abbr: 'c',
         defaultsTo: './beaver.yaml',
         help: 'Config file will be uploaded.');
-
-    argParser.addOption('project-id', abbr: 'p', callback: (value) {
-      if (value == null) {
-        print('project-id is required.');
-        exitWithHelpMessage();
-      }
-    }, help: 'The config file is uploaded to this project.');
   }
 
   @override
   String get api => '/api/upload';
 
+  String projectName;
+
   @override
   Future<Null> run() async {
+    if (argResults.rest.length == 1) {
+      projectName = argResults.rest[0];
+    } else {
+      print('project_name is required.');
+      exitWithHelpMessage();
+    }
+
     final url = getServerUrl();
     print(url.toString() + ' will be requested.');
 
     final config = new File(argResults['config-file']).readAsStringSync();
     final data =
-        JSON.encode({'id': argResults['project-id'], 'config': config});
+        JSON.encode({'project_name': projectName, 'config': config});
 
     final httpClient = new HttpClient();
     final request = await httpClient.openUrl('POST', getServerUrl());

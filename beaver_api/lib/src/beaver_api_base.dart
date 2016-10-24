@@ -19,25 +19,24 @@ Future<Map<String, Object>> apiHandler(
   final ret = {};
   switch (api) {
     case 'create':
-      final projectName = data['project'];
+      final projectName = data['project_name'];
       final config = data['config'];
-      final id = await _createProject(context, projectName, config: config);
-      ret['project'] = projectName;
-      ret['id'] = id;
+      await _createProject(context, projectName, config: config);
+      ret['project_name'] = projectName;
       break;
     case 'upload':
       // FIXME: Get file by a better way.
-      final projectId = data['id'];
+      final projectName = data['project_name'];
       final config = data['config'];
-      await _uploadConfigFile(context, projectId, config);
+      await _uploadConfigFile(context, projectName, config);
       break;
     case 'result':
-      final projectId = data['id'];
+      final projectName = data['project_name'];
       final buildNumber = int.parse(data['build_number']);
       final format = data['format'];
       final count = int.parse(data['count']);
       final result =
-          await _getResult(context, projectId, buildNumber, format, count);
+          await _getResult(context, projectName, buildNumber, format, count);
       ret['result'] = result;
       break;
     default:
@@ -57,27 +56,26 @@ Future<Context> _createContext() async {
 }
 
 /// Set new project. Returns the id of the registered project.
-Future<String> _createProject(
+Future<Null> _createProject(
     Context context, String projectName, {String config}) async {
-  final projectId = await context.beaverStore.setNewProject(projectName);
+  await context.beaverStore.setNewProject(projectName);
   if (config != null) {
-    await context.beaverStore.setConfig(projectId, config);
+    await context.beaverStore.setConfig(projectName, config);
   }
-  return projectId;
 }
 
 Future<Null> _uploadConfigFile(
-        Context context, String projectId, String config) =>
-    context.beaverStore.setConfig(projectId, config);
+        Context context, String projectName, String config) =>
+    context.beaverStore.setConfig(projectName, config);
 
-Future<String> _getResult(Context context, String projectId, int buildNumber,
+Future<String> _getResult(Context context, String projectName, int buildNumber,
     String format, int count) async {
-  final project = await context.beaverStore.getProject(projectId);
+  final project = await context.beaverStore.getProject(projectName);
   final resultBuildNumbers =
       new Iterable.generate(max(count, 0), (i) => buildNumber + i);
   final results = (await Future.wait(resultBuildNumbers.map((number) async {
     try {
-      return await context.beaverStore.getResult(projectId, number);
+      return await context.beaverStore.getResult(projectName, number);
     } on NullThrownError {
       return null;
     }
