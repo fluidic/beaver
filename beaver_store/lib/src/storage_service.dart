@@ -10,6 +10,7 @@ abstract class StorageService {
   Future<Project> loadProject(String projectName);
   Future<Null> saveProject(Project project);
   Future<Null> removeProject(String projectName);
+  Future<Iterable<Project>> listProjects();
 
   Future<int> getBuildNumber(String projectName);
   Future<bool> setBuildNumber(String projectName, int buildNumber);

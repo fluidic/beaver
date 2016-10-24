@@ -28,6 +28,11 @@ class GCloudStorageService extends Object
     return result.isEmpty ? null : result.first;
   }
 
+  Future<List<BeaverProject>> _queryProjectModels() async {
+    final query = db.query(BeaverProject);
+    return await query.run().toList();
+  }
+
   Future<BeaverBuild> _queryBuildModel(
       String projectName, int buildNumber) async {
     final query = db.query(BeaverBuild)
@@ -37,11 +42,17 @@ class GCloudStorageService extends Object
     return result.isEmpty ? null : result.first;
   }
 
-  Future<List<BeaverBuild>> _queryBuildModels(
-      String projectName) async {
-    final query = db.query(BeaverBuild)
-      ..filter('projectName =', projectName);
+  Future<List<BeaverBuild>> _queryBuildModels(String projectName) async {
+    final query = db.query(BeaverBuild)..filter('projectName =', projectName);
     return await query.run().toList();
+  }
+
+  Project _convertProjectModelToProject(BeaverProject model) {
+    final project = new Project(model.name);
+    if (model.config != null) {
+      project.config = new YamlConfig(UTF8.decode(model.config));
+    }
+    return project;
   }
 
   @override
@@ -50,11 +61,7 @@ class GCloudStorageService extends Object
     if (projectModel == null) {
       return null;
     }
-    final project = new Project(projectModel.name);
-    if (projectModel.config != null) {
-      project.config = new YamlConfig(UTF8.decode(projectModel.config));
-    }
-    return project;
+    return _convertProjectModelToProject(projectModel);
   }
 
   @override
@@ -155,5 +162,12 @@ class GCloudStorageService extends Object
     final buildModelKeys = new List<Key>();
     buildModels.forEach((buildModel) => buildModelKeys.add(buildModel.key));
     await db.commit(deletes: buildModelKeys);
+  }
+
+  @override
+  Future<Iterable<Project>> listProjects() async {
+    final projectModels = await _queryProjectModels();
+    return projectModels
+        .map((projectModel) => _convertProjectModelToProject(projectModel));
   }
 }

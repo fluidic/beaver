@@ -71,4 +71,9 @@ class LocalMachineStorageService implements StorageService {
       _resultMap.remove(key);
     }
   }
+
+  @override
+  Future<Iterable<Project>> listProjects() async {
+    return _projectMap.values;
+  }
 }

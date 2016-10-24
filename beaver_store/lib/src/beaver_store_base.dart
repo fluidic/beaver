@@ -66,6 +66,8 @@ class BeaverStore {
     await _storageService.removeResult(projectName);
     await _storageService.removeProject(projectName);
   }
+
+  Future<Iterable<Project>> listProjects() => _storageService.listProjects();
 }
 
 Future<BeaverStore> getBeaverStore(StorageServiceType type,
