@@ -108,7 +108,14 @@ class ParsedTrigger {
     var keys;
     try {
       keys = str.split(':')[1];
-      keys = keys.split('.');
+      // FIXME: Don't hardcode.
+      if (!keys.startsWith('.')) {
+        if (keys == 'url') {
+          return this.url;
+        }
+        throw new Exception('ParsedTrigger doesn\'t have ${keys} field.');
+      }
+      keys = keys.split('.').removeAt(0);
     } catch (_) {
       throw new Exception('Wrong format for a trigger data: ${str}');
     }
