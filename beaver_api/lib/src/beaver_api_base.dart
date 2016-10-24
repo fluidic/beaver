@@ -39,6 +39,10 @@ Future<Map<String, Object>> apiHandler(
           await _getResult(context, projectName, buildNumber, format, count);
       ret['result'] = result;
       break;
+    case 'delete':
+      final projectName = data['project_name'];
+      await _deleteProject(context, projectName);
+      break;
     default:
       throw new Exception('Wrong API.');
   }
@@ -56,8 +60,8 @@ Future<Context> _createContext() async {
 }
 
 /// Set new project. Returns the id of the registered project.
-Future<Null> _createProject(
-    Context context, String projectName, {String config}) async {
+Future<Null> _createProject(Context context, String projectName,
+    {String config}) async {
   await context.beaverStore.setNewProject(projectName);
   if (config != null) {
     await context.beaverStore.setConfig(projectName, config);
@@ -92,3 +96,6 @@ Future<String> _getResult(Context context, String projectName, int buildNumber,
       return formatter.toText();
   }
 }
+
+Future<Null> _deleteProject(Context context, String projectName) =>
+    context.beaverStore.deleteProject(projectName);
