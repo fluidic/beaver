@@ -4,12 +4,11 @@ import 'dart:convert';
 import 'package:beaver_api/beaver_api.dart';
 import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
-import 'package:path/path.dart' as path;
 
 main(List<String> args) async {
   print('beaver-ci started.');
 
-  final urlPath = args[0];
+  final urlPath = Uri.parse(args[0]);
   final headers = JSON.decode(args[1]) as Map<String, String>;
   final data = JSON.decode(args[2]) as Map<String, Object>;
 
@@ -21,16 +20,16 @@ main(List<String> args) async {
   final beaverStore = await getBeaverStore(StorageServiceType.gCloud,
       config: {'cloud_project_name': 'beaver-ci', 'zone': 'us-central1-a'});
 
+  final firstPath = urlPath.pathSegments.first;
+  final lastPath = urlPath.pathSegments.last;
+
   var response;
-  if (urlPath.startsWith('/api')) {
+  if (firstPath == 'api') {
     initApiHandler(beaverStore);
-    response = await _apiHandler(path.basename(urlPath), data);
-  } else if (urlPath.startsWith('/github')) {
-    initTriggerHandler(beaverStore);
-    response =
-        await _gitHubTriggerHandler(path.basename(urlPath), headers, data);
+    response = await _apiHandler(lastPath, data);
   } else {
-    throw new Exception('Not Found.');
+    initTriggerHandler(beaverStore);
+    response = await _triggerHandler(firstPath, lastPath, headers, data);
   }
 
   print('response: ${JSON.encode(response)}');
@@ -49,11 +48,11 @@ Future _apiHandler(String api, Map<String, Object> data) async {
   return result;
 }
 
-Future _gitHubTriggerHandler(String projectName, Map<String, String> headers,
-    Map<String, Object> data) async {
+Future _triggerHandler(String projectName, String triggerName,
+    Map<String, String> headers, Map<String, Object> data) async {
   var result;
   try {
-    final trigger = new Trigger('github', headers, data);
+    final trigger = new Trigger(triggerName, headers, data);
     final buildNumber = await triggerHandler(trigger, projectName);
     result = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
