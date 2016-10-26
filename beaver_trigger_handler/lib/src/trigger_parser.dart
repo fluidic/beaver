@@ -1,6 +1,8 @@
 import 'package:beaver_utils/beaver_utils.dart';
 
 import './base.dart';
+/// For [CronTriggerParser].
+import './trigger_parser/cron_trigger_parser.dart';
 /// For [GitHubTriggerParser].
 import './trigger_parser/github_trigger_parser.dart';
 
