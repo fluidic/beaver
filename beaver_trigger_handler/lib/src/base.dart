@@ -115,7 +115,8 @@ class ParsedTrigger {
         }
         throw new Exception('ParsedTrigger doesn\'t have ${keys} field.');
       }
-      keys = keys.split('.').removeAt(0);
+      keys = keys.split('.');
+      keys = keys.sublist(1);
     } catch (_) {
       throw new Exception('Wrong format for a trigger data: ${str}');
     }
