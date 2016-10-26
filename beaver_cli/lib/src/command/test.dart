@@ -15,6 +15,13 @@ class TestCommand extends HttpCommand {
     argParser.addOption('trigger-type',
         abbr: 't', defaultsTo: 'github', help: 'Trigger\'s type to be tested.');
 
+    argParser.addOption('trigger-name', abbr: 'n', callback: (value) {
+      if (value == null) {
+        print('trigger name is required.');
+        exitWithHelpMessage();
+      }
+    }, help: 'Trigger\'s name to be tested.');
+
     argParser.addOption('event',
         abbr: 'e', defaultsTo: 'create', help: 'Event will be sent.');
 
@@ -29,10 +36,8 @@ class TestCommand extends HttpCommand {
         abbr: 'f', defaultsTo: 'json', help: 'Data\'s format.');
   }
 
-  static const _triggerPath = const {'github': '/github'};
-
   @override
-  String get api => _triggerPath[argResults['trigger-type']];
+  String get api => '/' + projectName + '/' + argResults['trigger-name'];
 
   String projectName;
 
@@ -45,7 +50,7 @@ class TestCommand extends HttpCommand {
       exitWithHelpMessage();
     }
 
-    final url = getServerUrl(additionalPath: '/' + projectName);
+    final url = getServerUrl();
     print(url.toString() + ' will be requested.');
 
     final httpClient = new HttpClient();
