@@ -51,7 +51,7 @@ class TriggerResult {
         trigger.name,
         trigger.headers,
         trigger.data,
-        parsedTrigger.event.toString(),
+        parsedTrigger.event,
         parsedTrigger.url,
         taskInstance,
         taskInstanceRunResult.status == TaskInstanceStatus.success
