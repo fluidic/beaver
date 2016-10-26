@@ -15,7 +15,7 @@ main() async {
   initTriggerHandler(beaverStore);
   final router = shelf_route.router()
     ..add('/api', ['POST'], _apiHandler, exactMatch: false)
-    ..add('/github', ['POST'], _gitHubTriggerHandler, exactMatch: false);
+    ..add('/', ['POST'], _triggerHandler, exactMatch: false);
   var server =
       await shelf_io.serve(router.handler, InternetAddress.ANY_IP_V4, 8080);
   print('Serving at http://${server.address.host}:${server.port}');
@@ -38,14 +38,16 @@ Future _apiHandler(shelf.Request request) async {
   return new shelf.Response.ok(JSON.encode(result));
 }
 
-Future _gitHubTriggerHandler(shelf.Request request) async {
-  final projectName = request.url.pathSegments.last;
-  final requestBody =
-      JSON.decode(await request.readAsString()) as Map<String, Object>;
+Future _triggerHandler(shelf.Request request) async {
+  final projectName = request.url.pathSegments.first;
+  final triggerName = request.url.pathSegments.last;
+
+  final body = await request.readAsString();
+  final json = JSON.decode(body) as Map<String, Object>;
 
   var responseBody;
   try {
-    final trigger = new Trigger('github', request.headers, requestBody);
+    final trigger = new Trigger(triggerName, request.headers, json);
     final buildNumber = await triggerHandler(trigger, projectName);
     responseBody = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
