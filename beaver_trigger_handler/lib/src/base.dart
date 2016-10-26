@@ -19,6 +19,16 @@ class Trigger {
   Trigger(this.name, this.headers, this.data);
 }
 
+abstract class TriggerParser {
+  ParsedTrigger parse(Context context, Trigger trigger);
+  Iterable<String> getMainEvents();
+}
+
+class TriggerParserClass {
+  final String name;
+  const TriggerParserClass(this.name);
+}
+
 class Event {
   final String type;
   final String main;

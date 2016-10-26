@@ -3,18 +3,6 @@ import 'package:beaver_utils/beaver_utils.dart';
 import './base.dart';
 /// For [GitHubTriggerParser].
 import './trigger_parser/github_trigger_parser.dart';
-/// For [GitHubTriggerParser].
-
-
-abstract class TriggerParser {
-  ParsedTrigger parse(Context context, Trigger trigger);
-  Iterable<String> getMainEvents();
-}
-
-class TriggerParserClass {
-  final String name;
-  const TriggerParserClass(this.name);
-}
 
 TriggerParser _getTriggerParser(String type) {
   final triggerParserClassMap =

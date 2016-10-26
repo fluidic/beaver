@@ -1,5 +1,4 @@
 import '../base.dart';
-import '../trigger_parser.dart';
 
 // Referred from https://developer.github.com/v3/activity/events/types/.
 final Map<String, Map<String, Object>> _eventMap = {
