@@ -75,19 +75,6 @@ Future<TaskRunResult> _runTask(
   return new TaskRunResult._internal(context.config, status, logger.toString());
 }
 
-Map<String, ClassMirror> _loadClassMapByAnnotation(ClassMirror annotation) {
-  Map<String, ClassMirror> taskClassMap = {};
-  final cms = queryClassesByAnnotation(annotation);
-  for (final cm in cms) {
-    cm.metadata.forEach((md) {
-      InstanceMirror metadata = md;
-      String name = metadata.getField(#name).reflectee;
-      taskClassMap[name] = cm;
-    });
-  }
-  return taskClassMap;
-}
-
 void _dumpClassMap(String prefix, Map<String, ClassMirror> taskClassMap) {
   print(prefix);
   taskClassMap.forEach((name, cm) {
@@ -96,8 +83,8 @@ void _dumpClassMap(String prefix, Map<String, ClassMirror> taskClassMap) {
 }
 
 Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
-  final contextPartClassMap =
-      _loadClassMapByAnnotation(reflectClass(ContextPartClass));
+  Map<String, ClassMirror> contextPartClassMap =
+      queryNameClassMapByAnnotation(ContextPartClass);
   _dumpClassMap('List of ContextPart classes:', contextPartClassMap);
 
   final partMap = {};
@@ -143,36 +130,10 @@ Future _prepareBeaverTaskServer(String remoteAddr) async {
   ]);
 }
 
-Task _createTaskFromJson(json, Map<String, ClassMirror> taskClassMap) {
-  if (json is String) {
-    json = JSON.decode(json);
-  }
-  if (json is! Map) {
-    throw new ArgumentError('json must be a Map or a String encoding a Map.');
-  }
-
-  final name = json['name'];
-  final args = [];
-  for (final arg in json['args']) {
-    if (arg is String) {
-      args.add(arg);
-    } else if (arg is Map) {
-      args.add(_createTaskFromJson(arg, taskClassMap));
-    } else {
-      throw new ArgumentError('arg must be a Map or a String');
-    }
-  }
-
-  return newInstance('fromArgs', taskClassMap[name], [args]);
-}
-
 Future<TaskRunResult> runBeaver(json, Config config,
     {bool newVM: false}) async {
   // Turn on all logging levels.
   Logger.root.level = Level.ALL;
-
-  final taskClassMap = _loadClassMapByAnnotation(reflectClass(TaskClass));
-  _dumpClassMap('List of Task classes:', taskClassMap);
 
   GCloudContext context;
   switch (config.cloudType) {
@@ -188,7 +149,7 @@ Future<TaskRunResult> runBeaver(json, Config config,
     await _prepareBeaverTaskServer(vm.networkIPs.first);
     await context.deleteVM(vm.name);
   } else {
-    Task task = _createTaskFromJson(json, taskClassMap);
+    Task task = new Task.fromJson(json);
     return _runTask(context, task);
   }
 }
