@@ -5,6 +5,7 @@ import 'dart:mirrors';
 import 'package:beaver_gcloud/beaver_gcloud.dart';
 import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 import './annotation.dart';
@@ -130,6 +131,26 @@ Future _prepareBeaverTaskServer(String remoteAddr) async {
   ]);
 }
 
+Future<TaskRunResult> _requestRunBeaver(
+    String remoteAddr, taskJson, Config config) async {
+  Uri endpoint = new Uri.http(remoteAddr, '/run');
+  if (taskJson is String) {
+    taskJson = JSON.decode(taskJson);
+  }
+  if (taskJson is! Map) {
+    throw new ArgumentError('json must be a Map or a String encoding a Map.');
+  }
+
+  final body = {'task': taskJson, 'config': config.toJson()};
+  http.Response response = await http.post(endpoint,
+      headers: {'content-type': 'application/json'}, body: JSON.encode(body));
+  if (response.statusCode != 200) {
+    throw new Exception('Fail to request $endpoint');
+  }
+  final resultJson = JSON.decode(response.body);
+  return new TaskRunResult.fromJson(resultJson);
+}
+
 Future<TaskRunResult> runBeaver(json, Config config,
     {bool newVM: false}) async {
   // Turn on all logging levels.
@@ -146,8 +167,11 @@ Future<TaskRunResult> runBeaver(json, Config config,
 
   if (newVM) {
     CreateVMResult vm = await context.createVM();
-    await _prepareBeaverTaskServer(vm.networkIPs.first);
+    final remoteAddr = vm.networkIPs.first;
+    await _prepareBeaverTaskServer(remoteAddr);
+    TaskRunResult result = await _requestRunBeaver(remoteAddr, json, config);
     await context.deleteVM(vm.name);
+    return result;
   } else {
     Task task = new Task.fromJson(json);
     return _runTask(context, task);
