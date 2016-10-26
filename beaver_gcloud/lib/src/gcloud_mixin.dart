@@ -70,7 +70,8 @@ abstract class GCloudMixin implements GCloud {
 
   Future<Null> init(String project, String zone) async {
     final client = new http.Client();
-    List<String> scopes = [ComputeApi.ComputeScope as String]
+    List<String> scopes = []
+      ..add(ComputeApi.ComputeScope)
       ..addAll(datastore_impl.DatastoreImpl.SCOPES)
       ..addAll(Storage.SCOPES);
     AccessCredentials credentials =
