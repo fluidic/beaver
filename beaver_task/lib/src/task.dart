@@ -15,19 +15,19 @@ abstract class Task {
   factory Task.fromFunc(ExecuteFunc func) => new _LambdaTask(func);
 
   factory Task.fromJson(json) {
+    if (json is String) {
+      json = JSON.decode(json);
+    }
+    if (json is! Map) {
+      throw new ArgumentError('json must be a Map or a String encoding a Map.');
+    }
+
     Map<String, ClassMirror> taskClassMap = queryNameClassMapByAnnotation(TaskClass);
     return _createTaskFromJson(json, taskClassMap);
   }
 }
 
 Task _createTaskFromJson(json, Map<String, ClassMirror> taskClassMap) {
-  if (json is String) {
-    json = JSON.decode(json);
-  }
-  if (json is! Map) {
-    throw new ArgumentError('json must be a Map or a String encoding a Map.');
-  }
-
   final name = json['name'];
   final args = [];
   for (final arg in json['args']) {
