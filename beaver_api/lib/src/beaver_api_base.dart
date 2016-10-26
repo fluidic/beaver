@@ -47,6 +47,11 @@ Future<Map<String, Object>> apiHandler(
       final result = await _listProjects(context);
       ret['project_names'] = result;
       break;
+    case 'describe':
+      final projectName = data['project_name'];
+      final result = await _describeProject(context, projectName);
+      ret..addAll(result.toJson());
+      break;
     default:
       throw new Exception('Wrong API.');
   }
@@ -107,4 +112,12 @@ Future<Null> _deleteProject(Context context, String projectName) =>
 Future<List<String>> _listProjects(Context context) async {
   final projects = await context.beaverStore.listProjects();
   return projects.map((project) => project.name).toList(growable: false);
+}
+
+Future<Project> _describeProject(Context context, String projectName) async {
+  final project = await context.beaverStore.getProject(projectName);
+  if (project == null) {
+    throw new Exception('Project doesn\'t exist for name \'${projectName}\'');
+  }
+  return project;
 }
