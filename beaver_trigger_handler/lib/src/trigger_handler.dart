@@ -46,9 +46,8 @@ bool _isMatchedTrigger(
 
   final events = triggerConfig['events'];
   if (events != null) {
-    for (final eventStr in triggerConfig['events']) {
-      final event = new Event.fromString(eventStr);
-      if (event.isMatch(parsedTrigger.event)) {
+    for (final event in triggerConfig['events']) {
+      if (event == parsedTrigger.event) {
         return true;
       }
     }

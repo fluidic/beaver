@@ -16,8 +16,3 @@ ParsedTrigger parseTrigger(
   final triggerParser = _getTriggerParser(triggerType);
   return triggerParser.parse(context, trigger);
 }
-
-Iterable<String> getMainEvents(String type) {
-  final triggerParser = _getTriggerParser(type);
-  return triggerParser.getMainEvents();
-}
