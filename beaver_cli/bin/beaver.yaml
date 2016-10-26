@@ -11,7 +11,12 @@ triggers:
     url: "https://github.com/fluidic/beaver"
     type: github
     token: token_for_test
-    events: ["github_event_create_branch"]
+    events: ["create"]
+    task:
+      - name: download
+        args: ["https://raw.githubusercontent.com/fluidic/beaver/master/beaver_trigger_handler/README.md", "."]
+  - name: daily_build
+    type: cron
     task:
       - name: download
         args: ["https://raw.githubusercontent.com/fluidic/beaver/master/beaver_trigger_handler/README.md", "."]
