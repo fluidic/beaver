@@ -36,7 +36,7 @@ class TaskRunResult {
       throw new ArgumentError('json must be a Map or a String encoding a Map.');
     }
 
-    Config configJson = json['config'];
+    String configJson = json['config'];
     String statusString = json['status'];
     String log = json['log'];
     if (configJson == null || statusString == null || log == null) {
