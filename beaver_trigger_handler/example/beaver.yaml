@@ -7,7 +7,8 @@ zone: us-central1-a
 cloud_project_name: beaver-ci
 
 triggers:
-  - url: "https://github.com/fluidic/beaver"
+  - name: build_by_push
+    url: "https://github.com/fluidic/beaver"
     type: github
     token: token_for_test
     events: ["github_event_pull_request_opened"]

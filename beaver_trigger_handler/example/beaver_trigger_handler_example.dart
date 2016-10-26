@@ -42,19 +42,20 @@ main() async {
 }
 
 Future<String> handler(HttpRequest request) async {
-  final jsonString = await request.transform(UTF8.decoder).join();
-  final jsonData = JSON.decode(jsonString) as Map<String, Object>;
-
-  final projectName = request.uri.pathSegments.last;
+  final projectName = request.uri.pathSegments.first;
+  final triggerName = request.uri.pathSegments.last;
 
   final headers = new Map<String, String>();
   request.headers.forEach((name, value) {
     headers[name] = value.first;
   });
 
+  final body = await request.transform(UTF8.decoder).join();
+  final json = JSON.decode(body) as Map<String, Object>;
+
   var resp;
   try {
-    final trigger = new Trigger('github', headers, jsonData);
+    final trigger = new Trigger(triggerName, headers, json);
     final buildNumber = await triggerHandler(trigger, projectName);
     resp = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {

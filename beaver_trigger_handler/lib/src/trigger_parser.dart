@@ -1,9 +1,10 @@
 import 'package:beaver_utils/beaver_utils.dart';
 
 import './base.dart';
-
 /// For [GitHubTriggerParser].
 import './trigger_parser/github_trigger_parser.dart';
+/// For [GitHubTriggerParser].
+
 
 abstract class TriggerParser {
   ParsedTrigger parse(Context context, Trigger trigger);
@@ -22,8 +23,9 @@ TriggerParser _getTriggerParser(String type) {
   return newInstance('', triggerParserClass, []);
 }
 
-ParsedTrigger parseTrigger(Context context, Trigger trigger) {
-  final triggerParser = _getTriggerParser(trigger.type);
+ParsedTrigger parseTrigger(
+    Context context, Trigger trigger, String triggerType) {
+  final triggerParser = _getTriggerParser(triggerType);
   return triggerParser.parse(context, trigger);
 }
 

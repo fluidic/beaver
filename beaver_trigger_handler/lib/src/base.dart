@@ -12,11 +12,11 @@ class Context {
 }
 
 class Trigger {
-  final String type;
+  final String name;
   final Map<String, String> headers;
   final Map<String, Object> data;
 
-  Trigger(this.type, this.headers, this.data);
+  Trigger(this.name, this.headers, this.data);
 }
 
 class Event {
