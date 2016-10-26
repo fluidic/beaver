@@ -8,7 +8,7 @@ import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 main() async {
   final BeaverStore bs = await getBeaverStore(StorageServiceType.localMachine);
   final projectName = 'test';
-  await bs.setNewProject('projectName');
+  await bs.setNewProject(projectName);
   await bs.setConfig(projectName, new File('./beaver.yaml').readAsStringSync());
 
   initTriggerHandler(bs);
