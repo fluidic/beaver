@@ -88,7 +88,7 @@ class GCloudStorageService extends Object
     // TODO: consider serialization.
     buildModel
       ..triggerData = UTF8.encode(JSON.encode(result.triggerData))
-      ..triggerType = result.triggerType
+      ..triggerName = result.triggerName
       ..triggerHeaders = JSON.encode(result.triggerHeaders)
       ..parsedTriggerEvent = result.parsedTriggerEvent
       ..parsedTriggerUrl = result.parsedTriggerUrl
@@ -120,7 +120,7 @@ class GCloudStorageService extends Object
     return new TriggerResult.fromGCloud(
         projectName,
         buildNumber,
-        buildModel.triggerType,
+        buildModel.triggerName,
         triggerHeaders,
         triggerData,
         buildModel.parsedTriggerEvent,

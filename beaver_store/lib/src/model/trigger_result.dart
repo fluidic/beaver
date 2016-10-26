@@ -6,7 +6,7 @@ class TriggerResult {
   final int buildNumber;
 
   // Trigger
-  final String triggerType;
+  final String triggerName;
   final Map<String, String> triggerHeaders;
   final Map<String, Object> triggerData;
 
@@ -26,7 +26,7 @@ class TriggerResult {
   TriggerResult._internal(
       this.projectName,
       this.buildNumber,
-      this.triggerType,
+      this.triggerName,
       this.triggerHeaders,
       this.triggerData,
       this.parsedTriggerEvent,
@@ -48,7 +48,7 @@ class TriggerResult {
     return new TriggerResult._internal(
         id,
         buildNumber,
-        trigger.type,
+        trigger.name,
         trigger.headers,
         trigger.data,
         parsedTrigger.event.toString(),

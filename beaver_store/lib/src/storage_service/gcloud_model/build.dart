@@ -12,7 +12,7 @@ class BeaverBuild extends Model {
   List<int> triggerData;
 
   @StringProperty()
-  String triggerType;
+  String triggerName;
 
   @StringProperty()
   String triggerHeaders;
