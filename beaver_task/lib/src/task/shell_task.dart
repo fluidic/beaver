@@ -3,6 +3,7 @@ import 'dart:io';
 
 import '../annotation.dart';
 import '../base.dart';
+import '../task.dart';
 
 class ShellException extends TaskException {
   ShellException(String executable, int exitCode)

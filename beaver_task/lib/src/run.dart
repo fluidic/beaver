@@ -11,6 +11,7 @@ import './annotation.dart';
 import './base.dart';
 import './gcloud_context.dart';
 import './logger.dart';
+import './task.dart';
 
 enum TaskStatus { Success, Failure, InternalError }
 

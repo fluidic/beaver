@@ -5,6 +5,7 @@ import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
+import '../task.dart';
 
 /// Copies files or directories into the directory.
 /// If [dest] does not exist, it will be created.

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import './annotation.dart';
 import './base.dart';
+import './task.dart';
 
 @TaskClass('par')
 class _ParallelTask implements Task {

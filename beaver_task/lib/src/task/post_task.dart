@@ -4,6 +4,7 @@ import 'dart:io';
 
 import '../annotation.dart';
 import '../base.dart';
+import '../task.dart';
 
 class PostTaskResult {
   final int statusCode;

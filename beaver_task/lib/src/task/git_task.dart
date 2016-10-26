@@ -4,6 +4,7 @@ import 'package:git/git.dart';
 
 import '../annotation.dart';
 import '../base.dart';
+import '../task.dart';
 
 @TaskClass('git')
 class GitTask extends Task {

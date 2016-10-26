@@ -5,6 +5,7 @@ import 'package:path/path.dart' as path;
 
 import '../annotation.dart';
 import '../base.dart';
+import '../task.dart';
 
 /// Download a file from a URL.
 @TaskClass('download')

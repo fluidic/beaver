@@ -4,6 +4,7 @@ import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
+import '../task.dart';
 
 /// Renames a file or directory.
 @TaskClass('rename')
