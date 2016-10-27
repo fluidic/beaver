@@ -13,7 +13,7 @@ triggers:
     events: ["pull_request"]
     task:
       - name: download
-        args: ["trigger:.pull_request.patch_url", "."]
+        args: ["trigger:payload.pull_request.patch_url", "."]
 # dart beaver.dart test -d '{"action":"opened", "pull_request": {"patch_url": "https://github.com/fluidic/beaver/pull/34.patch"}, "repository": {"html_url": "https://github.com/fluidic/beaver"}}' -e pull_request
   - name: daily_build
     type: cron

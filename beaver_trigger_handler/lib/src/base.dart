@@ -1,6 +1,7 @@
 import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:logging/logging.dart' as logging;
+import 'package:parsers/parsers.dart';
 
 class Context {
   final logging.Logger logger;
@@ -49,29 +50,39 @@ class ParsedTrigger {
       throw new Exception('Not a trigger data.');
     }
 
-    // FIXME: a better way?
-    var keys;
+    var ids;
     try {
-      keys = str.split(':')[1];
-      // FIXME: Don't hardcode.
-      if (!keys.startsWith('.')) {
-        if (keys == 'url') {
-          return this.url;
-        }
-        throw new Exception('ParsedTrigger doesn\'t have ${keys} field.');
-      }
-      keys = keys.split('.');
-      keys = keys.sublist(1);
+      ids = new _TriggerData().start.parse(str)[1];
     } catch (_) {
       throw new Exception('Wrong format for a trigger data: ${str}');
     }
 
+    // FIXME: Improve!
     try {
-      dynamic value = data;
-      for (final key in keys) {
-        value = value[key];
+      var ret;
+      final fieldName = ids[0];
+      switch (fieldName) {
+        case 'url':
+          ret = url;
+          break;
+        case 'payload':
+          ret = data;
+
+          if (ids.length > 1) {
+            final keys = ids.sublist(1);
+            for (final key in keys) {
+              ret = ret[key];
+            }
+          }
+          break;
+        case 'event':
+          ret = event;
+          break;
+        default:
+          throw new Exception();
       }
-      return value;
+
+      return ret;
     } catch (_) {
       throw new Exception('No data for a trigger data: ${str}');
     }
@@ -117,4 +128,13 @@ class TaskInstanceRunResult {
       ..writeln('log: ${taskRunResult.log}');
     return buffer.toString();
   }
+}
+
+class _TriggerData extends LanguageParsers {
+  get prefix => string(ParsedTrigger.triggerDataPrefix);
+
+  get term => (prefix + prop).list;
+  get prop => identifier.sepBy1(dot);
+
+  get start => term.between(spaces, eof);
 }
