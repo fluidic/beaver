@@ -6,6 +6,9 @@ import './http.dart';
 
 class TestCommand extends HttpCommand {
   @override
+  bool get hidden => hidden;
+
+  @override
   String get description => 'Test the trigger.';
 
   @override
