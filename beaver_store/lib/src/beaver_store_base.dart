@@ -34,7 +34,7 @@ class BeaverStore {
     return buildNumber;
   }
 
-  Future<Null> setConfig(String id, String yaml) async {
+  Future<Config> setConfig(String id, String yaml) async {
     final config = new YamlConfig(yaml);
     final project = await _storageService.loadProject(id);
     if (project == null) {
@@ -45,6 +45,7 @@ class BeaverStore {
     }
     project.config = config;
     await _storageService.saveProject(project);
+    return project.config;
   }
 
   Future<Null> saveResult(

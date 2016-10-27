@@ -21,14 +21,17 @@ Future<Map<String, Object>> apiHandler(
     case 'create':
       final projectName = data['project_name'];
       final config = data['config'];
-      await _createProject(context, projectName, config: config);
+      final result =
+          await _createProject(context, projectName, config: config);
       ret['project_name'] = projectName;
+      ret..addAll(result);
       break;
     case 'upload':
       // FIXME: Get file by a better way.
       final projectName = data['project_name'];
       final config = data['config'];
-      await _uploadConfigFile(context, projectName, config);
+      final result = await _uploadConfigFile(context, projectName, config);
+      ret..addAll(result);
       break;
     case 'get-results':
       final projectName = data['project_name'];
@@ -50,7 +53,7 @@ Future<Map<String, Object>> apiHandler(
     case 'describe':
       final projectName = data['project_name'];
       final result = await _describeProject(context, projectName);
-      ret..addAll(result.toJson());
+      ret..addAll(result);
       break;
     default:
       throw new Exception('Wrong API.');
@@ -69,17 +72,33 @@ Future<Context> _createContext() async {
 }
 
 /// Set new project. Returns the id of the registered project.
-Future<Null> _createProject(Context context, String projectName,
+Future<Map<String, Object>> _createProject(Context context, String projectName,
     {String config}) async {
   await context.beaverStore.setNewProject(projectName);
   if (config != null) {
-    await context.beaverStore.setConfig(projectName, config);
+    return await _uploadConfigFile(context, projectName, config);
   }
+  return {};
 }
 
-Future<Null> _uploadConfigFile(
-        Context context, String projectName, String config) =>
-    context.beaverStore.setConfig(projectName, config);
+Future<Map<String, Object>> _uploadConfigFile(
+    Context context, String projectName, String rawConfig) async {
+  final config = await context.beaverStore.setConfig(projectName, rawConfig);
+  return _getSuggestedEndpoints(projectName, config);
+}
+
+Map<String, List<Map<String, String>>> _getSuggestedEndpoints(
+    String projectName, Config config) {
+  // FIXME: Get this url dynamically.
+  final baseAddress = '';
+
+  final triggers = config['triggers'] as List<Map<String, Object>>;
+  final endpoints = triggers.map((trigger) => { 'trigger_name': trigger['name'],
+        'endpoint': baseAddress + '/' + projectName + '/' + trigger['name']
+      }).toList(growable: false);
+
+  return {'endpoints': endpoints};
+}
 
 Future<String> _getResult(Context context, String projectName, int buildNumber,
     String format, int count) async {
@@ -114,10 +133,12 @@ Future<List<String>> _listProjects(Context context) async {
   return projects.map((project) => project.name).toList(growable: false);
 }
 
-Future<Project> _describeProject(Context context, String projectName) async {
+Future<Map<String, Object>> _describeProject(
+    Context context, String projectName) async {
   final project = await context.beaverStore.getProject(projectName);
   if (project == null) {
     throw new Exception('Project doesn\'t exist for name \'${projectName}\'');
   }
-  return project;
+  final endpoints = _getSuggestedEndpoints(projectName, project.config);
+  return {'project': project.toJson()}..addAll(endpoints);
 }
