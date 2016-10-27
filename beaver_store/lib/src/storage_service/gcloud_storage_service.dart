@@ -87,7 +87,7 @@ class GCloudStorageService extends Object
           ..projectName = projectName;
     // TODO: consider serialization.
     buildModel
-      ..triggerData = UTF8.encode(JSON.encode(result.triggerData))
+      ..triggerPayload = UTF8.encode(JSON.encode(result.triggerPayload))
       ..triggerName = result.triggerName
       ..triggerHeaders = JSON.encode(result.triggerHeaders)
       ..parsedTriggerEvent = result.parsedTriggerEvent
@@ -111,8 +111,8 @@ class GCloudStorageService extends Object
 
     final triggerHeaders =
         JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
-    final triggerData =
-        JSON.decode(UTF8.decode(buildModel.triggerData)) as Map<String, Object>;
+    final triggerPayload =
+        JSON.decode(UTF8.decode(buildModel.triggerPayload)) as Map<String, Object>;
     final taskInstance =
         JSON.decode(buildModel.taskInstance) as Map<String, Object>;
     final taskConfigCloudSettings =
@@ -122,7 +122,7 @@ class GCloudStorageService extends Object
         buildNumber,
         buildModel.triggerName,
         triggerHeaders,
-        triggerData,
+        triggerPayload,
         buildModel.parsedTriggerEvent,
         buildModel.parsedTriggerUrl,
         taskInstance,

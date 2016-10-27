@@ -4,9 +4,9 @@ import '../base.dart';
 class GitHubTriggerParser implements TriggerParser {
   @override
   ParsedTrigger parse(Context context, Trigger trigger) {
-    final event = _getEvent(trigger.headers, trigger.data);
-    final url = _getUrl(trigger.data);
-    return new ParsedTrigger(event, url, trigger.data);
+    final event = _getEvent(trigger.headers, trigger.payload);
+    final url = _getUrl(trigger.payload);
+    return new ParsedTrigger(event, url, trigger.payload);
   }
 
   String _getEvent(Map<String, String> headers, Map<String, Object> data) {

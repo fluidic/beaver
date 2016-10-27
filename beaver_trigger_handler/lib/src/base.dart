@@ -13,9 +13,9 @@ class Context {
 class Trigger {
   final String name;
   final Map<String, String> headers;
-  final Map<String, Object> data;
+  final Map<String, Object> payload;
 
-  Trigger(this.name, this.headers, this.data);
+  Trigger(this.name, this.headers, this.payload);
 }
 
 abstract class TriggerParser {
@@ -32,9 +32,9 @@ class ParsedTrigger {
   // FIXME: Url is valid and unique even though trigger is not the repository?
   // e.g. For GCloud Pub/Sub, can we use the url as a parameter here?
   final String url;
-  final Map<String, Object> data;
+  final Map<String, Object> payload;
 
-  ParsedTrigger(this.event, this.url, this.data);
+  ParsedTrigger(this.event, this.url, this.payload);
 
   static const triggerDataPrefix = 'trigger:';
 
@@ -59,30 +59,30 @@ class ParsedTrigger {
 
     // FIXME: Improve!
     try {
-      var ret;
+      var data;
       final fieldName = ids[0];
       switch (fieldName) {
         case 'url':
-          ret = url;
+          data = url;
           break;
         case 'payload':
-          ret = data;
+          data = payload;
 
           if (ids.length > 1) {
             final keys = ids.sublist(1);
             for (final key in keys) {
-              ret = ret[key];
+              data = data[key];
             }
           }
           break;
         case 'event':
-          ret = event;
+          data = event;
           break;
         default:
           throw new Exception();
       }
 
-      return ret;
+      return data;
     } catch (_) {
       throw new Exception('No data for a trigger data: ${str}');
     }
@@ -94,7 +94,7 @@ class ParsedTrigger {
     buffer
       ..writeln('event: ${event}')
       ..writeln('url: ${url}')
-      ..writeln('data: ${data}');
+      ..writeln('data: ${payload}');
     return buffer.toString();
   }
 }

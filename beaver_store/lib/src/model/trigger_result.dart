@@ -8,7 +8,7 @@ class TriggerResult {
   // Trigger
   final String triggerName;
   final Map<String, String> triggerHeaders;
-  final Map<String, Object> triggerData;
+  final Map<String, Object> triggerPayload;
 
   // ParsedTrigger
   final String parsedTriggerEvent;
@@ -28,7 +28,7 @@ class TriggerResult {
       this.buildNumber,
       this.triggerName,
       this.triggerHeaders,
-      this.triggerData,
+      this.triggerPayload,
       this.parsedTriggerEvent,
       this.parsedTriggerUrl,
       this.taskInstance,
@@ -50,7 +50,7 @@ class TriggerResult {
         buildNumber,
         trigger.name,
         trigger.headers,
-        trigger.data,
+        trigger.payload,
         parsedTrigger.event,
         parsedTrigger.url,
         taskInstance,
@@ -70,7 +70,7 @@ class TriggerResult {
       int buildNumber,
       String triggerType,
       Map<String, String> triggerHeaders,
-      Map<String, Object> triggerData,
+      Map<String, Object> triggerPayload,
       String parsedTriggerEvent,
       String parsedTriggerUrl,
       Map<String, Object> taskInstance,
@@ -84,7 +84,7 @@ class TriggerResult {
         buildNumber,
         triggerType,
         triggerHeaders,
-        triggerData,
+        triggerPayload,
         parsedTriggerEvent,
         parsedTriggerUrl,
         taskInstance,
