@@ -12,53 +12,36 @@ void initApiHandler(BeaverStore beaverStore) {
   _beaverStore = beaverStore;
 }
 
-Future<Map<String, Object>> apiHandler(
-    String api, Map<String, Object> data) async {
-  final context = await _createContext();
+Future<Map<String, Object>> apiHandler(String api, Map<String, Object> data) {
+  final context = _createContext();
 
-  final ret = {};
   switch (api) {
     case 'create':
       final projectName = data['project_name'];
       final config = data['config'];
-      final result =
-          await _createProject(context, projectName, config: config);
-      ret['project_name'] = projectName;
-      ret..addAll(result);
-      break;
+      return _createProject(context, projectName, config: config);
     case 'upload':
       // FIXME: Get file by a better way.
       final projectName = data['project_name'];
       final config = data['config'];
-      final result = await _uploadConfigFile(context, projectName, config);
-      ret..addAll(result);
-      break;
+      return _uploadConfigFile(context, projectName, config);
     case 'get-results':
       final projectName = data['project_name'];
       final buildNumber = int.parse(data['build_number']);
       final format = data['format'];
       final count = int.parse(data['count']);
-      final result =
-          await _getResult(context, projectName, buildNumber, format, count);
-      ret['result'] = result;
-      break;
+      return _getResult(context, projectName, buildNumber, format, count);
     case 'delete':
       final projectName = data['project_name'];
-      await _deleteProject(context, projectName);
-      break;
+      return _deleteProject(context, projectName);
     case 'list':
-      final result = await _listProjects(context);
-      ret['project_names'] = result;
-      break;
+      return _listProjects(context);
     case 'describe':
       final projectName = data['project_name'];
-      final result = await _describeProject(context, projectName);
-      ret..addAll(result);
-      break;
+      return _describeProject(context, projectName);
     default:
       throw new Exception('Wrong API.');
   }
-  return ret;
 }
 
 class Context {
@@ -67,18 +50,18 @@ class Context {
   Context(this.beaverStore);
 }
 
-Future<Context> _createContext() async {
+Context _createContext() {
   return new Context(_beaverStore);
 }
 
-/// Set new project. Returns the id of the registered project.
 Future<Map<String, Object>> _createProject(Context context, String projectName,
     {String config}) async {
   await context.beaverStore.setNewProject(projectName);
+  var endpoints = new Map<String, Object>();
   if (config != null) {
-    return await _uploadConfigFile(context, projectName, config);
+    endpoints = await _uploadConfigFile(context, projectName, config);
   }
-  return {};
+  return {'project_name': projectName}..addAll(endpoints);
 }
 
 Future<Map<String, Object>> _uploadConfigFile(
@@ -93,15 +76,18 @@ Map<String, List<Map<String, String>>> _getSuggestedEndpoints(
   final baseAddress = '';
 
   final triggers = config['triggers'] as List<Map<String, Object>>;
-  final endpoints = triggers.map((trigger) => { 'trigger_name': trigger['name'],
-        'endpoint': baseAddress + '/' + projectName + '/' + trigger['name']
-      }).toList(growable: false);
+  final endpoints = triggers
+      .map((trigger) => {
+            'trigger_name': trigger['name'],
+            'endpoint': baseAddress + '/' + projectName + '/' + trigger['name']
+          })
+      .toList(growable: false);
 
   return {'endpoints': endpoints};
 }
 
-Future<String> _getResult(Context context, String projectName, int buildNumber,
-    String format, int count) async {
+Future<Map<String, Object>> _getResult(Context context, String projectName,
+    int buildNumber, String format, int count) async {
   final project = await context.beaverStore.getProject(projectName);
   final resultBuildNumbers =
       new Iterable.generate(max(count, 0), (i) => buildNumber + i);
@@ -114,23 +100,31 @@ Future<String> _getResult(Context context, String projectName, int buildNumber,
   })))
       .toList()..removeWhere((result) => result == null);
 
+  var result;
   switch (format) {
     case 'html':
       final formatter = new HtmlFormatter(project, results);
-      return formatter.toHtml();
+      result = formatter.toHtml();
+      break;
     case 'text':
     default:
       final formatter = new TextFormatter(project, results);
-      return formatter.toText();
+      result = formatter.toText();
   }
+  return {'result': result};
 }
 
-Future<Null> _deleteProject(Context context, String projectName) =>
-    context.beaverStore.deleteProject(projectName);
+Future<Map<String, Object>> _deleteProject(
+    Context context, String projectName) async {
+  await context.beaverStore.deleteProject(projectName);
+  return {};
+}
 
-Future<List<String>> _listProjects(Context context) async {
+Future<Map<String, List<String>>> _listProjects(Context context) async {
   final projects = await context.beaverStore.listProjects();
-  return projects.map((project) => project.name).toList(growable: false);
+  final projectNames =
+      projects.map((project) => project.name).toList(growable: false);
+  return {'project_names': projectNames};
 }
 
 Future<Map<String, Object>> _describeProject(
