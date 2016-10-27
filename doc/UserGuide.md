@@ -241,21 +241,6 @@ abstract class Task {
 }
 ```
 
-### Composing Tasks
-```Dart
-@TaskClass('my_task')
-class MyTask implements Task {
-  MyTask.fromArgs(List<String> args);
-
-  @override
-  Future<Object> execute(Context context) => seq([
-        new InstallDartSdkTask(withContentShell: true, withDartium: true),
-        new PubTask(['get'], processWorkingDir: 'symbol'),
-        new PubTask(['run', 'test'], processWorkingDir: 'symbol')
-      ]).execute(context);
-}
-```
-
 #### Understanding Context
 A context is the environment where tasks are executed. It carries around various states common to some or all of tasks, such as ways to access cloud services running Beaver such as databaase, storage, and virtual machines.
 
@@ -270,3 +255,24 @@ abstract class Context {
   ComputeApi get compute;
 }
 ```
+
+### Composing Tasks
+You may compose other tasks to achieve more complex task at hands. Instead of inventing another concept for it, Beaver leverages tasks to compose other tasks. In Beaver, such tasks used to compose other tasks are called, *combinator*s.
+
+#### seq/par combinators
+You may use `seq` for arranging tasks executed in the specified order one after another. Also `par` can be used to fire up tasks at the same time in parallel.
+
+```Dart
+@TaskClass('my_task')
+class MyTask implements Task {
+  MyTask.fromArgs(List<String> args);
+
+  @override
+  Future<Object> execute(Context context) => seq([
+        new InstallDartSdkTask(withContentShell: true, withDartium: true),
+        new PubTask(['get'], processWorkingDir: 'symbol'),
+        new PubTask(['run', 'test'], processWorkingDir: 'symbol')
+      ]).execute(context);
+}
+```
+
