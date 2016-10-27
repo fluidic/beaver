@@ -116,6 +116,10 @@ Future<Map<String, Object>> _getResult(Context context, String projectName,
 
 Future<Map<String, Object>> _deleteProject(
     Context context, String projectName) async {
+  final project = await context.beaverStore.getProject(projectName);
+  if (project == null) {
+    throw new Exception('Project \'${projectName}\' doesn\'t exist.');
+  }
   await context.beaverStore.deleteProject(projectName);
   return {};
 }
