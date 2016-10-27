@@ -65,11 +65,15 @@ class GetResultsCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    final jsonBody = JSON.decode(responseBody);
-    if (jsonBody['status'] == 'success') {
-      print(jsonBody['result'].toString());
-    } else {
+    if (argResults['json']) {
       print(responseBody);
+    } else {
+      final json = JSON.decode(responseBody);
+      if (json['status'] == 'success') {
+        print(json['result'].toString());
+      } else {
+        print(json['reason']);
+      }
     }
   }
 }

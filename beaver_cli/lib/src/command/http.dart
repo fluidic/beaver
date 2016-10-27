@@ -50,6 +50,9 @@ abstract class HttpCommand extends Command {
         pathPrefix = getConfig('server', 'path_prefix') ?? '';
       }
     }, help: 'Path prefix.');
+
+    argParser.addFlag('json',
+        abbr: 'j', defaultsTo: false, help: 'Print output as a JSON string.');
   }
 
   Uri getServerUrl({String additionalPath: ''}) => new Uri(

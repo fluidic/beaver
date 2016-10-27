@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import './http.dart';
+import '../util.dart';
 
 class DescribeCommand extends HttpCommand {
   @override
@@ -17,6 +18,8 @@ class DescribeCommand extends HttpCommand {
   String get api => '/api/describe';
 
   String projectName;
+
+  static const String _indent = '    ';
 
   @override
   Future<Null> run() async {
@@ -40,6 +43,31 @@ class DescribeCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    print(responseBody);
+    if (argResults['json']) {
+      print(responseBody);
+    } else {
+      final json = JSON.decode(responseBody);
+      if (json['status'] == 'success') {
+        print('Project: ${json['project']['project_name']}');
+
+        print('Configuration:');
+        final config = json['project']['config'];
+        if (config != null) {
+          prettyPrint(config, _indent);
+        } else {
+          print('${_indent}nothing.');
+        }
+
+        print('Endpoints: ');
+        final endpoints = json['endpoints'];
+        if (endpoints != null) {
+          prettyPrint(endpoints, _indent);
+        } else {
+          print('${_indent}nothing.');
+        }
+      } else {
+        print(json['reason']);
+      }
+    }
   }
 }

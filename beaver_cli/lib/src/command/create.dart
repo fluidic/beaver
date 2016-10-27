@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:yaml/yaml.dart';
 
 import './http.dart';
+import '../util.dart';
 
 class CreateCommand extends HttpCommand {
   @override
@@ -22,6 +23,8 @@ class CreateCommand extends HttpCommand {
   String get api => '/api/create';
 
   String projectName;
+
+  static const String _indent = '    ';
 
   @override
   Future<Null> run() async {
@@ -54,6 +57,21 @@ class CreateCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    print(responseBody);
+    if (argResults['json']) {
+      print(responseBody);
+    } else {
+      final json = JSON.decode(responseBody);
+      if (json['status'] == 'success') {
+        print('Created successfully.');
+
+        final endpoints = json['endpoints'];
+        if (endpoints != null) {
+          print('Endpoints: ');
+          prettyPrint(endpoints, _indent);
+        }
+      } else {
+        print(json['reason']);
+      }
+    }
   }
 }

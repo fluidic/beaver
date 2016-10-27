@@ -40,6 +40,15 @@ class DeleteCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    print(responseBody);
+    if (argResults['json']) {
+      print(responseBody);
+    } else {
+      final json = JSON.decode(responseBody);
+      if (json['status'] == 'success') {
+        print('Deleted successfully.');
+      } else {
+        print(json['reason']);
+      }
+    }
   }
 }

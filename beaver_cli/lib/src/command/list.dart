@@ -27,6 +27,16 @@ class ListCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    print(responseBody);
+    if (argResults['json']) {
+      print(responseBody);
+    } else {
+      final json = JSON.decode(responseBody);
+      if (json['status'] == 'success') {
+        final projectNames = json['project_names'] as List;
+        projectNames.forEach((projectName) => print(projectName));
+      } else {
+        print(json['reason']);
+      }
+    }
   }
 }

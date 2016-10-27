@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:yaml/yaml.dart';
 
 import './http.dart';
+import '../util.dart';
 
 class UploadCommand extends HttpCommand {
   @override
@@ -24,6 +25,8 @@ class UploadCommand extends HttpCommand {
   String get api => '/api/upload';
 
   String projectName;
+
+  static const String _indent = '    ';
 
   @override
   Future<Null> run() async {
@@ -53,6 +56,21 @@ class UploadCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
-    print(responseBody);
+    if (argResults['json']) {
+      print(responseBody);
+    } else {
+      final json = JSON.decode(responseBody);
+      if (json['status'] == 'success') {
+        print('Endpoints: ');
+        final endpoints = json['endpoints'];
+        if (endpoints != null) {
+          prettyPrint(endpoints, _indent);
+        } else {
+          print('${_indent}nothing.');
+        }
+      } else {
+        print(json['reason']);
+      }
+    }
   }
 }
