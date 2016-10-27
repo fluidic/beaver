@@ -72,6 +72,9 @@ Future<Map<String, Object>> _uploadConfigFile(
 
 Map<String, List<Map<String, String>>> _getSuggestedEndpoints(
     String projectName, Config config) {
+  assert(config != null);
+  assert(config['triggers'] != null);
+
   // FIXME: Get this url dynamically.
   final baseAddress = '';
 
@@ -137,6 +140,10 @@ Future<Map<String, Object>> _describeProject(
   if (project == null) {
     throw new Exception('Project doesn\'t exist for name \'${projectName}\'');
   }
-  final endpoints = _getSuggestedEndpoints(projectName, project.config);
-  return {'project': project.toJson()}..addAll(endpoints);
+  final result = new Map<String, Object>.from({'project': project.toJson()});
+  if (project.config != null) {
+    final endpoints = _getSuggestedEndpoints(projectName, project.config);
+    result..addAll(endpoints);
+  }
+  return result;
 }

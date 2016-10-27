@@ -6,7 +6,13 @@ class Project {
 
   Project(this.name);
 
-  Map toJson() => {'project_name': name, 'config': config.toJson()};
+  Map toJson() {
+    final json = new Map<String, Object>.from({'project_name': name});
+    if (config != null) {
+      json..addAll({'config': config.toJson()});
+    }
+    return json;
+  }
 
   @override
   String toString() {
