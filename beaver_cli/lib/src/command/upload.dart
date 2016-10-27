@@ -61,6 +61,7 @@ class UploadCommand extends HttpCommand {
     } else {
       final json = JSON.decode(responseBody);
       if (json['status'] == 'success') {
+        print('Uploaded successfully.');
         print('Endpoints: ');
         final endpoints = json['endpoints'];
         if (endpoints != null) {
