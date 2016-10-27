@@ -92,6 +92,9 @@ Map<String, List<Map<String, String>>> _getSuggestedEndpoints(
 Future<Map<String, Object>> _getResult(Context context, String projectName,
     int buildNumber, String format, int count) async {
   final project = await context.beaverStore.getProject(projectName);
+  if (project == null) {
+    throw new Exception('No project for \'${projectName}\'.');
+  }
   final resultBuildNumbers =
       new Iterable.generate(max(count, 0), (i) => buildNumber + i);
   final results = (await Future.wait(resultBuildNumbers.map((number) async {
