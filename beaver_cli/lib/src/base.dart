@@ -9,6 +9,7 @@ import './command/delete.dart';
 import './command/describe.dart';
 import './command/get_results.dart';
 import './command/list.dart';
+import './command/setup.dart';
 import './command/test.dart';
 import './command/upload.dart';
 
@@ -48,11 +49,13 @@ CommandRunner getRunner() {
   final runner = new BeaverCommandRunner('beaver', 'CLI for beaver CI.');
   runner
     ..addCommand(new CreateCommand())
-    ..addCommand(new UploadCommand())
-    ..addCommand(new TestCommand())
-    ..addCommand(new GetResultsCommand())
     ..addCommand(new DeleteCommand())
+    ..addCommand(new DescribeCommand())
+    ..addCommand(new GetResultsCommand())
     ..addCommand(new ListCommand())
-    ..addCommand(new DescribeCommand());
+    ..addCommand(new SetupCommand())
+    ..addCommand(new TestCommand())
+    ..addCommand(new UploadCommand());
+
   return runner;
 }
