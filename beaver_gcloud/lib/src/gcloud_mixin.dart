@@ -123,6 +123,14 @@ abstract class GCloudMixin implements GCloud {
           ]
         }
       ],
+      "serviceAccounts": [
+        {
+          "email": "default",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
     });
     Operation op = await compute.instances.insert(instance, _project, _zone);
     CreateVMStatus status =
