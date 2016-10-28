@@ -24,4 +24,5 @@ dependencies:
     path: ../unique
 
 dev_dependencies:
+  args: '>=0.13.6 <0.14.0'
   test: '>=0.12.0 <0.13.0'
