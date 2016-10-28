@@ -155,7 +155,7 @@ abstract class GCloudMixin implements GCloud {
     instance.metadata.items = [item];
     op = await compute.instances
         .setMetadata(instance.metadata, _project, _zone, name);
-    if (op.status != null) {
+    if (op.error != null) {
       status = CreateVMStatus.FailToAddSshKey;
     }
 
