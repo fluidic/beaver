@@ -57,53 +57,60 @@ bool _isMatchedTrigger(
   }
 }
 
-Future<int> _triggerHandler(
-    Context context, Trigger trigger, String projectName) async {
-  context.logger.info('TriggerHandler is started.');
+Future<Null> _triggerHandler(
+    Context context, Trigger trigger, Project project, int buildNumber) async {
+  try {
+    final triggerConfig = _getTriggerConfig(project, trigger.name);
+    if (triggerConfig == null) {
+      throw new Exception('No Trigger Configuration for \'${trigger.name}\'');
+    }
+    context.logger.info('Trigger Configuration: ${triggerConfig}');
 
-  final project = await context.beaverStore.getProject(projectName);
-  if (project == null) {
-    throw new Exception('No project for \'${projectName}\'.');
+    final parsedTrigger = parseTrigger(context, trigger, triggerConfig['type']);
+    context.logger.info('Trigger: ${parsedTrigger}');
+
+    if (!_isMatchedTrigger(triggerConfig, parsedTrigger)) {
+      // FIXME: Use more precise message.
+      throw new Exception('Trigger and TriggerConfig are not matched.');
+    }
+
+    final tasks = (triggerConfig['task'] as YamlList).toList(growable: false)
+        as List<Map<String, Object>>;
+    final taskInstanceRunner =
+        new TaskInstanceRunner(context, project.config, parsedTrigger, tasks);
+    final result = await taskInstanceRunner.run();
+    context.logger.info('TaskInstanceRunResult: ${result}');
+
+    await context.beaverStore.saveResult(project.name, buildNumber, trigger,
+        parsedTrigger, triggerConfig, result);
+    context.logger.info('Result is saved.');
+  } catch (e) {
+    context.logger.shout(e.toString());
   }
-  context.logger.info('Project: ${project}');
-
-  final buildNumber =
-      await context.beaverStore.getAndUpdateBuildNumber(projectName);
-
-  final triggerConfig = _getTriggerConfig(project, trigger.name);
-  if (triggerConfig == null) {
-    throw new Exception('No Trigger Configuration for \'${trigger.name}\'');
-  }
-  context.logger.info('Trigger Configuration: ${triggerConfig}');
-
-  final parsedTrigger = parseTrigger(context, trigger, triggerConfig['type']);
-  context.logger.info('Trigger: ${parsedTrigger}');
-
-  if (!_isMatchedTrigger(triggerConfig, parsedTrigger)) {
-    // FIXME: Use more precise message.
-    throw new Exception('Trigger and TriggerConfig are not matched.');
-  }
-
-  final tasks = (triggerConfig['task'] as YamlList).toList(growable: false)
-      as List<Map<String, Object>>;
-  final taskInstanceRunner =
-      new TaskInstanceRunner(context, project.config, parsedTrigger, tasks);
-  final result = await taskInstanceRunner.run();
-  context.logger.info('TaskInstanceRunResult: ${result}');
-
-  await context.beaverStore.saveResult(
-      projectName, buildNumber, trigger, parsedTrigger, triggerConfig, result);
-  context.logger.info('Result is saved.');
-  return buildNumber;
 }
 
 Future<int> triggerHandler(Trigger trigger, String projectName) async {
   final context = await _createContext();
 
   try {
-    return await _triggerHandler(context, trigger, projectName);
+    context.logger.info('TriggerHandler is started.');
+
+    final project = await context.beaverStore.getProject(projectName);
+    if (project == null) {
+      throw new Exception('No project for \'${projectName}\'.');
+    }
+    context.logger.info('Project: ${project}');
+
+    final buildNumber =
+        await context.beaverStore.getAndUpdateBuildNumber(projectName);
+    context.logger.info('Build Number: ${buildNumber}');
+
+    // Do the job in backgound
+    _triggerHandler(context, trigger, project, buildNumber);
+
+    return buildNumber;
   } catch (e) {
-    context.logger.severe(e.toString());
+    context.logger.shout(e.toString());
     throw e;
   }
 }
