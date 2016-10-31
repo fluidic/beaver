@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth_default_credentials/googleapis_auth_default_credentials.dart';
 import 'package:gcloud/db.dart';
@@ -8,7 +9,6 @@ import 'package:gcloud/storage.dart';
 import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
 import 'package:googleapis/compute/v1.dart';
 import 'package:http/http.dart' as http;
-import 'package:unique/unique.dart';
 
 import 'ssh_keygen.dart';
 

@@ -1,7 +1,4 @@
-// Copyright (c) 2016, Kwang Yul Seo. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
-
-import 'package:unique/unique.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -3,3 +3,4 @@ library beaver_utils;
 
 export 'src/io.dart';
 export 'src/reflection.dart';
+export 'src/unique.dart';
