@@ -26,7 +26,7 @@ class TaskInstanceRunner {
     final jsonTask = _createJsonForTask(_tasks, _parsedTrigger);
     _context.logger.fine('Task: ${jsonTask}');
 
-    // FIXME: Change this logic after implementing setup(init) command.
+    // FIXME: Change this logic after implementing setup(init) cli_command.
     final config = new beaver_task.Config(_config['cloud_type'], {
       'project_name': _config['cloud_project_name'],
       'zone': _config['zone']

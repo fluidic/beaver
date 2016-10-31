@@ -1,3 +1,3 @@
 library beaver_cli;
 
-export 'src/base.dart';
+export 'src/cli.dart';

@@ -4,14 +4,14 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
-import './command/create.dart';
-import './command/delete.dart';
-import './command/describe.dart';
-import './command/get_results.dart';
-import './command/list.dart';
-import './command/setup.dart';
-import './command/test.dart';
-import './command/upload.dart';
+import './cli_command/create.dart';
+import './cli_command/delete.dart';
+import './cli_command/describe.dart';
+import './cli_command/get_results.dart';
+import './cli_command/list.dart';
+import './cli_command/setup.dart';
+import './cli_command/test.dart';
+import './cli_command/upload.dart';
 
 class BeaverCommandRunner extends CommandRunner {
   BeaverCommandRunner(String executableName, String description)
@@ -23,7 +23,7 @@ class BeaverCommandRunner extends CommandRunner {
 
     if (argResults.command == null && argResults.rest.isNotEmpty) {
       final command = argResults.rest[0];
-      print('${command} is not a beaver command. See \'beaver help\'.');
+      print('${command} is not a beaver cli_command. See \'beaver help\'.');
 
       StringDistance d = new Levenshtein();
       final candidates =
