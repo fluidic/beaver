@@ -15,7 +15,7 @@ main() async {
   initTriggerHandler(beaverStore);
   final router = shelf_route.router()
     ..add('/api', ['POST'], _apiHandler, exactMatch: false)
-    ..add('/', ['POST'], _triggerHandler, exactMatch: false);
+    ..add('/', ['POST', 'GET'], _triggerHandler, exactMatch: false);
   var server =
       await shelf_io.serve(router.handler, InternetAddress.ANY_IP_V4, 8080);
   print('Serving at http://${server.address.host}:${server.port}');
@@ -43,7 +43,12 @@ Future _triggerHandler(shelf.Request request) async {
   final triggerName = request.url.pathSegments.last;
 
   final body = await request.readAsString();
-  final json = JSON.decode(body) as Map<String, Object>;
+  Map<String, Object> json;
+  if (body.isEmpty) {
+    json = {};
+  } else {
+    json = JSON.decode(body) as Map<String, Object>;
+  }
 
   var responseBody;
   try {
