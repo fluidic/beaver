@@ -16,6 +16,7 @@ class TextFormatter implements Formatter {
       "Build Number": result.buildNumber.toString(),
       "TaskInstance Status": result.taskInstanceStatus,
       "Task Status": result.taskStatus,
+      "Trigger Name": result.triggerName,
       "Trigger Event": result.parsedTriggerEvent,
       "Trigger URL": result.parsedTriggerUrl,
       "Log": result.taskLog,

@@ -31,6 +31,7 @@ class HtmlFormatter implements Formatter {
           '#',
           'TaskInstance Status',
           'Task Status',
+          'Trigger Name',
           'Trigger Event',
           'Trigger URL',
           'Log',
@@ -54,6 +55,9 @@ class HtmlFormatter implements Formatter {
       });
       builder.element('td', nest: () {
         builder.text(result.taskStatus);
+      });
+      builder.element('td', nest: () {
+        builder.text(result.triggerName);
       });
       builder.element('td', nest: () {
         builder.text(result.parsedTriggerEvent);
