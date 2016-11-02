@@ -5,6 +5,8 @@ import './base.dart';
 import './trigger_parser/cron_trigger_parser.dart';
 /// For [GitHubTriggerParser].
 import './trigger_parser/github_trigger_parser.dart';
+/// For [InternalTriggerParser].
+import './trigger_parser/internal_trigger_parser.dart';
 
 TriggerParser _getTriggerParser(String type) {
   final triggerParserClassMap =
