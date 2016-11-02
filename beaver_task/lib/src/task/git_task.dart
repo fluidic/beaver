@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:args/args.dart';
 import 'package:git/git.dart';
 
 import '../annotation.dart';
@@ -14,7 +15,12 @@ class GitTask extends Task {
   GitTask(this.args, {String processWorkingDir})
       : this.processWorkingDir = processWorkingDir;
 
-  GitTask.fromArgs(List<String> args) : this(args);
+  factory GitTask.fromArgs(List<String> args) {
+    final parser = new ArgParser()..addOption('process-working-dir', abbr: 'C');
+    final results = parser.parse(args);
+    return new GitTask(results.rest,
+        processWorkingDir: results['process-working-dir']);
+  }
 
   @override
   Future<Null> execute(Context context) async {
