@@ -1,26 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 import 'package:file_helper/file_helper.dart';
 import 'package:path/path.dart' as path;
 
-final String _homePath = Platform.isWindows
-    ? Platform.environment['APPDATA']
-    : Platform.environment['HOME'];
-
 final CommandWrapper _sshKeygen = new CommandWrapper('ssh-keygen');
 
-final String _beaverDir = path.join(_homePath, '.beaver');
-
-final String sshKeyPath = path.join(_beaverDir, 'id_rsa');
+final String sshKeyPath = path.join(beaverConfigDir, 'id_rsa');
 final String sshPublicKeyPath = '${sshKeyPath}.pub';
 
 Future<Null> generateSshKeyIfNotExist() async {
   if (await new File(sshKeyPath).exists()) return;
 
-  if (!await new File(_beaverDir).exists()) {
-    await mkdir([_beaverDir], recursive: true);
+  if (!await new File(beaverConfigDir).exists()) {
+    await mkdir([beaverConfigDir], recursive: true);
   }
 
   const username = 'beaver';
