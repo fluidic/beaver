@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
+import '../exit_codes.dart';
 import './http.dart';
 import '../util.dart';
 
@@ -44,7 +45,7 @@ class UploadCommand extends HttpCommand {
     final yaml = loadYaml(config);
     if (projectName != yaml['project_name']) {
       print('project_names are different.');
-      exit(0);
+      exit(exitCodeError);
     }
     final data = JSON.encode({'project_name': projectName, 'config': config});
 

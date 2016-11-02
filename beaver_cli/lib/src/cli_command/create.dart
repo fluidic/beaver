@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
+import '../exit_codes.dart';
 import './http.dart';
 import '../util.dart';
 
@@ -44,7 +45,7 @@ class CreateCommand extends HttpCommand {
           loadYaml(new File(argResults['config-file']).readAsStringSync());
       if (projectName != config['project_name']) {
         print('project_names are different.');
-        exit(0);
+        exit(exitCodeError);
       }
       data.addAll({'config': config.toString()});
     }

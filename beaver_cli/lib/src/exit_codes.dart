@@ -1,0 +1,1 @@
+const exitCodeError = 2;
