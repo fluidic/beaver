@@ -53,7 +53,7 @@ class TestCommand extends HttpCommand {
       exitWithHelpMessage();
     }
 
-    final url = getServerUrl();
+    final url = getApiUrl();
     print(url.toString() + ' will be requested.');
 
     final httpClient = new HttpClient();

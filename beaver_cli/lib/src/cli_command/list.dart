@@ -18,7 +18,7 @@ class ListCommand extends HttpCommand {
 
   @override
   Future<Null> run() async {
-    final url = getServerUrl();
+    final url = getApiUrl();
     print(url.toString() + ' will be requested.');
 
     final httpClient = new HttpClient();

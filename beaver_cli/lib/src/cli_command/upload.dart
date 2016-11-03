@@ -38,7 +38,7 @@ class UploadCommand extends HttpCommand {
       exitWithHelpMessage();
     }
 
-    final url = getServerUrl();
+    final url = getApiUrl();
     print(url.toString() + ' will be requested.');
 
     final config = new File(argResults['config-file']).readAsStringSync();
@@ -50,17 +50,18 @@ class UploadCommand extends HttpCommand {
     final data = JSON.encode({'project_name': projectName, 'config': config});
 
     final httpClient = new HttpClient();
-    final request = await httpClient.openUrl('POST', getServerUrl());
+    final request = await httpClient.openUrl('POST', getApiUrl());
     request.headers.add('Content-Type', 'application/json');
     request.write(data);
     final response = await request.close();
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
+    final result = addServerUrlToEndpoints(responseBody);
     if (argResults['json']) {
-      print(responseBody);
+      print(result);
     } else {
-      final json = JSON.decode(responseBody);
+      final json = JSON.decode(result);
       if (json['status'] == 'success') {
         print('Uploaded successfully.');
         print('Endpoints: ');

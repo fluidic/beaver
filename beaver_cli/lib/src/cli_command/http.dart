@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
@@ -56,11 +57,30 @@ abstract class HttpCommand extends Command {
         abbr: 'j', defaultsTo: false, help: 'Print output as a JSON string.');
   }
 
-  Uri getServerUrl({String additionalPath: ''}) => new Uri(
+  Uri getApiUrl({String additionalPath: ''}) => new Uri(
       scheme: secure ? 'https' : 'http',
       host: address,
       port: port,
       path: '${pathPrefix}${api}${additionalPath}');
+
+  String _getServerUrlAsString() => new Uri(
+          scheme: secure ? 'https' : 'http',
+          host: address,
+          port: port,
+          path: '${pathPrefix}')
+      .toString();
+
+  String addServerUrlToEndpoints(String response) {
+    final json = JSON.decode(response);
+    final endpoints = json['endpoints'];
+    if (endpoints != null) {
+      final serverUrl = _getServerUrlAsString();
+      (endpoints as List).forEach((endpoint) {
+        endpoint['endpoint'] = serverUrl + endpoint['endpoint'];
+      });
+    }
+    return JSON.encode(json);
+  }
 
   void exitWithHelpMessage() {
     print(argParser.usage);

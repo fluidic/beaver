@@ -36,7 +36,7 @@ class CreateCommand extends HttpCommand {
       exitWithHelpMessage();
     }
 
-    final url = getServerUrl();
+    final url = getApiUrl();
     print(url.toString() + ' will be requested.');
 
     final data = {'project_name': projectName};
@@ -58,10 +58,11 @@ class CreateCommand extends HttpCommand {
     final responseBody = await response.transform(UTF8.decoder).join();
     httpClient.close();
 
+    final result = addServerUrlToEndpoints(responseBody);
     if (argResults['json']) {
-      print(responseBody);
+      print(result);
     } else {
-      final json = JSON.decode(responseBody);
+      final json = JSON.decode(result);
       if (json['status'] == 'success') {
         print('Created successfully.');
 
