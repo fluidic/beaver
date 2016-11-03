@@ -57,8 +57,8 @@ bool _isMatchedTrigger(
   }
 }
 
-Future<Null> _triggerHandler(
-    Context context, Trigger trigger, Project project, int buildNumber) async {
+Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
+    int buildNumber, CloudInfo cloudInfo) async {
   try {
     final triggerConfig = _getTriggerConfig(project, trigger.name);
     if (triggerConfig == null) {
@@ -76,8 +76,8 @@ Future<Null> _triggerHandler(
 
     final tasks = (triggerConfig['task'] as YamlList).toList(growable: false)
         as List<Map<String, Object>>;
-    final taskInstanceRunner =
-        new TaskInstanceRunner(context, project.config, parsedTrigger, tasks);
+    final taskInstanceRunner = new TaskInstanceRunner(
+        context, project.config, parsedTrigger, tasks, cloudInfo);
     final result = await taskInstanceRunner.run();
     context.logger.info('TaskInstanceRunResult: ${result}');
 
@@ -110,7 +110,7 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
     context.logger.info('Build Number: ${buildNumber}');
 
     // Do the job in backgound
-    _triggerHandler(context, trigger, project, buildNumber);
+    _triggerHandler(context, trigger, project, buildNumber, cloudInfo);
 
     return buildNumber;
   } catch (e) {

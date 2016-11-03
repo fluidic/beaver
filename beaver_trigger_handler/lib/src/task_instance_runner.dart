@@ -14,9 +14,10 @@ class TaskInstanceRunner {
   final beaver_store.Config _config;
   final ParsedTrigger _parsedTrigger;
   final List<Map<String, Object>> _tasks;
+  final CloudInfo _cloudInfo;
 
-  TaskInstanceRunner(
-      this._context, this._config, this._parsedTrigger, this._tasks);
+  TaskInstanceRunner(this._context, this._config, this._parsedTrigger,
+      this._tasks, this._cloudInfo);
 
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
@@ -24,11 +25,8 @@ class TaskInstanceRunner {
     final jsonTask = _createJsonForTask(_tasks, _parsedTrigger);
     _context.logger.fine('Task: ${jsonTask}');
 
-    // FIXME: Change this logic after implementing setup(init) cli_command.
-    final config = new beaver_task.Config(_config['cloud_type'], {
-      'project_name': _config['cloud_project_name'],
-      'zone': _config['zone']
-    });
+    final config = new beaver_task.Config(_cloudInfo.type,
+        {'project_name': _cloudInfo.projectName, 'zone': _cloudInfo.region});
     final result = await runBeaver(jsonTask, config);
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
