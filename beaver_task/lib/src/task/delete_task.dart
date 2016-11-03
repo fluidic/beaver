@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:args/args.dart';
 import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
@@ -22,7 +23,14 @@ class DeleteTask extends Task {
       : force = force,
         recursive = recursive;
 
-  DeleteTask.fromArgs(List<String> args) : this(args);
+  factory DeleteTask.fromArgs(List<String> args) {
+    final parser = new ArgParser()
+      ..addFlag('force', defaultsTo: true, abbr: 'f')
+      ..addFlag('recursive', defaultsTo: true, abbr: 'r');
+    final results = parser.parse(args);
+    return new DeleteTask(results.rest,
+        force: results['force'], recursive: results['recursive']);
+  }
 
   @override
   Future<Object> execute(Context context) async {

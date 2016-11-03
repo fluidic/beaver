@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:args/args.dart';
 import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
@@ -17,7 +18,11 @@ class TouchTask extends Task {
 
   TouchTask(this.paths, {create: true}) : create = create;
 
-  TouchTask.fromArgs(List<String> args) : this(args);
+  factory TouchTask.fromArgs(List<String> args) {
+    final parser = new ArgParser()..addFlag('create', defaultsTo: true);
+    final results = parser.parse(args);
+    return new TouchTask(results.rest, create: results['create']);
+  }
 
   @override
   Future<Object> execute(Context context) async {
