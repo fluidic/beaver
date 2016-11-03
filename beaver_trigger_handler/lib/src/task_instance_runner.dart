@@ -3,7 +3,6 @@ import 'dart:convert';
 
 /// [GCloudStorageUploadTask] import.
 import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
-import 'package:beaver_store/beaver_store.dart' as beaver_store;
 import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
