@@ -1,20 +1,20 @@
 project_name: test
 description: "hello world"
 
-# FIXME: Remove after implementing setup(init) cli_command.
-cloud_type: gcloud
-zone: us-central1-a
-cloud_project_name: beaver-ci
-
 triggers:
-  - name: build_new_branch
-    url: "https://github.com/fluidic/beaver"
+  - name: build_new_commit
+    url: "https://github.com/fluidic/beaver_demo"
     type: github
-    token: token_for_test
-    events: ["create"]
+    events: ["push"]
     task:
-      - name: download
-        args: ["https://raw.githubusercontent.com/fluidic/beaver/master/beaver_trigger_handler/README.md", "."]
+      - name: git
+        args: ["clone", "trigger:url"]
+      - name: pub
+        args: ["--process-working-dir", "beaver_demo", "get"]
+      - name: pub
+        args: ["--process-working-dir", "beaver_demo", "run", "test"]
+      - name: mail
+        args: ["dev@fluidic.io"]
   - name: daily_build
     type: cron
     task:

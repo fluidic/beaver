@@ -1,11 +1,6 @@
 project_name: test
 description: "hello world"
 
-# FIXME: Remove after implementing setup(init) cli_command.
-cloud_type: gcloud
-zone: us-central1-a
-cloud_project_name: beaver-ci
-
 triggers:
   - name: build_by_push
     url: "https://github.com/fluidic/beaver"
