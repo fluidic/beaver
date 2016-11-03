@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:args/args.dart';
 import 'package:beaver_task/beaver_task.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 
@@ -10,6 +11,13 @@ class PubTask extends Task {
 
   PubTask(this.args, {String processWorkingDir})
       : this.processWorkingDir = processWorkingDir;
+
+  factory PubTask.fromArgs(List<String> args) {
+    final parser = new ArgParser()..addOption('process-working-dir', abbr: 'C');
+    final results = parser.parse(args);
+    return new PubTask(results.rest,
+        processWorkingDir: results['process-working-dir']);
+  }
 
   @override
   Future<Null> execute(Context context) async {
@@ -23,4 +31,3 @@ class PubTask extends Task {
     }
   }
 }
-

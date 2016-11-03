@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:args/args.dart';
 import 'package:beaver_task/beaver_task.dart';
 import 'package:quiver_iterables/iterables.dart' show concat;
 
@@ -14,6 +15,18 @@ class InstallDartSdkTask extends Task {
 
   InstallDartSdkTask(
       {this.dev: false, this.withDartium: false, this.withContentShell: false});
+
+  factory InstallDartSdkTask.fromArgs(List<String> args) {
+    final parser = new ArgParser()
+      ..addFlag('dev', defaultsTo: false, abbr: 'd')
+      ..addFlag('withDartium', defaultsTo: false, abbr: 'D')
+      ..addFlag('withContentShell', defaultsTo: false, abbr: 'C');
+    final results = parser.parse(args);
+    return new InstallDartSdkTask(
+        dev: results['dev'],
+        withDartium: results['withDartium'],
+        withContentShell: results['withContentShell']);
+  }
 
   @override
   Future<Null> execute(Context context) async {
