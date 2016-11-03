@@ -6,7 +6,7 @@ exports.beaver = function beaver(req, res) {
     const child = spawn('./third_party/dart-linux-x64/dart',
         [
             'beaver_ci.dart.snapshot',
-            req.path,
+            req.protocol + "://" + req.get('host') + req.originalUrl,
             JSON.stringify(req.headers),
             // FIXME: req.body can be empty.
             JSON.stringify(req.body)

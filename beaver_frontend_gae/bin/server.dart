@@ -39,9 +39,6 @@ Future _apiHandler(shelf.Request request) async {
 }
 
 Future _triggerHandler(shelf.Request request) async {
-  final projectName = request.url.pathSegments.first;
-  final triggerName = request.url.pathSegments.last;
-
   final body = await request.readAsString();
   Map<String, Object> json;
   if (body.isEmpty) {
@@ -52,8 +49,8 @@ Future _triggerHandler(shelf.Request request) async {
 
   var responseBody;
   try {
-    final trigger = new Trigger(triggerName, request.headers, json);
-    final buildNumber = await triggerHandler(trigger, projectName);
+    final buildNumber =
+        await triggerHandler(request.requestedUri, request.headers, json);
     responseBody = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
     responseBody = {'status': 'failure', 'reason': e.toString()};
