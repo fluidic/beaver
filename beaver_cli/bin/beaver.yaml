@@ -18,5 +18,18 @@ triggers:
   - name: daily_build
     type: cron
     task:
-      - name: download
-        args: ["https://raw.githubusercontent.com/fluidic/beaver/master/beaver_trigger_handler/README.md", "."]
+      - name: trigger
+        args: ["build_master"]
+      - name: mail
+        args: ["dev@fluidic.io"]
+  - name: build_master
+    type: internal
+    task:
+      - name: git
+        args: ["clone", "https://github.com/fluidic/beaver_demo"]
+      - name: pub
+        args: ["--process-working-dir", "beaver_demo", "get"]
+      - name: pub
+        args: ["--process-working-dir", "beaver_demo", "run", "test"]
+      - name: mail
+        args: ["dev@fluidic.io"]
