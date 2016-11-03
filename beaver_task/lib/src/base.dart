@@ -34,7 +34,10 @@ class Config {
   /// The settings for the cloud. The keys are specific to each cloud type.
   final Map<String, String> cloudSettings;
 
-  Config(this.cloudType, this.cloudSettings);
+  /// The information on build.
+  final Map<String, String> buildInfo;
+
+  Config(this.cloudType, this.cloudSettings, this.buildInfo);
 
   factory Config.fromJson(json) {
     if (json is String) {
@@ -46,12 +49,16 @@ class Config {
 
     final cloudType = json['cloud_type'];
     final cloudSettings = json['cloud_settings'] as Map<String, String>;
-    if (cloudType == null || cloudSettings == null) {
+    final buildInfo = json['build_info'] as Map<String, String>;
+    if (cloudType == null || cloudSettings == null || buildInfo == null) {
       throw new ArgumentError('The given json does not contain all the fields');
     }
-    return new Config(cloudType, cloudSettings);
+    return new Config(cloudType, cloudSettings, buildInfo);
   }
 
-  Map toJson() => {'cloud_type': cloudType, 'cloud_settings': cloudSettings};
+  Map toJson() => {
+        'cloud_type': cloudType,
+        'cloud_settings': cloudSettings,
+        'build_info': buildInfo
+      };
 }
-
