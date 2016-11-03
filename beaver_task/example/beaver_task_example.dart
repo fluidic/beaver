@@ -21,5 +21,5 @@ Map myTask = {
 main(args) => runBeaver(
     myTask,
     new Config(
-        'gcloud', {'project_name': 'beaver-ci', 'zone': 'us-central1-a'}),
+        'gcloud', {'project_name': 'beaver-ci', 'zone': 'us-central1-a'}, {}),
     newVM: false);
