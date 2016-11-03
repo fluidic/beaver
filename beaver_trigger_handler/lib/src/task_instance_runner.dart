@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+/// [PubTask] import.
+import 'package:beaver_dart_task/beaver_dart_task.dart';
 /// [GCloudStorageUploadTask] import.
 import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
 import 'package:beaver_task/beaver_task.dart' as beaver_task;
