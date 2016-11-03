@@ -42,9 +42,6 @@ main() async {
 }
 
 Future<String> handler(HttpRequest request) async {
-  final projectName = request.uri.pathSegments.first;
-  final triggerName = request.uri.pathSegments.last;
-
   final headers = new Map<String, String>();
   request.headers.forEach((name, value) {
     headers[name] = value.first;
@@ -55,8 +52,8 @@ Future<String> handler(HttpRequest request) async {
 
   var resp;
   try {
-    final trigger = new Trigger(triggerName, headers, json);
-    final buildNumber = await triggerHandler(trigger, projectName);
+    final buildNumber =
+        await triggerHandler(request.requestedUri, headers, json);
     resp = {'status': 'success', 'build_number': buildNumber};
   } catch (e) {
     resp = {'status': 'failure', 'reason': e.toString()};

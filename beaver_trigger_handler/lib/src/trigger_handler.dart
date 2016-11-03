@@ -89,20 +89,24 @@ Future<Null> _triggerHandler(
   }
 }
 
-Future<int> triggerHandler(Trigger trigger, String projectName) async {
+Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
+    Map<String, Object> payload) async {
   final context = await _createContext();
 
   try {
     context.logger.info('TriggerHandler is started.');
 
-    final project = await context.beaverStore.getProject(projectName);
+    final cloudInfo = new CloudInfo.fromUrl(requestUrl);
+    final trigger = new Trigger(requestUrl, headers, payload);
+
+    final project = await context.beaverStore.getProject(trigger.projectName);
     if (project == null) {
-      throw new Exception('No project for \'${projectName}\'.');
+      throw new Exception('No project for \'${trigger.projectName}\'.');
     }
     context.logger.info('Project: ${project}');
 
     final buildNumber =
-        await context.beaverStore.getAndUpdateBuildNumber(projectName);
+        await context.beaverStore.getAndUpdateBuildNumber(trigger.projectName);
     context.logger.info('Build Number: ${buildNumber}');
 
     // Do the job in backgound
