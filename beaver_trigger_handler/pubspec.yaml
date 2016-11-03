@@ -8,8 +8,6 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
-  beaver_composite_task:
-    path: ../beaver_composite_task
   beaver_gcloud_task:
     path: ../beaver_gcloud_task
   beaver_store:
