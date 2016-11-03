@@ -24,7 +24,7 @@ class SetupCommand extends Command {
 
     Uri server = Uri.parse(address);
     final map = {
-      'address': server.host,
+      'host': server.host,
       'secure': server.scheme == 'https' ? true : false
     };
     if (server.hasPort) {

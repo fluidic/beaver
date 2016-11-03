@@ -1,3 +1,4 @@
 server:
-  address: localhost
+  host: localhost
+  secure: false
   port: 8080

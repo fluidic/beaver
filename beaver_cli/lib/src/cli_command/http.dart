@@ -8,24 +8,24 @@ import '../exit_codes.dart';
 
 abstract class HttpCommand extends Command {
   String get api;
-  String address;
+  String host;
   int port;
   bool secure;
   String pathPrefix;
 
   HttpCommand() : super() {
-    argParser.addOption('address', abbr: 'A', callback: (value) {
+    argParser.addOption('host', abbr: 'H', callback: (value) {
       if (value == null) {
-        address = getConfig('server', 'address');
+        host = getConfig('server', 'host');
       } else {
-        address = value;
+        host = value;
       }
 
-      if (address == null) {
-        print('address is required.');
+      if (host == null) {
+        print('host is required.');
         exitWithHelpMessage();
       }
-    }, help: 'Address will be requested.');
+    }, help: 'Host will be requested.');
 
     argParser.addOption('port', abbr: 'P', callback: (value) {
       if (value == null) {
@@ -59,13 +59,13 @@ abstract class HttpCommand extends Command {
 
   Uri getApiUrl({String additionalPath: ''}) => new Uri(
       scheme: secure ? 'https' : 'http',
-      host: address,
+      host: host,
       port: port,
       path: '${pathPrefix}${api}${additionalPath}');
 
   String _getServerUrlAsString() => new Uri(
           scheme: secure ? 'https' : 'http',
-          host: address,
+          host: host,
           port: port,
           path: '${pathPrefix}')
       .toString();
