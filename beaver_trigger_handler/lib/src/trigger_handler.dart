@@ -77,7 +77,7 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     final tasks = (triggerConfig['task'] as YamlList).toList(growable: false)
         as List<Map<String, Object>>;
     final taskInstanceRunner = new TaskInstanceRunner(
-        context, project.config, parsedTrigger, tasks, cloudInfo);
+        context, trigger, parsedTrigger, tasks, buildNumber, cloudInfo);
     final result = await taskInstanceRunner.run();
     context.logger.info('TaskInstanceRunResult: ${result}');
 

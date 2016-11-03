@@ -11,13 +11,14 @@ import './base.dart';
 
 class TaskInstanceRunner {
   final Context _context;
-  final beaver_store.Config _config;
+  final Trigger _trigger;
   final ParsedTrigger _parsedTrigger;
   final List<Map<String, Object>> _tasks;
+  final int _buildNumber;
   final CloudInfo _cloudInfo;
 
-  TaskInstanceRunner(this._context, this._config, this._parsedTrigger,
-      this._tasks, this._cloudInfo);
+  TaskInstanceRunner(this._context, this._trigger, this._parsedTrigger,
+      this._tasks, this._buildNumber, this._cloudInfo);
 
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
@@ -25,8 +26,15 @@ class TaskInstanceRunner {
     final jsonTask = _createJsonForTask(_tasks, _parsedTrigger);
     _context.logger.fine('Task: ${jsonTask}');
 
-    final config = new beaver_task.Config(_cloudInfo.type,
-        {'project_name': _cloudInfo.projectName, 'zone': _cloudInfo.region});
+    final config = new beaver_task.Config(_cloudInfo.type, {
+      'project_name': _cloudInfo.projectName,
+      'zone': _cloudInfo.region
+    }, {
+      'request_url': _cloudInfo.baseUrl.toString(),
+      'trigger_name': _trigger.name,
+      'project_name': _trigger.projectName,
+      'build_number': _buildNumber.toString()
+    });
     final result = await runBeaver(jsonTask, config);
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
