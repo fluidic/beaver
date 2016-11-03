@@ -194,17 +194,19 @@ Deleted successfully!
 ```
 
 ## Bundled Tasks
-### Archiving
-### File Operations
-### HTTP
-### Executing shell
-### Accessing Cloud Services
-### Dart Language Supports
-### Notifications
+* Archiving: `gunzip`, `unzip`, `untar`, `bunzip2`, ...
+* File operations: `copy`, `delete`, `mkdir`, `move`, `rename`, `touch`, ... 
+* HTTP: `download`, `post`
+* Executing shell: `shell`
+* Source version control: `git`
+* Accessing cloud services: `upload to storage` 
+* Notifications: `mail`
 
 ## Language Specifics
 ### Dart
-
+A set of Dart specific tasks are provided:
+* Installing SDK
+* Executing `pub` command
 
 ## Extending Beaver
 There are two types of extensions in Beaver. One is `TriggerParser`. The other is `Task`.
