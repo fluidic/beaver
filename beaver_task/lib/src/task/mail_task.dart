@@ -21,6 +21,8 @@ class MailTask extends Task {
     // FIXME: Pass trigger_handler's info like build number.
     final content = '''
     Task is triggerred.
+    Project Name: ${context.config.buildInfo['project_name']}
+    Trigger Name: ${context.config.buildInfo['trigger_name']}
     Task Log: ${context.logger.toString()}
     ''';
 
