@@ -31,7 +31,8 @@ class TaskInstanceRunner {
 
     final config = new beaver_task.Config(_cloudInfo.type, {
       'project_name': _cloudInfo.projectName,
-      'zone': _cloudInfo.region
+      // FIXME: Don't hardcode
+      'zone': _cloudInfo.region + '-a'
     }, {
       'request_url': _cloudInfo.baseUrl.toString(),
       'trigger_name': _trigger.name,
