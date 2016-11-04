@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
 import './base.dart';
+import './cloud_info.dart';
 import './task_instance_runner.dart';
 import './trigger_parser.dart';
 
@@ -109,7 +110,7 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
         await context.beaverStore.getAndUpdateBuildNumber(trigger.projectName);
     context.logger.info('Build Number: ${buildNumber}');
 
-    // Do the job in backgound
+    // Do the job in background
     _triggerHandler(context, trigger, project, buildNumber, cloudInfo);
 
     return buildNumber;

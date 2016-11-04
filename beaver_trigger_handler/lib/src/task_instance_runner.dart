@@ -9,6 +9,7 @@ import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
+import './cloud_info.dart';
 
 class TaskInstanceRunner {
   final Context _context;
