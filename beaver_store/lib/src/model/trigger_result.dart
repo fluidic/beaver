@@ -1,5 +1,5 @@
 import 'package:beaver_task/beaver_task_runner.dart';
-import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
+import 'package:beaver_trigger_handler/beaver_trigger.dart';
 
 class TriggerResult {
   final String projectName;

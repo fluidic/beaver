@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
+import 'package:beaver_trigger_handler/beaver_trigger.dart';
 
 import './model/config.dart';
 import './model/project.dart';
