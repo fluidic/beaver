@@ -18,9 +18,10 @@ class TaskInstanceRunner {
   final List<Map<String, Object>> _tasks;
   final int _buildNumber;
   final CloudInfo _cloudInfo;
+  final bool _newVM;
 
   TaskInstanceRunner(this._context, this._trigger, this._parsedTrigger,
-      this._tasks, this._buildNumber, this._cloudInfo);
+      this._tasks, this._buildNumber, this._cloudInfo, this._newVM);
 
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
@@ -37,7 +38,7 @@ class TaskInstanceRunner {
       'project_name': _trigger.projectName,
       'build_number': _buildNumber.toString()
     });
-    final result = await runBeaver(jsonTask, config);
+    final result = await runBeaver(jsonTask, config, newVM: _newVM);
 
     return new TaskInstanceRunResult(TaskInstanceStatus.success, result);
   }
