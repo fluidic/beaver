@@ -75,15 +75,12 @@ Map<String, List<Map<String, String>>> _getSuggestedEndpoints(
   assert(config != null);
   assert(config['triggers'] != null);
 
-  // FIXME: Get this url dynamically.
-  final baseAddress = '';
-
   final triggers = config['triggers'] as List<Map<String, Object>>;
   final endpoints = triggers
-      .map((trigger) => {
+      .map((trigger) => new Map<String, String>.from({
             'trigger_name': trigger['name'],
-            'endpoint': baseAddress + '/' + projectName + '/' + trigger['name']
-          })
+            'endpoint': '/' + projectName + '/' + trigger['name']
+          }))
       .toList(growable: false);
 
   return {'endpoints': endpoints};
