@@ -20,7 +20,7 @@ Future<Null> generateSshKeyIfNotExist() async {
 
   const username = 'beaver';
   CommandResult result =
-      await _sshKeygen.run(['-t', 'rsa', '-f', sshKeyPath, '-C', username]);
+      await _sshKeygen.run(['-t', 'rsa', '-f', sshKeyPath, '-C', username, '-N', '']);
   if (result.exitCode != 0) {
     throw new Exception('Fail to create ssh key');
   }
