@@ -5,6 +5,12 @@ Beaver CI
 
 Beaver CI is a serverless continuous integration framework.
 
+![Beaver CI Logo](BeaverCI_Logo.png)
+
+# User Guide (draft)
+
+* [Beaver CI User Guide](doc/UserGuide.md)
+
 # Presentations
 
 * [Introduction to Beaver CI][intro]
