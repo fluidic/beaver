@@ -60,6 +60,8 @@ A project is a collection of related triggers and tasks. Since triggers may orig
 
 There is a configuration file in YAML associated with every project. It is where triggers and tasks are wired. For details, see [Project Configuration](#project-configuration)
 
+![Pipeline](images/pipeline.png)
+
 ## Basic Workflows
 ### Setting Up Beaver to the Cloud
 #### Creating a New Beaver Instance in the Cloud
