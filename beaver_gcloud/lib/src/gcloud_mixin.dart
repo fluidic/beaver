@@ -147,7 +147,7 @@ abstract class GCloudMixin implements GCloud {
         instance.networkInterfaces.map((ni) => ni.networkIP);
     String natIP = instance.networkInterfaces.first.accessConfigs.first.natIP;
 
-    generateSshKeyIfNotExist();
+    await generateSshKeyIfNotExist();
     final sshKey = await new File(sshPublicKeyPath).readAsString();
     MetadataItems item = new MetadataItems()
       ..key = 'ssh-keys'
