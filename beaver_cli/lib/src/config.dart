@@ -1,14 +1,7 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:yaml/yaml.dart';
-
-String _userHome() =>
-    Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
-
-String _globalConfigFile() => path.join(_userHome(), '.beaver-config.yaml');
-
-String _localConfigFile() => 'beaver-config.yaml';
 
 getConfig(String key1, [String key2]) {
   final config = _loadConfigFile();
@@ -40,7 +33,7 @@ void setConfig(String key, Map map) {
 _saveConfigFile(String config) {
   var file = _getConfigFile();
   if (file == null) {
-    file = new File(_globalConfigFile());
+    file = new File(beaverGlobalConfigPath);
     file.createSync();
   }
 
@@ -57,9 +50,9 @@ _dumpToYaml(String key, Map map) {
 }
 
 File _getConfigFile() {
-  var file = new File(_localConfigFile());
+  var file = new File(beaverLocalConfigPath);
   if (!file.existsSync()) {
-    file = new File(_globalConfigFile());
+    file = new File(beaverGlobalConfigPath);
     if (!file.existsSync()) {
       return null;
     }
