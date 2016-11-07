@@ -1,22 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
-import 'package:file_helper/file_helper.dart';
 import 'package:path/path.dart' as path;
 
 final CommandWrapper _sshKeygen = new CommandWrapper('ssh-keygen');
 
-final String sshKeyPath = path.join(beaverConfigDir, 'id_rsa');
+final String sshKeyPath = path.join('/tmp', 'id_rsa');
 final String sshPublicKeyPath = '$sshKeyPath.pub';
 
 Future<Null> generateSshKeyIfNotExist() async {
   if (await new File(sshKeyPath).exists()) return;
-
-  if (!await new File(beaverConfigDir).exists()) {
-    await mkdir([beaverConfigDir], recursive: true);
-  }
 
   const username = 'beaver';
   CommandResult result =
