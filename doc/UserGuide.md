@@ -66,23 +66,23 @@ There is a configuration file in YAML associated with every project. It is where
 ### Setting Up Beaver to the Cloud
 #### Creating a New Beaver Instance in the Cloud
 ```
-$ beaver_admin_cli setup -c credentials_path cloud_project_name
+$ beaver_admin setup -c credentials_path cloud_project_name
 ```
 
 #### Getting Beaver Endpoint
 ```
-$ beaver_admin_cli describe cloud_project_name
+$ beaver_admin describe cloud_project_name
 https://us-central1-beaver-ci.cloudfunctions.net/beaver
 ```
 
 ### Setting up Beaver Client
 ```
-$ beaver_cli setup https://us-central1-beaver-ci.cloudfunctions.net/beaver
+$ beaver setup https://us-central1-beaver-ci.cloudfunctions.net/beaver
 ```
 
 ### Creating Project
 ```
-$ beaver_cli create beaver_demo
+$ beaver create beaver_demo
 Created successfully!
 ```
 
@@ -106,7 +106,7 @@ For the details of how to write project configuration files, see [Project Config
 
 ### Uploading Project Configuration
 ```
-$ beaver_cli upload -c beaver.yaml beaver_demo
+$ beaver upload -c beaver.yaml beaver_demo
 Uploaded successfully!
 Don't forget to add webhook https://us-central1-beaver-ci.cloudfunctions.net/beaver/github/beaver_demo \
 to the GitHub repo "https://github.com/fluidic/beaver_demo"
@@ -116,7 +116,7 @@ Currently Beaver does not automatically set a webhook up to the relevant GitHub 
 
 ### Checking Build Result
 ```
-$ beaver_cli get-results -b 0 beaver_demo
+$ beaver get-results -b 0 beaver_demo
 beaver_demo
  - Build Number        : 0
  - TaskInstance Status : success
@@ -128,7 +128,7 @@ beaver_demo
 
 ### Listing All Projects
 ```
-$ beaver_cli list
+$ beaver list
 beaver_demo
 foo
 bar
@@ -136,7 +136,7 @@ bar
 
 ### Getting Project Details
 ```
-$ beaver_cli describe beaver_demo
+$ beaver describe beaver_demo
 Configuration:
   - ...
   - ...
@@ -148,7 +148,7 @@ Endpoints:
 
 ### Deleting Projects   
 ```
-$ beaver_cli delete beaver_demo
+$ beaver delete beaver_demo
 Deleted successfully!
 ```
 
