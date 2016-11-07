@@ -57,8 +57,8 @@ class CreateCommand extends Command {
       exit(exitCodeError);
     }
     final endpoint = await deploy(project);
-    print(endpoint);
-
-    // TODO: Save the project and endpoint
+    final yaml = toYamlString({'project': project, 'endpoint': endpoint});
+    writeTextFile(beaverAdminConfigPath, yaml);
+    print(yaml);
   }
 }
