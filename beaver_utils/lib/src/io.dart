@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+Future<Null> createFileIfNotExist(String file) async {
+  await new File(file).create();
+}
+
 /// Reads the contents of the text file [file].
 Future<String> readTextFile(String file) =>
     new File(file).readAsString(encoding: UTF8);

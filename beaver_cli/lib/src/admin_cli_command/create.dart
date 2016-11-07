@@ -57,10 +57,14 @@ class CreateCommand extends Command {
       print(usage);
       exit(exitCodeError);
     }
-    final endpoint = await deploy(project, siteId);
-    final yaml = toYamlString(
-        {'site_id': siteId, 'project': project, 'endpoint': endpoint});
-    await writeTextFile(beaverAdminConfigPath, yaml);
-    print(yaml);
+
+    await createFileIfNotExist(beaverAdminConfigPath);
+    String contents = await readTextFile(beaverAdminConfigPath);
+    Map config = deepCopy(loadYaml(contents) ?? {})
+      ..putIfAbsent('sites', () => []);
+    String endpoint = await deploy(project, siteId);
+    config['sites']
+        .add({'site_id': siteId, 'project': project, 'endpoint': endpoint});
+    await writeTextFile(beaverAdminConfigPath, toYamlString(config));
   }
 }
