@@ -17,7 +17,7 @@ class InstallDartSdkTask extends Task {
       {this.dev: false, this.withDartium: false, this.withContentShell: false});
 
   factory InstallDartSdkTask.fromArgs(List<String> args) {
-    final parser = new ArgParser()
+    final parser = new ArgParser(allowTrailingOptions: true)
       ..addFlag('dev', defaultsTo: false, abbr: 'd')
       ..addFlag('withDartium', defaultsTo: false, abbr: 'D')
       ..addFlag('withContentShell', defaultsTo: false, abbr: 'C');

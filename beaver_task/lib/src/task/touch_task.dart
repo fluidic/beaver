@@ -19,7 +19,8 @@ class TouchTask extends Task {
   TouchTask(this.paths, {create: true}) : create = create;
 
   factory TouchTask.fromArgs(List<String> args) {
-    final parser = new ArgParser()..addFlag('create', defaultsTo: true);
+    final parser = new ArgParser(allowTrailingOptions: true)
+      ..addFlag('create', defaultsTo: true);
     final results = parser.parse(args);
     return new TouchTask(results.rest, create: results['create']);
   }

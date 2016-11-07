@@ -16,7 +16,8 @@ class GitTask extends Task {
       : this.processWorkingDir = processWorkingDir;
 
   factory GitTask.fromArgs(List<String> args) {
-    final parser = new ArgParser()..addOption('process-working-dir', abbr: 'C');
+    final parser = new ArgParser(allowTrailingOptions: true)
+      ..addOption('process-working-dir', abbr: 'C');
     final results = parser.parse(args);
     return new GitTask(results.rest,
         processWorkingDir: results['process-working-dir']);

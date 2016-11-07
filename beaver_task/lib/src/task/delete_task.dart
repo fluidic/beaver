@@ -24,7 +24,7 @@ class DeleteTask extends Task {
         recursive = recursive;
 
   factory DeleteTask.fromArgs(List<String> args) {
-    final parser = new ArgParser()
+    final parser = new ArgParser(allowTrailingOptions: true)
       ..addFlag('force', defaultsTo: true, abbr: 'f')
       ..addFlag('recursive', defaultsTo: true, abbr: 'r');
     final results = parser.parse(args);
