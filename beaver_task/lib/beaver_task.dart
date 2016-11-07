@@ -17,3 +17,4 @@ export 'src/task/rename_task.dart';
 export 'src/task/shell_task.dart';
 export 'src/task/touch_task.dart';
 export 'src/task/trigger_task.dart';
+export 'src/task/version_check_task.dart';
