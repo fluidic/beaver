@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:beaver_utils/beaver_utils.dart';
 import 'package:yaml/yaml.dart';
 
-getConfig(String key1, [String key2]) {
+dynamic getConfig(String key1, [String key2]) {
   final config = _loadConfigFile();
 
   if (config == null) {
@@ -30,7 +30,7 @@ void setConfig(String key, Map map) {
   _saveConfigFile(config);
 }
 
-_saveConfigFile(String config) {
+void _saveConfigFile(String config) {
   var file = _getConfigFile();
   if (file == null) {
     file = new File(beaverGlobalConfigPath);
@@ -41,7 +41,7 @@ _saveConfigFile(String config) {
 }
 
 const String _indent = '  ';
-_dumpToYaml(String key, Map map) {
+String _dumpToYaml(String key, Map map) {
   final sb = new StringBuffer('$key:\n');
   map.forEach((key, value) {
     sb.writeln('$_indent$key: $value');

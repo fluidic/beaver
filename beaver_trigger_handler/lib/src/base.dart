@@ -135,10 +135,10 @@ class TaskInstanceRunResult {
 }
 
 class _TriggerData extends LanguageParsers {
-  get prefix => string(ParsedTrigger.triggerDataPrefix);
+  Parser get prefix => string(ParsedTrigger.triggerDataPrefix);
 
-  get term => (prefix + prop).list;
-  get prop => identifier.sepBy1(dot);
+  Parser<List> get term => (prefix + prop).list;
+  Parser<List> get prop => identifier.sepBy1(dot);
 
-  get start => term.between(spaces, eof);
+  Parser get start => term.between(spaces, eof);
 }

@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:beaver_store/beaver_store.dart';
 
-main() async {
+Future<Null> main() async {
   final store = new BeaverStore(StorageServiceType.localMachine);
 
   final projectName = 'beaver';
