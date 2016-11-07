@@ -24,8 +24,8 @@ class CreateCommand extends Command {
   }
 
   /// Deploys the function to gcloud and returns the trigger URL.
-  Future<String> deploy(String project) async {
-    final functionName = 'beaver-functions-${uniqueName()}';
+  Future<String> deploy(String project, String siteId) async {
+    final functionName = 'beaver-functions-$siteId}';
     final url = 'https://source.developers.google.com/p/$project/r/default';
     await gcloudCli.run([
       'alpha',
@@ -50,14 +50,16 @@ class CreateCommand extends Command {
 
   @override
   Future<Null> run() async {
+    final siteId = uniqueName();
     final project = argResults['project'];
     if (project == null) {
       print('project is required.');
       print(usage);
       exit(exitCodeError);
     }
-    final endpoint = await deploy(project);
-    final yaml = toYamlString({'project': project, 'endpoint': endpoint});
+    final endpoint = await deploy(project, siteId);
+    final yaml = toYamlString(
+        {'site_id': siteId, 'project': project, 'endpoint': endpoint});
     await writeTextFile(beaverAdminConfigPath, yaml);
     print(yaml);
   }
