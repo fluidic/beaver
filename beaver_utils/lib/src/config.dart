@@ -7,3 +7,6 @@ final String _homePath = Platform.isWindows
     : Platform.environment['HOME'];
 
 final String beaverConfigDir = path.join(_homePath, '.beaver');
+
+final String beaverAdminConfigPath =
+    path.join(beaverConfigDir, 'beaver_admin.yaml');
