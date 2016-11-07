@@ -26,7 +26,7 @@ class TaskInstanceRunner {
   Future<TaskInstanceRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final jsonTask = _createJsonForTask(_tasks, _parsedTrigger);
+    final jsonTask = _createJson(_tasks, _parsedTrigger);
     _context.logger.fine('Task: $jsonTask');
 
     final config = new beaver_task.Config(_cloudInfo.type, {
@@ -45,35 +45,43 @@ class TaskInstanceRunner {
   }
 }
 
-List<String> _getArgs(List<String> args, ParsedTrigger parsedTrigger) {
-  final ret = new List<String>();
-  args.forEach((arg) {
-    if (parsedTrigger.isTriggerData(arg)) {
-      ret.add(parsedTrigger.getTriggerData(arg));
-    } else {
-      ret.add(arg);
-    }
-  });
-  return ret;
+String _getArg(String arg, ParsedTrigger parsedTrigger) {
+  if (parsedTrigger.isTriggerData(arg)) {
+    return parsedTrigger.getTriggerData(arg);
+  }
+  return arg;
 }
 
-String _createJsonForTask(
-    List<Map<String, Object>> taskInstances, ParsedTrigger parsedTrigger) {
-  assert(taskInstances.isNotEmpty);
+Map<String, Object> _createJsonForTask(
+    Map<String, Object> taskInstance, ParsedTrigger parsedTrigger) {
+  assert(taskInstance.isNotEmpty);
 
+  final args = taskInstance['args'] as List;
+  var resultArgs = [];
+
+  for (final arg in args) {
+    if (arg is String) {
+      resultArgs.add(_getArg(arg, parsedTrigger));
+    } else if (arg is Map) {
+      resultArgs
+          .add(_createJsonForTask(arg as Map<String, Object>, parsedTrigger));
+    } else {
+      throw new Exception('Task arg should be String or Map.');
+    }
+  }
+  return {'name': taskInstance['name'], 'args': resultArgs};
+}
+
+String _createJson(
+    List<Map<String, Object>> taskInstances, ParsedTrigger parsedTrigger) {
   final taskList = [];
   taskInstances.forEach((taskInstance) {
-    taskList.add({
-      'name': taskInstance['name'],
-      'args': _getArgs(taskInstance['args'] as List<String>, parsedTrigger)
-    });
+    taskList.add(_createJsonForTask(taskInstance, parsedTrigger));
   });
 
   if (taskList.length == 1) {
     return JSON.encode(taskList[0]);
+  } else {
+    return JSON.encode({'name': 'seq', 'args': taskList});
   }
-
-  // FIXME: Need to be able to use par, too.
-  final map = {}..addAll({'name': 'seq', 'args': taskList});
-  return JSON.encode(map);
 }
