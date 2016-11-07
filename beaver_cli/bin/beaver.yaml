@@ -33,3 +33,12 @@ triggers:
         args: ["--process-working-dir", "beaver_demo", "run", "test"]
       - name: mail
         args: ["dev@fluidic.io"]
+  - name: version_check
+    type: cron
+    task:
+      - name: version_check
+        args: ["https://github.com/fluidic/lazy.git", "0.2.0"]
+      - name: trigger
+        args: ["build_master"]
+      - name: mail
+        args: ["dev@fluidic.io"]
