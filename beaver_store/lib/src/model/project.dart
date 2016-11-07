@@ -17,7 +17,7 @@ class Project {
   @override
   String toString() {
     final buffer = new StringBuffer();
-    buffer..writeln('name: ${name}')..writeln('config: ${config}');
+    buffer..writeln('name: $name')..writeln('config: $config');
     return buffer.toString();
   }
 }
