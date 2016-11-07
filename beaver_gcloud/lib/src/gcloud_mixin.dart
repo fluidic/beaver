@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:beaver_utils/beaver_utils.dart';
 import 'package:googleapis_auth/auth_io.dart';
@@ -148,7 +147,7 @@ abstract class GCloudMixin implements GCloud {
     String natIP = instance.networkInterfaces.first.accessConfigs.first.natIP;
 
     await generateSshKeyIfNotExist();
-    final sshKey = await new File(sshPublicKeyPath).readAsString();
+    final sshKey = await readTextFile(sshPublicKeyPath);
     MetadataItems item = new MetadataItems()
       ..key = 'ssh-keys'
       ..value = sshKey;
