@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:beaver_task/beaver_task.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
 
@@ -18,8 +20,10 @@ Map myTask = {
   ]
 };
 
-main(args) => runBeaver(
-    myTask,
-    new Config(
-        'gcloud', {'project_name': 'beaver-ci', 'zone': 'us-central1-a'}, {}),
-    newVM: false);
+Future<Null> main(args) async {
+  await runBeaver(
+      myTask,
+      new Config(
+          'gcloud', {'project_name': 'beaver-ci', 'zone': 'us-central1-a'}, {}),
+      newVM: false);
+}

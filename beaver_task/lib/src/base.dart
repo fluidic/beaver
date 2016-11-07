@@ -12,6 +12,7 @@ class TaskException implements Exception {
 
   TaskException(this.message);
 
+  @override
   String toString() => message;
 }
 

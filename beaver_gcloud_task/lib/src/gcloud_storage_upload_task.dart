@@ -29,7 +29,7 @@ class GCloudStorageUploadTask extends Task {
     final file = new File(src);
     if (!await file.exists()) {
       throw new GCloudStorageUploadException(
-          'Source file \'${src}\' does not exist.');
+          'Source file \'$src\' does not exist.');
     }
 
     GCloudContextPart part = context.getPart('gcloud') as GCloudContextPart;

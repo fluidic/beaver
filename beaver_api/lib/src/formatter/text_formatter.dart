@@ -26,7 +26,7 @@ class TextFormatter implements Formatter {
     });
     items.forEach((String itemName, String itemContent) {
       buffer.writeln(
-          " - ${itemName.padRight(longestKeyLength + 1)}: ${itemContent}");
+          " - ${itemName.padRight(longestKeyLength + 1)}: $itemContent");
     });
   }
 

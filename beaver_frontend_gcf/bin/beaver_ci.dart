@@ -5,7 +5,7 @@ import 'package:beaver_api/beaver_api.dart';
 import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
-main(List<String> args) async {
+Future<Null >main(List<String> args) async {
   print('beaver-ci started.');
 
   final requestUrl = Uri.parse(args[0]);

@@ -48,11 +48,11 @@ class UnzipTask extends Task {
   Future<Null> execute(Context context) async {
     final srcFile = new File(src);
     if (!await srcFile.exists()) {
-      throw new UnzipException('Source file \'${src}\' does not exist.');
+      throw new UnzipException('Source file \'$src\' does not exist.');
     }
     final destDirectory = new Directory(dest);
     if (!await destDirectory.exists()) {
-      throw new UnzipException('Dest directory \'${dest}\' does not exist.');
+      throw new UnzipException('Dest directory \'$dest\' does not exist.');
     }
 
     List<int> bytes = await srcFile.readAsBytes();

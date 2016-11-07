@@ -14,7 +14,7 @@ class BeaverCommandRunner extends CommandRunner {
 
     if (argResults.command == null && argResults.rest.isNotEmpty) {
       final command = argResults.rest[0];
-      print('${command} is not a beaver cli_command. See \'beaver help\'.');
+      print('$command is not a beaver cli_command. See \'beaver help\'.');
 
       StringDistance d = new Levenshtein();
       final candidates =

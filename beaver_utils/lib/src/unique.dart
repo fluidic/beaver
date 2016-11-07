@@ -13,5 +13,5 @@ String uniqueName({String prefix: '', int length: _defaultLength}) {
   for (var i = 0; i < charCodes.length; i++) {
     charCodes[i] = _letters[_rnd.nextInt(_letters.length)];
   }
-  return '${prefix}${new String.fromCharCodes(charCodes)}';
+  return '$prefix${new String.fromCharCodes(charCodes)}';
 }

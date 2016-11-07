@@ -27,7 +27,7 @@ class TaskInstanceRunner {
     _context.logger.fine('TaskInstanceRunner started.');
 
     final jsonTask = _createJsonForTask(_tasks, _parsedTrigger);
-    _context.logger.fine('Task: ${jsonTask}');
+    _context.logger.fine('Task: $jsonTask');
 
     final config = new beaver_task.Config(_cloudInfo.type, {
       'project_name': _cloudInfo.projectName,

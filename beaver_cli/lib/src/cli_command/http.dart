@@ -61,13 +61,13 @@ abstract class HttpCommand extends Command {
       scheme: secure ? 'https' : 'http',
       host: host,
       port: port,
-      path: '${pathPrefix}${api}${additionalPath}');
+      path: '$pathPrefix$api$additionalPath');
 
   String _getServerUrlAsString() => new Uri(
           scheme: secure ? 'https' : 'http',
           host: host,
           port: port,
-          path: '${pathPrefix}')
+          path: '$pathPrefix')
       .toString();
 
   String addServerUrlToEndpoints(String response) {

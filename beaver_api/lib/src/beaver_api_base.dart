@@ -90,7 +90,7 @@ Future<Map<String, Object>> _getResult(Context context, String projectName,
     int buildNumber, String format, int count) async {
   final project = await context.beaverStore.getProject(projectName);
   if (project == null) {
-    throw new Exception('No project for \'${projectName}\'.');
+    throw new Exception('No project for \'$projectName\'.');
   }
   final resultBuildNumbers =
       new Iterable.generate(max(count, 0), (i) => buildNumber + i);
@@ -121,7 +121,7 @@ Future<Map<String, Object>> _deleteProject(
     Context context, String projectName) async {
   final project = await context.beaverStore.getProject(projectName);
   if (project == null) {
-    throw new Exception('Project \'${projectName}\' doesn\'t exist.');
+    throw new Exception('Project \'$projectName\' doesn\'t exist.');
   }
   await context.beaverStore.deleteProject(projectName);
   return {};
@@ -138,7 +138,7 @@ Future<Map<String, Object>> _describeProject(
     Context context, String projectName) async {
   final project = await context.beaverStore.getProject(projectName);
   if (project == null) {
-    throw new Exception('Project doesn\'t exist for name \'${projectName}\'');
+    throw new Exception('Project doesn\'t exist for name \'$projectName\'');
   }
   final result = new Map<String, Object>.from({'project': project.toJson()});
   if (project.config != null) {

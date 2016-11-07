@@ -14,7 +14,7 @@ import './gcloud_context.dart';
 import './logger.dart';
 import './task.dart';
 
-enum TaskStatus { Success, Failure, InternalError }
+enum TaskStatus { success, failure, internalError }
 
 EnumCodec<TaskStatus> _taskStatusCodec = new EnumCodec<TaskStatus>();
 
@@ -62,16 +62,16 @@ class TaskRunResult {
 Future<TaskRunResult> _runTask(
     Context context, /* Task|ExecuteFunc */ task) async {
   task = task is Task ? task : new Task.fromFunc(task as ExecuteFunc);
-  var status = TaskStatus.Success;
+  var status = TaskStatus.success;
   final logger = context.logger;
   try {
     await task.execute(context);
   } on TaskException catch (e) {
     logger.shout(e);
-    status = TaskStatus.Failure;
+    status = TaskStatus.failure;
   } catch (e) {
     logger.shout(e);
-    status = TaskStatus.InternalError;
+    status = TaskStatus.internalError;
   }
   return new TaskRunResult._internal(context.config, status, logger.toString());
 }
@@ -79,7 +79,7 @@ Future<TaskRunResult> _runTask(
 void _dumpClassMap(String prefix, Map<String, ClassMirror> taskClassMap) {
   print(prefix);
   taskClassMap.forEach((name, cm) {
-    print('  ${name} -> ${cm.qualifiedName}');
+    print('  $name -> ${cm.qualifiedName}');
   });
 }
 
@@ -109,7 +109,7 @@ Future<Context> _createGCloudContext(Config config) async {
 CommandWrapper _ssh = new CommandWrapper('ssh');
 
 Future _prepareBeaverTaskServer(String remoteAddr) async {
-  String host = 'beaver@${remoteAddr}';
+  String host = 'beaver@$remoteAddr';
   await _ssh.run([
     '-oStrictHostKeyChecking=no',
     '-i',

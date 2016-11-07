@@ -27,7 +27,7 @@ class CopyTask extends Task {
     final dir = new Directory(dest);
     if (!await dir.exists()) {
       if (!await file_helper.mkdir([dest], recursive: true)) {
-        throw new TaskException('Directory \'${dest}\' creation is failed.');
+        throw new TaskException('Directory \'$dest\' creation is failed.');
       }
     }
 

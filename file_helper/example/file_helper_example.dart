@@ -1,10 +1,12 @@
 // Copyright (c) 2016, Fluidic Inc. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
+
 import 'package:file_helper/file_helper.dart' as file_helper;
 
-main() async {
+Future<Null> main() async {
   // copy
   await new File('testFile').create();
   await file_helper.mkdir(['testDir']);

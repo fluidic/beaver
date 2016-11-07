@@ -57,7 +57,7 @@ class TriggerResult {
         taskInstanceRunResult.status == TaskInstanceStatus.success
             ? 'success'
             : 'failure',
-        taskInstanceRunResult.taskRunResult.status == TaskStatus.Success
+        taskInstanceRunResult.taskRunResult.status == TaskStatus.success
             ? 'success'
             : 'failure',
         taskInstanceRunResult.taskRunResult.config.cloudType,

@@ -42,7 +42,7 @@ class GCloudMailTask extends Task {
     final sendgridName = 'sendgridEmail';
     final sendgridKey = await _getSendgridKey(part);
     final url =
-        'https://${part.region}-${part.project}.cloudfunctions.net/${sendgridName}?sg_key=${sendgridKey}';
+        'https://${part.region}-${part.project}.cloudfunctions.net/$sendgridName?sg_key=$sendgridKey';
 
     final httpClient = new HttpClient();
     final request = await httpClient.postUrl(Uri.parse(url));

@@ -49,9 +49,9 @@ _saveConfigFile(String config) {
 
 const String _indent = '  ';
 _dumpToYaml(String key, Map map) {
-  final sb = new StringBuffer('${key}:\n');
+  final sb = new StringBuffer('$key:\n');
   map.forEach((key, value) {
-    sb.writeln('${_indent}${key}: ${value}');
+    sb.writeln('$_indent$key: $value');
   });
   return sb.toString();
 }

@@ -3,7 +3,7 @@ import 'package:beaver_gcloud/beaver_gcloud.dart';
 
 class GCloud extends GCloudBase {}
 
-main(List<String> args) {
+void main(List<String> args) {
   final parser = new ArgParser()
     ..addOption('project', abbr: 'p')
     ..addOption('zone', abbr: 'z', defaultsTo: 'us-central1-a');
@@ -18,7 +18,7 @@ main(List<String> args) {
   final gcloud = new GCloud();
   gcloud.init(argResults['project'], argResults['zone']).then((_) {
     gcloud.deleteVM(instanceName).then((DeleteVMResult result) {
-      if (result.status == DeleteVMStatus.Success) {
+      if (result.status == DeleteVMStatus.success) {
         print('deleteVM succeeded');
       } else {
         print('deleteVM failed: ${result.status}');

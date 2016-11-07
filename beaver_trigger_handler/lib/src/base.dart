@@ -58,7 +58,7 @@ class ParsedTrigger {
     try {
       ids = new _TriggerData().start.parse(str)[1];
     } catch (_) {
-      throw new Exception('Wrong format for a trigger data: ${str}');
+      throw new Exception('Wrong format for a trigger data: $str');
     }
 
     // FIXME: Improve!
@@ -88,7 +88,7 @@ class ParsedTrigger {
 
       return data;
     } catch (_) {
-      throw new Exception('No data for a trigger data: ${str}');
+      throw new Exception('No data for a trigger data: $str');
     }
   }
 
@@ -96,9 +96,9 @@ class ParsedTrigger {
   String toString() {
     final buffer = new StringBuffer();
     buffer
-      ..writeln('event: ${event}')
-      ..writeln('url: ${url}')
-      ..writeln('data: ${payload}');
+      ..writeln('event: $event')
+      ..writeln('url: $url')
+      ..writeln('data: $payload');
     return buffer.toString();
   }
 }
@@ -119,15 +119,15 @@ class TaskInstanceRunResult {
     }
 
     var taskStatus = 'success';
-    if (taskRunResult.status != TaskStatus.Success) {
+    if (taskRunResult.status != TaskStatus.success) {
       taskStatus = 'failure';
     }
 
     final buffer = new StringBuffer();
     buffer
-      ..writeln('status: ${taskInstanceStatus}')
+      ..writeln('status: $taskInstanceStatus')
       ..writeln('TaskRunResult')
-      ..writeln('status: ${taskStatus}')
+      ..writeln('status: $taskStatus')
       ..writeln('config: ${taskRunResult.config.toString()}')
       ..writeln('log: ${taskRunResult.log}');
     return buffer.toString();

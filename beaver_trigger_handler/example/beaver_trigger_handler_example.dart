@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
-main() async {
+Future<Null> main() async {
   final BeaverStore bs = await getBeaverStore(StorageServiceType.localMachine);
   final projectName = 'test';
   await bs.setNewProject(projectName);
@@ -29,7 +29,7 @@ main() async {
       } catch (e) {
         req.response
           ..statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-          ..write('Exception: ${e}.')
+          ..write('Exception: $e.')
           ..close();
       }
     } else {

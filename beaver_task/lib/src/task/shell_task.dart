@@ -7,7 +7,7 @@ import '../task.dart';
 
 class ShellException extends TaskException {
   ShellException(String executable, int exitCode)
-      : super('${executable} exited with ${exitCode}');
+      : super('$executable exited with $exitCode');
 }
 
 @TaskClass('shell')

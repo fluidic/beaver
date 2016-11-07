@@ -3,7 +3,7 @@ import 'package:beaver_gcloud/beaver_gcloud.dart';
 
 class GCloud extends GCloudBase {}
 
-main(List<String> args) {
+void main(List<String> args) {
   final parser = new ArgParser()
     ..addOption('project', abbr: 'p')
     ..addOption('zone', abbr: 'z', defaultsTo: 'us-central1-a');
@@ -12,7 +12,7 @@ main(List<String> args) {
   final gcloud = new GCloud();
   gcloud.init(argResults['project'], argResults['zone']).then((_) {
     gcloud.createVM().then((CreateVMResult result) {
-      if (result.status == CreateVMStatus.Success) {
+      if (result.status == CreateVMStatus.success) {
         print('createVM succeeded');
         print('\tname: ${result.name}');
         print('\texternalIP: ${result.externalIP}');

@@ -65,10 +65,10 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     if (triggerConfig == null) {
       throw new Exception('No Trigger Configuration for \'${trigger.name}\'');
     }
-    context.logger.info('Trigger Configuration: ${triggerConfig}');
+    context.logger.info('Trigger Configuration: $triggerConfig');
 
     final parsedTrigger = parseTrigger(context, trigger, triggerConfig['type']);
-    context.logger.info('Trigger: ${parsedTrigger}');
+    context.logger.info('Trigger: $parsedTrigger');
 
     if (!_isMatchedTrigger(triggerConfig, parsedTrigger)) {
       // FIXME: Use more precise message.
@@ -81,7 +81,7 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     final taskInstanceRunner = new TaskInstanceRunner(
         context, trigger, parsedTrigger, tasks, buildNumber, cloudInfo, newVM);
     final result = await taskInstanceRunner.run();
-    context.logger.info('TaskInstanceRunResult: ${result}');
+    context.logger.info('TaskInstanceRunResult: $result');
 
     await context.beaverStore.saveResult(project.name, buildNumber, trigger,
         parsedTrigger, triggerConfig, result);
@@ -105,11 +105,11 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
     if (project == null) {
       throw new Exception('No project for \'${trigger.projectName}\'.');
     }
-    context.logger.info('Project: ${project}');
+    context.logger.info('Project: $project');
 
     final buildNumber =
         await context.beaverStore.getAndUpdateBuildNumber(trigger.projectName);
-    context.logger.info('Build Number: ${buildNumber}');
+    context.logger.info('Build Number: $buildNumber');
 
     // Do the job in background
     _triggerHandler(context, trigger, project, buildNumber, cloudInfo);

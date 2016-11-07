@@ -11,7 +11,7 @@ class ListCommand extends HttpCommand {
   @override
   String get name => 'list';
 
-  ListCommand() : super() {}
+  ListCommand() : super();
 
   @override
   String get api => '/api/list';

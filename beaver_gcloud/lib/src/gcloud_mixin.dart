@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 import 'ssh_keygen.dart';
 
-enum CreateVMStatus { Success, FailToAddSshKey, Error }
+enum CreateVMStatus { success, failToAddSshKey, error }
 
 class CreateVMResult {
   // Status of CreateVM.
@@ -34,7 +34,7 @@ class CreateVMResult {
       this.status, this.name, this.zone, this.networkIPs, this.externalIP);
 }
 
-enum DeleteVMStatus { Success, Error }
+enum DeleteVMStatus { success, error }
 
 class DeleteVMResult {
   // Status of DeleteVM.
@@ -96,7 +96,7 @@ abstract class GCloudMixin implements GCloud {
     var instance = new Instance.fromJson({
       'name': name,
       'machineType':
-          'projects/beaver-ci/zones/${_zone}/machineTypes/n1-standard-1',
+          'projects/beaver-ci/zones/$_zone/machineTypes/n1-standard-1',
       "disks": [
         {
           "type": "PERSISTENT",
@@ -108,7 +108,7 @@ abstract class GCloudMixin implements GCloud {
             "sourceImage":
                 "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
             "diskType":
-                "projects/beaver-ci/zones/${_zone}/diskTypes/pd-standard",
+                "projects/beaver-ci/zones/$_zone/diskTypes/pd-standard",
             "diskSizeGb": "10"
           }
         }
@@ -134,7 +134,7 @@ abstract class GCloudMixin implements GCloud {
     });
     Operation op = await compute.instances.insert(instance, _project, _zone);
     CreateVMStatus status =
-        op.error == null ? CreateVMStatus.Success : CreateVMStatus.Error;
+        op.error == null ? CreateVMStatus.success : CreateVMStatus.error;
 
     // IP addresses are not available in PROVISIONING status.
     // FIXME: Avoid polling if possible.
@@ -156,7 +156,7 @@ abstract class GCloudMixin implements GCloud {
     op = await compute.instances
         .setMetadata(instance.metadata, _project, _zone, name);
     if (op.error != null) {
-      status = CreateVMStatus.FailToAddSshKey;
+      status = CreateVMStatus.failToAddSshKey;
     }
 
     return new CreateVMResult(status, name, _zone, networkIPs, natIP);
@@ -167,7 +167,7 @@ abstract class GCloudMixin implements GCloud {
     Operation op =
         await compute.instances.delete(_project, _zone, instanceName);
     DeleteVMStatus status =
-        op.error == null ? DeleteVMStatus.Success : DeleteVMStatus.Error;
+        op.error == null ? DeleteVMStatus.success : DeleteVMStatus.error;
     return new DeleteVMResult(status);
   }
 }

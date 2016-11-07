@@ -21,7 +21,7 @@ class BeaverStore {
   Future<Null> setNewProject(String name) async {
     final project = await _storageService.loadProject(name);
     if (project != null) {
-      throw new Exception('Project \'${name}\' already exists.');
+      throw new Exception('Project \'$name\' already exists.');
     }
     await _storageService.saveProject(new Project(name));
   }
@@ -38,7 +38,7 @@ class BeaverStore {
     final config = new YamlConfig(yaml);
     final project = await _storageService.loadProject(id);
     if (project == null) {
-      throw new Exception('No project for ${id}');
+      throw new Exception('No project for $id');
     }
     if (project.name != config['project_name']) {
       throw new Exception('Project name is not valid.');

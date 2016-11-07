@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:mirrors';
 
-newInstance(String constructorName, ClassMirror cm, List args) =>
+dynamic newInstance(String constructorName, ClassMirror cm, List args) =>
     cm.newInstance(new Symbol(constructorName), args).reflectee;
 
 Map<String, ClassMirror> queryNameClassMapByAnnotation(Type annotationClassType) {
