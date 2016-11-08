@@ -5,7 +5,7 @@ import 'package:args/command_runner.dart';
 import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 
-import '../exit_codes.dart';
+import '../exit_codes.dart' as exit_codes;
 
 final gcloudCli = new CommandWrapper('gcloud');
 
@@ -27,7 +27,7 @@ class DeleteCommand extends Command {
     if (argResults.rest.length != 1) {
       print('Specify site id to describe.');
       printUsage();
-      exit(exitCodeError);
+      exit(exit_codes.usage);
     }
     final siteId = argResults.rest[0];
 
@@ -35,7 +35,7 @@ class DeleteCommand extends Command {
     final config = await readYamlFile(beaverAdminConfigPath);
     if (config['sites'] == null) {
       print('$siteId does not exist');
-      exit(exitCodeError);
+      exit(exit_codes.data);
     }
     var foundSite;
     for (final site in config['sites']) {
@@ -47,7 +47,7 @@ class DeleteCommand extends Command {
     }
     if (foundSite == null) {
       print('$siteId does not exist');
-      exit(exitCodeError);
+      exit(exit_codes.data);
     }
     config['sites'].remove(foundSite);
     await deleteFunction(siteId);

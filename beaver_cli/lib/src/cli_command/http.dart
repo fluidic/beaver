@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 
 import '../config.dart';
-import '../exit_codes.dart';
+import '../exit_codes.dart' as exit_codes;
 
 abstract class HttpCommand extends Command {
   String get api;
@@ -84,6 +84,6 @@ abstract class HttpCommand extends Command {
 
   void exitWithHelpMessage() {
     print(argParser.usage);
-    exit(exitCodeError);
+    exit(exit_codes.usage);
   }
 }

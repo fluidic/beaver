@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:beaver_utils/beaver_utils.dart';
 
-import '../exit_codes.dart';
+import '../exit_codes.dart' as exit_codes;
 
 class DescribeCommand extends Command {
   @override
@@ -18,7 +18,7 @@ class DescribeCommand extends Command {
     if (argResults.rest.length != 1) {
       print('Specify site id to describe.');
       printUsage();
-      exit(exitCodeError);
+      exit(exit_codes.usage);
     }
     final siteId = argResults.rest[0];
 

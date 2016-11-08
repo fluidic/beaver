@@ -6,7 +6,7 @@ import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 import 'package:yaml/yaml.dart';
 
-import '../exit_codes.dart';
+import '../exit_codes.dart' as exit_codes;
 
 final gcloudCli = new CommandWrapper('gcloud');
 
@@ -55,7 +55,7 @@ class CreateCommand extends Command {
     if (project == null) {
       print('project is required.');
       print(usage);
-      exit(exitCodeError);
+      exit(exit_codes.usage);
     }
 
     await createFileIfNotExist(beaverAdminConfigPath);
