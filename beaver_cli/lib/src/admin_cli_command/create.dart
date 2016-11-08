@@ -25,7 +25,7 @@ class CreateCommand extends Command {
 
   /// Deploys the function to gcloud and returns the trigger URL.
   Future<String> deploy(String project, String siteId) async {
-    final functionName = 'beaver-functions-$siteId}';
+    final functionName = 'beaver-functions-$siteId';
     final url = 'https://source.developers.google.com/p/$project/r/default';
     await gcloudCli.run([
       'alpha',
