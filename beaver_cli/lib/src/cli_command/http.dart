@@ -13,7 +13,7 @@ abstract class HttpCommand extends Command {
   bool secure;
   String pathPrefix;
 
-  HttpCommand() : super() {
+  HttpCommand() {
     argParser.addOption('host', abbr: 'H', callback: (value) {
       if (value == null) {
         host = getConfig('server', 'host');

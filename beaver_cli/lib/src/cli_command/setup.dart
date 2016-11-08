@@ -11,8 +11,6 @@ class SetupCommand extends Command {
   @override
   String get name => 'setup';
 
-  SetupCommand() : super();
-
   @override
   Future<Null> run() async {
     String address;

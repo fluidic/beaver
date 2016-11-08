@@ -15,7 +15,7 @@ class UploadCommand extends HttpCommand {
   @override
   String get name => 'upload';
 
-  UploadCommand() : super() {
+  UploadCommand() {
     argParser.addOption('config-file',
         abbr: 'c',
         defaultsTo: './beaver.yaml',

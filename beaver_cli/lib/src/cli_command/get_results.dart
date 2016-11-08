@@ -11,7 +11,7 @@ class GetResultsCommand extends HttpCommand {
   @override
   String get name => 'get-results';
 
-  GetResultsCommand() : super() {
+  GetResultsCommand() {
     argParser.addOption('build-number', abbr: 'b', callback: (value) {
       if (value == null) {
         print('build-number is required.');

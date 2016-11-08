@@ -14,7 +14,7 @@ class TestCommand extends HttpCommand {
   @override
   String get name => 'test';
 
-  TestCommand() : super() {
+  TestCommand() {
     argParser.addOption('trigger-type',
         abbr: 't', defaultsTo: 'github', help: 'Trigger\'s type to be tested.');
 

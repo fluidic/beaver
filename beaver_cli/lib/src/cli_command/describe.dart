@@ -12,8 +12,6 @@ class DescribeCommand extends HttpCommand {
   @override
   String get name => 'describe';
 
-  DescribeCommand() : super();
-
   @override
   String get api => '/api/describe';
 

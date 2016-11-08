@@ -15,7 +15,7 @@ class CreateCommand extends HttpCommand {
   @override
   String get name => 'create';
 
-  CreateCommand() : super() {
+  CreateCommand() {
     argParser.addOption('config-file',
         abbr: 'c', help: 'Config file will be uploaded.');
   }

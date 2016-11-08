@@ -11,8 +11,6 @@ class DeleteCommand extends HttpCommand {
   @override
   String get name => 'delete';
 
-  DeleteCommand() : super();
-
   @override
   String get api => '/api/delete';
 

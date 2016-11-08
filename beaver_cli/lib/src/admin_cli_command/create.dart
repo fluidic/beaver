@@ -17,7 +17,7 @@ class CreateCommand extends Command {
   @override
   String get name => 'create';
 
-  CreateCommand() : super() {
+  CreateCommand() {
     argParser.addOption('project',
         abbr: 'p',
         help: 'The cloud project ID to use for setting up beaver CI');
