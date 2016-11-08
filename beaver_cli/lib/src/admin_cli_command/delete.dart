@@ -10,12 +10,12 @@ import '../exit_codes.dart';
 
 final gcloudCli = new CommandWrapper('gcloud');
 
-class RmCommand extends Command {
+class DeleteCommand extends Command {
   @override
-  String get description => 'Remove a beaver CI env';
+  String get description => 'Delete a beaver CI env';
 
   @override
-  String get name => 'rm';
+  String get name => 'delete';
 
   Future<Null> deleteFunction(String siteId) async {
     final functionName = 'beaver-functions-$siteId';
