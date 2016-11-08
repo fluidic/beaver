@@ -42,3 +42,14 @@ triggers:
         args: ["build_master"]
       - name: mail
         args: ["dev@fluidic.io"]
+  - name: use_specific_sdk
+    type: internal
+    task:
+      - name: install_dart_sdk
+        args: ["1.20.1"]
+      - name: git
+        args: ["clone", "trigger:url"]
+      - name: pub
+        args: ["get", "--process-working-dir", "beaver_demo", "--pub-path", "dart-sdk/bin/pub"]
+      - name: pub
+        args: ["run", "test", "--process-working-dir", "beaver_demo", "--pub-path", "dart-sdk/bin/pub"]
