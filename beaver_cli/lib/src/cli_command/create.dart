@@ -41,13 +41,13 @@ class CreateCommand extends HttpCommand {
 
     final data = {'project_name': projectName};
     if (argResults['config-file'] != null) {
-      final config =
-          loadYaml(new File(argResults['config-file']).readAsStringSync());
+      final yaml = new File(argResults['config-file']).readAsStringSync();
+      final config = loadYaml(yaml);
       if (projectName != config['project_name']) {
         print('project_names are different.');
         exit(exitCodeError);
       }
-      data.addAll({'config': config.toString()});
+      data.addAll({'config': yaml});
     }
 
     final httpClient = new HttpClient();
