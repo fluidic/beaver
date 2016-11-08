@@ -1,3 +1,5 @@
+import 'iterables.dart';
+
 /// Serializes [node] into a String and returns it.
 String toYamlString(node) {
   var sb = new StringBuffer();
@@ -76,8 +78,3 @@ void _listToYamlString(
 }
 
 void _writeIndent(int indent, StringSink ss) => ss.write(' ' * indent);
-
-/// Returns the concatentation of the input iterables.
-///
-/// The returned iterable is a lazily-evaluated view on the input iterables.
-Iterable/*<T>*/ concat/*<T>*/(Iterable<Iterable/*<T>*/> iterables) => iterables.expand((x) => x);
