@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:beaver_task/beaver_task.dart';
+import 'package:command_wrapper/command_wrapper.dart';
 
 @TaskClass('install_dart_sdk')
 class InstallDartSdkTask extends Task {
@@ -31,5 +32,10 @@ class InstallDartSdkTask extends Task {
       new DownloadTask(sdk, '.'),
       new UnzipTask('dartsdk-$platform-x64-release.zip', '.')
     ]).execute(context);
+
+    // FIXME: bin files should be executable.
+    // Refer: https://github.com/dart-lang/sdk/issues/15078
+    final cmd = new CommandWrapper('bash');
+    await cmd.run(['-c', 'chmod +x dart-sdk/bin/*']);
   }
 }
