@@ -19,7 +19,8 @@ class DeleteCommand extends Command {
 
   Future<Null> deleteFunction(String siteId) async {
     final functionName = 'beaver-functions-$siteId';
-    await gcloudCli.run(['alpha', 'functions', 'delete', functionName]);
+    await gcloudCli
+        .run(['alpha', 'functions', 'delete', functionName], stdin: ['y']);
   }
 
   @override
@@ -56,4 +57,3 @@ class DeleteCommand extends Command {
     print('Deleted $siteId');
   }
 }
-
