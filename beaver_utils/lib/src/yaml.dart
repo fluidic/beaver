@@ -1,4 +1,19 @@
+import 'dart:async';
+
+import 'package:yaml/yaml.dart';
+
+import 'collection.dart';
+import 'io.dart';
 import 'iterables.dart';
+
+Future readYamlFile(String path) async {
+  String contents = await readTextFile(path);
+  final node = loadYaml(contents);
+  return node == null ? {} : deepCopy(node);
+}
+
+Future<Null> writeYamlFile(String path, node) =>
+    writeTextFile(path, toYamlString(node));
 
 /// Serializes [node] into a String and returns it.
 String toYamlString(node) {

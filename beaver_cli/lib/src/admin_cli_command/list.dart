@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:args/command_runner.dart';
 import 'package:beaver_utils/beaver_utils.dart';
-import 'package:yaml/yaml.dart';
 
 class ListCommand extends Command {
   @override
@@ -13,8 +12,7 @@ class ListCommand extends Command {
 
   @override
   Future<Null> run() async {
-    final contents = await readTextFile(beaverAdminConfigPath);
-    final config = loadYaml(contents);
+    final config = await readYamlFile(beaverAdminConfigPath);
     if (config == null || config['sites'] == null) return;
 
     for (final site in config['sites']) {
@@ -22,4 +20,3 @@ class ListCommand extends Command {
     }
   }
 }
-

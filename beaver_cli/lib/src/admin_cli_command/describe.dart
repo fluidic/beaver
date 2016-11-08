@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:beaver_utils/beaver_utils.dart';
-import 'package:yaml/yaml.dart';
 
 import '../exit_codes.dart';
 
@@ -23,8 +22,7 @@ class DescribeCommand extends Command {
     }
     final siteId = argResults.rest[0];
 
-    final contents = await readTextFile(beaverAdminConfigPath);
-    final config = loadYaml(contents);
+    final config = await readYamlFile(beaverAdminConfigPath);
     if (config == null || config['sites'] == null) return;
 
     for (final site in config['sites']) {

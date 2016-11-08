@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
-import 'package:yaml/yaml.dart';
 
 import '../exit_codes.dart';
 
@@ -33,8 +32,7 @@ class DeleteCommand extends Command {
     final siteId = argResults.rest[0];
 
     await createFileIfNotExist(beaverAdminConfigPath);
-    String contents = await readTextFile(beaverAdminConfigPath);
-    Map config = deepCopy(loadYaml(contents) ?? {});
+    final config = await readYamlFile(beaverAdminConfigPath);
     if (config['sites'] == null) {
       print('$siteId does not exist');
       exit(exitCodeError);
@@ -53,7 +51,7 @@ class DeleteCommand extends Command {
     }
     config['sites'].remove(foundSite);
     await deleteFunction(siteId);
-    await writeTextFile(beaverAdminConfigPath, toYamlString(config));
+    await writeYamlFile(beaverAdminConfigPath, config);
     print('Deleted $siteId');
   }
 }
