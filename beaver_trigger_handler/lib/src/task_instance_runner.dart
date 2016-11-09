@@ -37,7 +37,8 @@ class TaskInstanceRunner {
       'request_url': _cloudInfo.baseUrl.toString(),
       'trigger_name': _trigger.name,
       'project_name': _trigger.projectName,
-      'build_number': _buildNumber.toString()
+      'build_number': _buildNumber.toString(),
+      'site_id': _cloudInfo.siteId
     });
     return await runBeaver(jsonTask, config, newVM: _newVM);
   }
