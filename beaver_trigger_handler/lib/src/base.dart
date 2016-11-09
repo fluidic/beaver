@@ -1,5 +1,4 @@
 import 'package:beaver_store/beaver_store.dart';
-import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:parsers/parsers.dart';
 
@@ -99,37 +98,6 @@ class ParsedTrigger {
       ..writeln('event: $event')
       ..writeln('url: $url')
       ..writeln('data: $payload');
-    return buffer.toString();
-  }
-}
-
-enum TaskInstanceStatus { success, failure }
-
-class TaskInstanceRunResult {
-  final TaskInstanceStatus status;
-  final TaskRunResult taskRunResult;
-
-  TaskInstanceRunResult(this.status, this.taskRunResult);
-
-  @override
-  String toString() {
-    var taskInstanceStatus = 'success';
-    if (status != TaskInstanceStatus.success) {
-      taskInstanceStatus = 'failure';
-    }
-
-    var taskStatus = 'success';
-    if (taskRunResult.status != TaskStatus.success) {
-      taskStatus = 'failure';
-    }
-
-    final buffer = new StringBuffer();
-    buffer
-      ..writeln('status: $taskInstanceStatus')
-      ..writeln('TaskRunResult')
-      ..writeln('status: $taskStatus')
-      ..writeln('config: ${taskRunResult.config.toString()}')
-      ..writeln('log: ${taskRunResult.log}');
     return buffer.toString();
   }
 }

@@ -93,7 +93,6 @@ class GCloudStorageService extends Object
       ..parsedTriggerEvent = result.parsedTriggerEvent
       ..parsedTriggerUrl = result.parsedTriggerUrl
       ..taskInstance = JSON.encode(result.taskInstance)
-      ..taskInstanceStatus = result.taskInstanceStatus
       ..taskStatus = result.taskStatus
       ..taskConfigCloudType = result.taskConfigCloudType
       ..taskConfigCloudSettings = JSON.encode(result.taskConfigCloudSettings)
@@ -111,8 +110,8 @@ class GCloudStorageService extends Object
 
     final triggerHeaders =
         JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
-    final triggerPayload =
-        JSON.decode(UTF8.decode(buildModel.triggerPayload)) as Map<String, Object>;
+    final triggerPayload = JSON.decode(UTF8.decode(buildModel.triggerPayload))
+        as Map<String, Object>;
     final taskInstance =
         JSON.decode(buildModel.taskInstance) as Map<String, Object>;
     final taskConfigCloudSettings =
@@ -126,7 +125,6 @@ class GCloudStorageService extends Object
         buildModel.parsedTriggerEvent,
         buildModel.parsedTriggerUrl,
         taskInstance,
-        buildModel.taskInstanceStatus,
         buildModel.taskStatus,
         buildModel.taskConfigCloudType,
         taskConfigCloudSettings,

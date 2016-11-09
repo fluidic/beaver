@@ -27,9 +27,6 @@ class BeaverBuild extends Model {
   String taskInstance;
 
   @StringProperty()
-  String taskInstanceStatus;
-
-  @StringProperty()
   String taskStatus;
 
   @StringProperty()

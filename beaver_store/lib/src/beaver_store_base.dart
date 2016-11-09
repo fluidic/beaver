@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:beaver_trigger_handler/beaver_trigger.dart';
 
 import './model/config.dart';
@@ -54,9 +55,9 @@ class BeaverStore {
       Trigger trigger,
       ParsedTrigger parsedTrigger,
       Map<String, Object> taskInstance,
-      TaskInstanceRunResult taskInstanceRunResult) async {
-    final result = new TriggerResult.fromTriggerHandler(id, buildNumber,
-        trigger, parsedTrigger, taskInstance, taskInstanceRunResult);
+      TaskRunResult taskRunResult) async {
+    final result = new TriggerResult.fromTriggerHandler(
+        id, buildNumber, trigger, parsedTrigger, taskInstance, taskRunResult);
     await _storageService.saveResult(id, buildNumber, result);
   }
 

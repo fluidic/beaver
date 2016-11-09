@@ -16,8 +16,7 @@ class TriggerResult {
 
   final Map<String, Object> taskInstance;
 
-  // TaskInstanceRunResult
-  final String taskInstanceStatus;
+  // TaskRunResult
   final String taskStatus;
   final String taskConfigCloudType;
   final Map<String, Object> taskConfigCloudSettings;
@@ -32,7 +31,6 @@ class TriggerResult {
       this.parsedTriggerEvent,
       this.parsedTriggerUrl,
       this.taskInstance,
-      this.taskInstanceStatus,
       this.taskStatus,
       this.taskConfigCloudType,
       this.taskConfigCloudSettings,
@@ -44,7 +42,7 @@ class TriggerResult {
       Trigger trigger,
       ParsedTrigger parsedTrigger,
       Map<String, Object> taskInstance,
-      TaskInstanceRunResult taskInstanceRunResult) {
+      TaskRunResult taskRunResult) {
     return new TriggerResult._internal(
         id,
         buildNumber,
@@ -54,15 +52,10 @@ class TriggerResult {
         parsedTrigger.event,
         parsedTrigger.url,
         taskInstance,
-        taskInstanceRunResult.status == TaskInstanceStatus.success
-            ? 'success'
-            : 'failure',
-        taskInstanceRunResult.taskRunResult.status == TaskStatus.success
-            ? 'success'
-            : 'failure',
-        taskInstanceRunResult.taskRunResult.config.cloudType,
-        taskInstanceRunResult.taskRunResult.config.cloudSettings,
-        taskInstanceRunResult.taskRunResult.log);
+        taskRunResult.status == TaskStatus.success ? 'success' : 'failure',
+        taskRunResult.config.cloudType,
+        taskRunResult.config.cloudSettings,
+        taskRunResult.log);
   }
 
   factory TriggerResult.fromGCloud(
@@ -74,7 +67,6 @@ class TriggerResult {
       String parsedTriggerEvent,
       String parsedTriggerUrl,
       Map<String, Object> taskInstance,
-      String taskInstanceStatus,
       String taskStatus,
       String taskConfigCloudType,
       Map<String, Object> taskConfigCloudSettings,
@@ -88,7 +80,6 @@ class TriggerResult {
         parsedTriggerEvent,
         parsedTriggerUrl,
         taskInstance,
-        taskInstanceStatus,
         taskStatus,
         taskConfigCloudType,
         taskConfigCloudSettings,

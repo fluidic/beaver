@@ -29,7 +29,6 @@ class HtmlFormatter implements Formatter {
       builder.element('tr', nest: () {
         final columns = [
           '#',
-          'TaskInstance Status',
           'Task Status',
           'Trigger Name',
           'Trigger Event',
@@ -49,9 +48,6 @@ class HtmlFormatter implements Formatter {
     builder.element('tr', nest: () {
       builder.element('td', nest: () {
         builder.text(result.buildNumber.toString());
-      });
-      builder.element('td', nest: () {
-        builder.text(result.taskInstanceStatus);
       });
       builder.element('td', nest: () {
         builder.text(result.taskStatus);

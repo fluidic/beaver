@@ -81,7 +81,7 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     final taskInstanceRunner = new TaskInstanceRunner(
         context, trigger, parsedTrigger, tasks, buildNumber, cloudInfo, newVM);
     final result = await taskInstanceRunner.run();
-    context.logger.info('TaskInstanceRunResult: $result');
+    context.logger.info('TaskRunResult: $result');
 
     await context.beaverStore.saveResult(project.name, buildNumber, trigger,
         parsedTrigger, triggerConfig, result);
