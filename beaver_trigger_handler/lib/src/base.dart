@@ -2,10 +2,18 @@ import 'package:beaver_store/beaver_store.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:parsers/parsers.dart';
 
+import './cloud_info.dart';
+
 class Context {
   final logging.Logger logger;
   final BeaverStore beaverStore;
   String status;
+  Project project;
+  int buildNumber;
+  CloudInfo cloudInfo;
+  Trigger trigger;
+  ParsedTrigger parsedTrigger;
+  Map<String, Object> triggerConfig;
 
   Context(this.logger, this.beaverStore);
 }

@@ -44,6 +44,7 @@ Future<Map<String, Object>> _getTriggerConfig(
     throw new Exception(context.status);
   });
   context.logger.info('Trigger Configuration: $triggerConfig');
+  context.triggerConfig = triggerConfig;
   return triggerConfig;
 }
 
@@ -83,43 +84,38 @@ List<Map<String, Object>> _getTaskInstances(
 }
 
 Future<TaskRunResult> _runTasks(
-    Context context,
-    Trigger trigger,
-    ParsedTrigger parsedTrigger,
-    List<Map<String, Object>> tasks,
-    int buildNumber,
-    CloudInfo cloudInfo,
-    bool newVM) async {
+    Context context, List<Map<String, Object>> tasks, bool newVM) async {
   final taskInstanceRunner = new TaskInstanceRunner(
-      context, trigger, parsedTrigger, tasks, buildNumber, cloudInfo, newVM);
+      context,
+      context.trigger,
+      context.parsedTrigger,
+      tasks,
+      context.buildNumber,
+      context.cloudInfo,
+      newVM);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskRunResult: $result');
   return result;
 }
 
 Future<Null> _saveSuccessResult(
-    Context context,
-    Project project,
-    int buildNumber,
-    Trigger trigger,
-    ParsedTrigger parsedTrigger,
-    Map<String, Object> triggerConfig,
-    TaskRunResult taskRunResult) async {
+    Context context, TaskRunResult taskRunResult) async {
   await context.beaverStore.saveResult(
-      project.name, buildNumber, '0: success', trigger,
-      parsedTrigger: parsedTrigger,
-      taskInstance: triggerConfig,
+      context.project.name, context.buildNumber, '0: success', context.trigger,
+      parsedTrigger: context.parsedTrigger,
+      taskInstance: context.triggerConfig,
       taskRunResult: taskRunResult);
   context.logger.info('Result is saved.');
 }
 
-Future<Null> _saveFailureResult(Context context, Project project,
-    int buildNumber, Trigger trigger, String errorString) async {
+Future<Null> _saveFailureResult(Context context, String errorString) async {
   if (context.status == null) {
     _setStatus(context, 999, value: [errorString]);
   }
-  await context.beaverStore
-      .saveResult(project.name, buildNumber, context.status, trigger);
+  await context.beaverStore.saveResult(context.project.name,
+      context.buildNumber, context.status, context.trigger,
+      parsedTrigger: context.parsedTrigger,
+      taskInstance: context.triggerConfig);
   context.logger.shout(context.status);
 }
 
@@ -133,14 +129,11 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
 
     final tasks = _getTaskInstances(context, triggerConfig);
     final newVM = triggerConfig['newVM'] ?? false;
-    final result = await _runTasks(
-        context, trigger, parsedTrigger, tasks, buildNumber, cloudInfo, newVM);
+    final result = await _runTasks(context, tasks, newVM);
 
-    await _saveSuccessResult(context, project, buildNumber, trigger,
-        parsedTrigger, triggerConfig, result);
+    await _saveSuccessResult(context, result);
   } catch (e) {
-    await _saveFailureResult(
-        context, project, buildNumber, trigger, e.toString());
+    await _saveFailureResult(context, e.toString());
   }
 }
 
@@ -151,6 +144,7 @@ Future<Project> _getProject(Context context, String projectName) async {
     throw new Exception(context.status);
   }
   context.logger.info('Project: $project');
+  context.project = project;
   return project;
 }
 
@@ -158,6 +152,7 @@ Future<int> _getBuildNumber(Context context, String projectName) async {
   final buildNumber =
       await context.beaverStore.getAndUpdateBuildNumber(projectName);
   context.logger.info('Build Number: $buildNumber');
+  context.buildNumber = buildNumber;
   return buildNumber;
 }
 
@@ -169,7 +164,9 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
     context.logger.info('TriggerHandler is started.');
 
     final cloudInfo = new CloudInfo.fromUrl(requestUrl);
+    context.cloudInfo = cloudInfo;
     final trigger = new Trigger(requestUrl, headers, payload);
+    context.trigger = trigger;
     final project = await _getProject(context, trigger.projectName);
     final buildNumber = await _getBuildNumber(context, trigger.projectName);
 

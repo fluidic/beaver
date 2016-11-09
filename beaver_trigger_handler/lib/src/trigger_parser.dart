@@ -20,5 +20,6 @@ ParsedTrigger parseTrigger(
   final triggerParser = _getTriggerParser(triggerType);
   final parsedTrigger = triggerParser.parse(context, trigger);
   context.logger.info('Trigger: $parsedTrigger');
+  context.parsedTrigger = parsedTrigger;
   return parsedTrigger;
 }
