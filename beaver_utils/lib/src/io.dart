@@ -14,3 +14,9 @@ Future<String> readTextFile(String file) =>
 Future<Null> writeTextFile(String file, String contents) async {
   await new File(file).writeAsString(contents, encoding: UTF8);
 }
+
+Future chmod(String mode, File file) =>
+    Process.run('chmod', [mode, file.path]).then((result) {
+      if (result.exitCode != 0) throw new Exception(result.stderr);
+    });
+

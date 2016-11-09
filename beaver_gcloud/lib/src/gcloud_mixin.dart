@@ -9,8 +9,6 @@ import 'package:gcloud/src/datastore_impl.dart' as datastore_impl;
 import 'package:googleapis/compute/v1.dart';
 import 'package:http/http.dart' as http;
 
-import 'ssh_keygen.dart';
-
 enum CreateVMStatus { success, failToAddSshKey, error }
 
 class CreateVMResult {
@@ -89,7 +87,7 @@ abstract class GCloudMixin implements GCloud {
   }
 
   @override
-  Future<CreateVMResult> createVM() async {
+  Future<CreateVMResult> createVM({String sshPublicKey}) async {
     final name = 'beaver-worker-${uniqueName()}';
 
     var instance = new Instance.fromJson({
@@ -106,8 +104,7 @@ abstract class GCloudMixin implements GCloud {
           "initializeParams": {
             "sourceImage":
                 "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160803",
-            "diskType":
-                "projects/beaver-ci/zones/$_zone/diskTypes/pd-standard",
+            "diskType": "projects/beaver-ci/zones/$_zone/diskTypes/pd-standard",
             "diskSizeGb": "10"
           }
         }
@@ -125,9 +122,7 @@ abstract class GCloudMixin implements GCloud {
       "serviceAccounts": [
         {
           "email": "default",
-          "scopes": [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ]
+          "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
         }
       ],
     });
@@ -146,16 +141,16 @@ abstract class GCloudMixin implements GCloud {
         instance.networkInterfaces.map((ni) => ni.networkIP);
     String natIP = instance.networkInterfaces.first.accessConfigs.first.natIP;
 
-    await generateSshKeyIfNotExist();
-    final sshKey = await readTextFile(sshPublicKeyPath);
-    MetadataItems item = new MetadataItems()
-      ..key = 'ssh-keys'
-      ..value = sshKey;
-    instance.metadata.items = [item];
-    op = await compute.instances
-        .setMetadata(instance.metadata, _project, _zone, name);
-    if (op.error != null) {
-      status = CreateVMStatus.failToAddSshKey;
+    if (sshPublicKey != null) {
+      MetadataItems item = new MetadataItems()
+        ..key = 'ssh-keys'
+        ..value = sshPublicKey;
+      instance.metadata.items = [item];
+      op = await compute.instances
+          .setMetadata(instance.metadata, _project, _zone, name);
+      if (op.error != null) {
+        status = CreateVMStatus.failToAddSshKey;
+      }
     }
 
     return new CreateVMResult(status, name, _zone, networkIPs, natIP);

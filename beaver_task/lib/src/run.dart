@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:mirrors';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
@@ -97,7 +98,7 @@ Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
   return partMap;
 }
 
-Future<Context> _createGCloudContext(Config config) async {
+Future<GCloudContext> _createGCloudContext(Config config) async {
   final logger = new BeaverLogger();
   final partMap = await _createContextPartMap(config);
   final context = new GCloudContext(config, logger, partMap);
@@ -108,9 +109,20 @@ Future<Context> _createGCloudContext(Config config) async {
 
 CommandWrapper _ssh = new CommandWrapper('ssh');
 
-Future _prepareBeaverTaskServer(String remoteAddr) async {
+Future _prepareBeaverTaskServer(
+    GCloudContext context, String remoteAddr) async {
+  const sshKeyPath = '/tmp/id_rsa';
+  final sshKeyFile = new File(sshKeyPath);
+  if (!await sshKeyFile.exists()) {
+    final siteId = context.config.buildInfo['site_id'];
+    final bucket = context.storage.bucket('beaver-$siteId');
+    await sshKeyFile.openWrite().addStream(bucket.read('id_rsa'));
+    await chmod('0600', sshKeyFile);
+  }
+
   String host = 'beaver@$remoteAddr';
   await _ssh.run([
+    '-T',
     '-oStrictHostKeyChecking=no',
     '-i',
     sshKeyPath,
@@ -151,6 +163,13 @@ Future<TaskRunResult> _requestRunBeaver(
   return new TaskRunResult.fromJson(resultJson);
 }
 
+Future<String> _readSshPublicKey(GCloudContext context) {
+  final siteId = context.config.buildInfo['site_id'];
+  final bucket = context.storage.bucket('beaver-$siteId');
+  final stream = bucket.read('id_rsa.pub');
+  return stream.transform(const Utf8Decoder()).join('');
+}
+
 Future<TaskRunResult> runBeaver(json, Config config,
     {bool newVM: false}) async {
   // Turn on all logging levels.
@@ -166,9 +185,10 @@ Future<TaskRunResult> runBeaver(json, Config config,
   }
 
   if (newVM) {
-    CreateVMResult vm = await context.createVM();
+    final sshKey = await _readSshPublicKey(context);
+    CreateVMResult vm = await context.createVM(sshPublicKey: sshKey);
     final remoteAddr = vm.networkIPs.first;
-    await _prepareBeaverTaskServer(remoteAddr);
+    await _prepareBeaverTaskServer(context, remoteAddr);
     TaskRunResult result = await _requestRunBeaver(remoteAddr, json, config);
     await context.deleteVM(vm.name);
     return result;
