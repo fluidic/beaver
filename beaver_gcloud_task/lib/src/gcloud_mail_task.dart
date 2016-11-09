@@ -10,6 +10,34 @@ class GCloudMailException extends TaskException {
   GCloudMailException(String message) : super(message);
 }
 
+Future<HttpClientResponse> _sendgridEmail(String apiKey, String to, String from,
+    String subject, String content) async {
+  final requestBody = JSON.encode({
+    "personalizations": [
+      {
+        "to": [
+          {"email": to}
+        ]
+      }
+    ],
+    "from": {"email": from},
+    "subject": subject,
+    "content": [
+      {"type": "text/plain", "value": content}
+    ]
+  });
+  final client = new HttpClient();
+  final response = ((await client
+          .postUrl(Uri.parse('https://api.sendgrid.com/v3/mail/send')))
+        ..headers.contentType =
+            new ContentType('application', 'json', charset: 'utf-8')
+        ..headers.set(HttpHeaders.AUTHORIZATION, 'Bearer ${apiKey}')
+        ..write(requestBody))
+      .close();
+  client.close();
+  return response;
+}
+
 @TaskClass('gcloud_mail')
 class GCloudMailTask extends Task {
   final String to;
@@ -38,26 +66,10 @@ class GCloudMailTask extends Task {
       throw new GCloudMailException('GCloudContextPart is not avaliable.');
     }
 
-    // FIXME: hardcoded.
-    final sendgridName = 'sendgridEmail';
     final sendgridKey = await _getSendgridKey(part);
-    final url =
-        'https://${part.region}-${part.project}.cloudfunctions.net/$sendgridName?sg_key=$sendgridKey';
-
-    final httpClient = new HttpClient();
-    final request = await httpClient.postUrl(Uri.parse(url));
-    request.headers.contentType =
-        new ContentType('application', 'json', charset: 'utf-8');
-    request.write(JSON.encode({
-      'to': to,
-      // TODO: setUp(init)
-      'from': 'notification@beaver-ci.org',
-      'subject': subject,
-      'body': content,
-    }));
-    final response = await request.close();
+    final response = await _sendgridEmail(
+        sendgridKey, to, 'notification@beaver-ci.org', subject, content);
     final responseBody = await response.transform(UTF8.decoder).join();
-    httpClient.close();
     if (response.statusCode >= 400) {
       throw new GCloudMailException(responseBody);
     }
