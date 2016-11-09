@@ -8,6 +8,9 @@ class BeaverBuild extends Model {
   @IntProperty()
   int number;
 
+  @StringProperty()
+  String status;
+
   @BlobProperty()
   List<int> triggerPayload;
 

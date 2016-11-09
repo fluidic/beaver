@@ -83,10 +83,15 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     final result = await taskInstanceRunner.run();
     context.logger.info('TaskRunResult: $result');
 
-    await context.beaverStore.saveResult(project.name, buildNumber, trigger,
-        parsedTrigger, triggerConfig, result);
+    await context.beaverStore.saveResult(
+        project.name, buildNumber, 'success', trigger,
+        parsedTrigger: parsedTrigger,
+        taskInstance: triggerConfig,
+        taskRunResult: result);
     context.logger.info('Result is saved.');
   } catch (e) {
+    await context.beaverStore
+        .saveResult(project.name, buildNumber, 'failure', trigger);
     context.logger.shout(e.toString());
   }
 }

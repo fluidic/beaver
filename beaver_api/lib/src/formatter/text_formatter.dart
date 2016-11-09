@@ -14,6 +14,7 @@ class TextFormatter implements Formatter {
   void _writeResult(TriggerResult result, StringBuffer buffer) {
     final items = {
       "Build Number": result.buildNumber.toString(),
+      "Status": result.status,
       "Task Status": result.taskStatus,
       "Trigger Name": result.triggerName,
       "Trigger Event": result.parsedTriggerEvent,

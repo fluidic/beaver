@@ -119,6 +119,7 @@ class GCloudStorageService extends Object
     return new TriggerResult.fromGCloud(
         projectName,
         buildNumber,
+        buildModel.status,
         buildModel.triggerName,
         triggerHeaders,
         triggerPayload,

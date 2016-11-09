@@ -5,6 +5,8 @@ class TriggerResult {
   final String projectName;
   final int buildNumber;
 
+  final String status;
+
   // Trigger
   final String triggerName;
   final Map<String, String> triggerHeaders;
@@ -25,6 +27,7 @@ class TriggerResult {
   TriggerResult._internal(
       this.projectName,
       this.buildNumber,
+      this.status,
       this.triggerName,
       this.triggerHeaders,
       this.triggerPayload,
@@ -39,6 +42,7 @@ class TriggerResult {
   factory TriggerResult.fromTriggerHandler(
       String id,
       int buildNumber,
+      String status,
       Trigger trigger,
       ParsedTrigger parsedTrigger,
       Map<String, Object> taskInstance,
@@ -46,21 +50,25 @@ class TriggerResult {
     return new TriggerResult._internal(
         id,
         buildNumber,
+        status,
         trigger.name,
         trigger.headers,
         trigger.payload,
-        parsedTrigger.event,
-        parsedTrigger.url,
+        parsedTrigger?.event,
+        parsedTrigger?.url,
         taskInstance,
-        taskRunResult.status == TaskStatus.success ? 'success' : 'failure',
-        taskRunResult.config.cloudType,
-        taskRunResult.config.cloudSettings,
-        taskRunResult.log);
+        taskRunResult != null
+            ? taskRunResult.status == TaskStatus.success ? 'success' : 'failure'
+            : null,
+        taskRunResult?.config?.cloudType,
+        taskRunResult?.config?.cloudSettings,
+        taskRunResult?.log);
   }
 
   factory TriggerResult.fromGCloud(
       String projectName,
       int buildNumber,
+      String status,
       String triggerType,
       Map<String, String> triggerHeaders,
       Map<String, Object> triggerPayload,
@@ -74,6 +82,7 @@ class TriggerResult {
     return new TriggerResult._internal(
         projectName,
         buildNumber,
+        status,
         triggerType,
         triggerHeaders,
         triggerPayload,
