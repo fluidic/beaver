@@ -1,14 +1,20 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:command_wrapper/command_wrapper.dart';
+import 'package:path/path.dart' as path;
 import 'package:args/command_runner.dart';
 import 'package:beaver_utils/beaver_utils.dart';
-import 'package:command_wrapper/command_wrapper.dart';
 import 'package:yaml/yaml.dart';
 
 import '../exit_codes.dart' as exit_codes;
 
 final gcloudCli = new CommandWrapper('gcloud');
+final _gsutil = new CommandWrapper('gsutil');
+final _sshKeygen = new CommandWrapper('ssh-keygen');
+
+final String _sshKeyPath = path.join(beaverConfigDir, 'id_rsa');
+final String _sshPublicKeyPath = '$_sshKeyPath.pub';
 
 class CreateCommand extends Command {
   @override
@@ -21,6 +27,31 @@ class CreateCommand extends Command {
     argParser.addOption('project',
         abbr: 'p',
         help: 'The cloud project ID to use for setting up beaver CI');
+  }
+
+  Future<Null> generateSshKeyIfNotExist() async {
+    if (await new File(_sshKeyPath).exists()) return;
+
+    const username = 'beaver';
+    CommandResult result = await _sshKeygen
+        .run(['-t', 'rsa', '-f', _sshKeyPath, '-C', username, '-N', '']);
+    if (result.exitCode != exit_codes.success) {
+      throw new Exception('Fail to create ssh key');
+    }
+
+    final contents = await readTextFile(_sshPublicKeyPath);
+    // If we use the API to set public SSH keys, we must prefix the key with our
+    // username. See https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys
+    await writeTextFile(_sshPublicKeyPath, '$username:$contents');
+  }
+
+  Future<Null> uploadSshKey(String project, String siteId) async {
+    final bucketUrl = 'gs://beaver-$siteId';
+    CommandResult result = await _gsutil.run(['ls']);
+    if (!result.stdout.contains(bucketUrl)) {
+      await _gsutil.run(['mb', '-p', project, bucketUrl]);
+    }
+    await _gsutil.run(['cp', _sshKeyPath, _sshPublicKeyPath, bucketUrl]);
   }
 
   /// Deploys the function to gcloud and returns the trigger URL.
@@ -64,6 +95,10 @@ class CreateCommand extends Command {
     config['sites'] ??= [];
     config['sites']
         .add({'site_id': siteId, 'project': project, 'endpoint': endpoint});
+
+    await generateSshKeyIfNotExist();
+    await uploadSshKey(project, siteId);
+
     await writeYamlFile(beaverAdminConfigPath, config);
   }
 }
