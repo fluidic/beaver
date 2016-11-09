@@ -10,8 +10,8 @@ final Map<int, String> status = {
 
   // 400 ~ 499: Config related
   400 /* CONFIG_NOT_FOUND */: 'No Trigger Configuration for \'%s\'',
-  // FIXME: Use more precise message.
-  401 /* NO_MATCH_CONFIG */: 'Trigger and TriggerConfig are not matched.',
+  401 /* URL_NOT_MATCH */: 'Url is not matched.',
+  402 /* EVENT_NOT_MATCH */: 'Event is not matched.',
 
   // 500 ~ 599: Task related
 

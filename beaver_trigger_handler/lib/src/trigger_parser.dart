@@ -18,5 +18,7 @@ TriggerParser _getTriggerParser(String type) {
 ParsedTrigger parseTrigger(
     Context context, Trigger trigger, String triggerType) {
   final triggerParser = _getTriggerParser(triggerType);
-  return triggerParser.parse(context, trigger);
+  final parsedTrigger = triggerParser.parse(context, trigger);
+  context.logger.info('Trigger: $parsedTrigger');
+  return parsedTrigger;
 }
