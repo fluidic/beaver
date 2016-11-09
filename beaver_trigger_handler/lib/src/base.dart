@@ -5,6 +5,7 @@ import 'package:parsers/parsers.dart';
 class Context {
   final logging.Logger logger;
   final BeaverStore beaverStore;
+  String status;
 
   Context(this.logger, this.beaverStore);
 }

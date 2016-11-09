@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:beaver_store/beaver_store.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
+import 'package:sprintf/sprintf.dart';
 
 import './base.dart';
 import './cloud_info.dart';
+import './status.dart';
 import './task_instance_runner.dart';
 import './trigger_parser.dart';
 
@@ -58,12 +60,22 @@ bool _isMatchedTrigger(
   }
 }
 
+void _setStatus(
+    Context context, int statusCode, {List<dynamic> value}) {
+  var message = status[statusCode];
+  if (value != null) {
+    message = sprintf(message, value);
+  }
+  context.status = statusCode.toString() + ': ' + message;
+}
+
 Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     int buildNumber, CloudInfo cloudInfo) async {
   try {
     final triggerConfig = _getTriggerConfig(project, trigger.name);
     if (triggerConfig == null) {
-      throw new Exception('No Trigger Configuration for \'${trigger.name}\'');
+      _setStatus(context, 400, value: [trigger.name]);
+      throw new Exception(context.status);
     }
     context.logger.info('Trigger Configuration: $triggerConfig');
 
@@ -71,8 +83,8 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     context.logger.info('Trigger: $parsedTrigger');
 
     if (!_isMatchedTrigger(triggerConfig, parsedTrigger)) {
-      // FIXME: Use more precise message.
-      throw new Exception('Trigger and TriggerConfig are not matched.');
+      _setStatus(context, 401);
+      throw new Exception(context.status);
     }
 
     final tasks = (triggerConfig['task'] as YamlList).toList(growable: false)
@@ -84,15 +96,18 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     context.logger.info('TaskRunResult: $result');
 
     await context.beaverStore.saveResult(
-        project.name, buildNumber, 'success', trigger,
+        project.name, buildNumber, '0: success', trigger,
         parsedTrigger: parsedTrigger,
         taskInstance: triggerConfig,
         taskRunResult: result);
     context.logger.info('Result is saved.');
   } catch (e) {
+    if (context.status == null) {
+      _setStatus(context, 999, value: [e.toString()]);
+    }
     await context.beaverStore
-        .saveResult(project.name, buildNumber, 'failure', trigger);
-    context.logger.shout(e.toString());
+        .saveResult(project.name, buildNumber, context.status, trigger);
+    context.logger.shout(context.status);
   }
 }
 
@@ -108,7 +123,8 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
 
     final project = await context.beaverStore.getProject(trigger.projectName);
     if (project == null) {
-      throw new Exception('No project for \'${trigger.projectName}\'.');
+      _setStatus(context, 300, value: [trigger.projectName]);
+      throw new Exception(context.status);
     }
     context.logger.info('Project: $project');
 
@@ -121,7 +137,10 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
 
     return buildNumber;
   } catch (e) {
-    context.logger.shout(e.toString());
-    throw e;
+    if (context.status == null) {
+      _setStatus(context, 999, value: [e.toString()]);
+    }
+    context.logger.shout(context.status);
+    throw new Exception(context.status);
   }
 }

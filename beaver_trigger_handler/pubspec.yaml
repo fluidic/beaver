@@ -20,6 +20,7 @@ dependencies:
     path: ../beaver_utils
   logging: '>=0.11.3+1 <0.12.0'
   parsers: '>=0.14.5 <0.15.0'
+  sprintf: '>=1.0.8 <1.1.0'
   yaml: '>=2.1.10 <2.2.0'
 
 dev_dependencies:
