@@ -85,14 +85,7 @@ List<Map<String, Object>> _getTaskInstances(
 
 Future<TaskRunResult> _runTasks(
     Context context, List<Map<String, Object>> tasks, bool newVM) async {
-  final taskInstanceRunner = new TaskInstanceRunner(
-      context,
-      context.trigger,
-      context.parsedTrigger,
-      tasks,
-      context.buildNumber,
-      context.cloudInfo,
-      newVM);
+  final taskInstanceRunner = new TaskInstanceRunner(context, tasks, newVM);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskRunResult: $result');
   return result;

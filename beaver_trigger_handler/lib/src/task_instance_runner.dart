@@ -9,36 +9,30 @@ import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
-import './cloud_info.dart';
 
 class TaskInstanceRunner {
   final Context _context;
-  final Trigger _trigger;
-  final ParsedTrigger _parsedTrigger;
   final List<Map<String, Object>> _tasks;
-  final int _buildNumber;
-  final CloudInfo _cloudInfo;
   final bool _newVM;
 
-  TaskInstanceRunner(this._context, this._trigger, this._parsedTrigger,
-      this._tasks, this._buildNumber, this._cloudInfo, this._newVM);
+  TaskInstanceRunner(this._context, this._tasks, this._newVM);
 
   Future<TaskRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final jsonTask = _createJson(_tasks, _parsedTrigger);
+    final jsonTask = _createJson(_tasks, _context.parsedTrigger);
     _context.logger.fine('Task: $jsonTask');
 
-    final config = new beaver_task.Config(_cloudInfo.type, {
-      'project_name': _cloudInfo.projectName,
+    final config = new beaver_task.Config(_context.cloudInfo.type, {
+      'project_name': _context.cloudInfo.projectName,
       // FIXME: Don't hardcode
-      'zone': _cloudInfo.region + '-a'
+      'zone': _context.cloudInfo.region + '-a'
     }, {
-      'request_url': _cloudInfo.baseUrl.toString(),
-      'trigger_name': _trigger.name,
-      'project_name': _trigger.projectName,
-      'build_number': _buildNumber.toString(),
-      'site_id': _cloudInfo.siteId
+      'request_url': _context.cloudInfo.baseUrl.toString(),
+      'trigger_name': _context.trigger.name,
+      'project_name': _context.trigger.projectName,
+      'build_number': _context.buildNumber.toString(),
+      'site_id': _context.cloudInfo.siteId
     });
     return await runBeaver(jsonTask, config, newVM: _newVM);
   }
