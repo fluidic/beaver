@@ -17,5 +17,5 @@ final Map<int, String> status = {
 
   // 600 ~ 699: runBeaver related
 
-  999: 'Unkown Error'
+  999: 'Unknown Error: %s'
 };
