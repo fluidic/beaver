@@ -2,11 +2,15 @@
 
 const spawn = require('child_process').spawn;
 
+function isGCF(req) {
+  return req.get('host').indexOf('cloudfunctions.net') !== -1;
+}
+
 exports.beaver = function beaver(req, res) {
     const child = spawn('./third_party/dart-linux-x64/dart',
         [
             'beaver_ci.dart.snapshot',
-            req.protocol + "://" + req.get('host') + req.originalUrl,
+            req.protocol + "://" + req.get('host') + (isGCF(req) ? "/" + process.env.FUNCTION_NAME : "") + req.originalUrl,
             JSON.stringify(req.headers),
             // FIXME: req.body can be empty.
             JSON.stringify(req.body)
