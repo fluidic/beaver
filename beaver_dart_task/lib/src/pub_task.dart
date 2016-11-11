@@ -34,10 +34,10 @@ class PubTask extends Task {
 
     CommandResult result =
         await pubCommand.run(args, processWorkingDir: processWorkingDir);
-    for (final line in result.stderr) {
+    for (final line in result.stdout) {
       context.logger.info(line);
     }
-    for (final line in result.stdout) {
+    for (final line in result.stderr) {
       context.logger.shout(line);
     }
   }
