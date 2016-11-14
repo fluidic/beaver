@@ -87,6 +87,7 @@ class GCloudStorageService extends Object
           ..projectName = projectName;
     // TODO: consider serialization.
     buildModel
+      ..status = result.status
       ..triggerPayload = UTF8.encode(JSON.encode(result.triggerPayload))
       ..triggerName = result.triggerName
       ..triggerHeaders = JSON.encode(result.triggerHeaders)
