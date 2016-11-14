@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import './util.dart';
+import './utils.dart';
 
 void _printToStream(IOSink sink, Entry entry, {bool showLabel}) {
   bool firstLine = true;

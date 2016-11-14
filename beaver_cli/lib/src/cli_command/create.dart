@@ -6,7 +6,7 @@ import 'package:yaml/yaml.dart';
 
 import '../exit_codes.dart' as exit_codes;
 import './http.dart';
-import '../util.dart';
+import '../utils.dart';
 
 class CreateCommand extends HttpCommand {
   @override

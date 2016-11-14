@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import './http.dart';
-import '../util.dart';
+import '../utils.dart';
 
 class DescribeCommand extends HttpCommand {
   @override
