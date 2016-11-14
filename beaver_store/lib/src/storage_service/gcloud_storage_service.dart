@@ -101,7 +101,7 @@ class GCloudStorageService extends Object
       ..taskConfigCloudSettings = result.taskConfigCloudSettings != null
           ? JSON.encode(result.taskConfigCloudSettings)
           : null
-      ..taskLog = result.taskConfigCloudSettings != null
+      ..taskLog = result.taskLog != null
           ? UTF8.encode(result.taskLog)
           : null;
     await db.commit(inserts: [buildModel]);
