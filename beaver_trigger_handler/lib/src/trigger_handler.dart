@@ -119,8 +119,10 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
     final result = await _runTasks(context, tasks, newVM);
 
     await _saveSuccessResult(context, result);
-  } catch (e) {
+  } catch (e, stackTrace) {
     await _saveFailureResult(context, e.toString());
+    context.logger.shout(e);
+    context.logger.shout(stackTrace);
   }
 }
 
