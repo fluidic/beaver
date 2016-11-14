@@ -4,6 +4,8 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
+import './exit_codes.dart' as exit_codes;
+import './io.dart';
 import './version.dart';
 
 class BeaverCommandRunner extends CommandRunner {
@@ -19,7 +21,7 @@ class BeaverCommandRunner extends CommandRunner {
   }
 
   @override
-  Future run(Iterable<String> args) {
+  Future run(Iterable<String> args) async {
     ArgResults argResults = parse(args);
 
     if (argResults.command == null && argResults.rest.isNotEmpty) {
@@ -39,10 +41,10 @@ class BeaverCommandRunner extends CommandRunner {
           print('\t$candidate');
         }
       }
-      return new Future.value();
+      return;
     }
 
-    return new Future.sync(() => runCommand(argResults));
+    await runCommand(argResults);
   }
 
   @override
@@ -52,5 +54,10 @@ class BeaverCommandRunner extends CommandRunner {
       return;
     }
     await super.runCommand(options);
+
+    // Explicitly exit on success to ensure that any dangling dart:io handles
+    // don't cause the process to never terminate.
+    await flushThenExit(exit_codes.success);
   }
 }
+
