@@ -89,10 +89,18 @@ class GCloudStorageService extends Object
           ..projectName = projectName;
     buildModel
       ..status = result.status
-      ..trigger = UTF8.encode(JSON.encode(result.trigger.toJson()))
-      ..parsedTrigger = UTF8.encode(JSON.encode(result.parsedTrigger.toJson()))
-      ..triggerConfig = UTF8.encode(JSON.encode(result.triggerConfig))
-      ..taskRunResult = UTF8.encode(JSON.encode(result.taskRunResult.toJson()));
+      ..trigger = UTF8.encode(JSON.encode(result.trigger.toJson()));
+    if (result.parsedTrigger != null) {
+      buildModel.parsedTrigger =
+          UTF8.encode(JSON.encode(result.parsedTrigger.toJson()));
+    }
+    if (result.triggerConfig != null) {
+      buildModel.triggerConfig = UTF8.encode(JSON.encode(result.triggerConfig));
+    }
+    if (result.taskRunResult != null) {
+      buildModel.taskRunResult =
+          UTF8.encode(JSON.encode(result.taskRunResult.toJson()));
+    }
     await db.commit(inserts: [buildModel]);
     return true;
   }
@@ -103,13 +111,23 @@ class GCloudStorageService extends Object
     if (buildModel == null) {
       throw new NullThrownError();
     }
+
     final trigger = new Trigger.fromJson(UTF8.decode(buildModel.trigger));
-    final parsedTrigger =
-        new ParsedTrigger.fromJson(UTF8.decode(buildModel.parsedTrigger));
-    final triggerConfig = JSON.decode(UTF8.decode(buildModel.triggerConfig))
-        as Map<String, Object>;
-    final taskRunResult =
-        new TaskRunResult.fromJson(UTF8.decode(buildModel.taskRunResult));
+    ParsedTrigger parsedTrigger;
+    if (buildModel.parsedTrigger != null) {
+      parsedTrigger =
+          new ParsedTrigger.fromJson(UTF8.decode(buildModel.parsedTrigger));
+    }
+    Map<String, Object> triggerConfig;
+    if (buildModel.triggerConfig != null) {
+      triggerConfig = JSON.decode(UTF8.decode(buildModel.triggerConfig))
+          as Map<String, Object>;
+    }
+    TaskRunResult taskRunResult;
+    if (buildModel.taskRunResult != null) {
+      taskRunResult =
+          new TaskRunResult.fromJson(UTF8.decode(buildModel.taskRunResult));
+    }
     return new TriggerResult(projectName, buildNumber, buildModel.status,
         trigger, parsedTrigger, triggerConfig, taskRunResult);
   }
