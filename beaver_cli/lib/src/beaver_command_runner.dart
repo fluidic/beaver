@@ -5,6 +5,11 @@ import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
 class BeaverCommandRunner extends CommandRunner {
+  @override
+  String get usageFooter =>
+      'See https://github.com/fluidic/beaver/blob/master/doc/UserGuide.md '
+      'for detailed documentation';
+
   BeaverCommandRunner(String executableName, String description)
       : super(executableName, description);
 
@@ -18,7 +23,7 @@ class BeaverCommandRunner extends CommandRunner {
 
       StringDistance d = new Levenshtein();
       final candidates =
-      commands.keys.where((key) => d.distance(command, key) <= 2);
+          commands.keys.where((key) => d.distance(command, key) <= 2);
       if (candidates.isNotEmpty) {
         if (candidates.length == 1) {
           print('\nDid you mean this?');
@@ -35,4 +40,3 @@ class BeaverCommandRunner extends CommandRunner {
     return new Future.sync(() => runCommand(argResults));
   }
 }
-
