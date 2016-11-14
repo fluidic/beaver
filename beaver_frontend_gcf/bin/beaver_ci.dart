@@ -5,7 +5,7 @@ import 'package:beaver_api/beaver_api.dart';
 import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_trigger_handler/beaver_trigger_handler.dart';
 
-Future<Null >main(List<String> args) async {
+Future<Null> main(List<String> args) async {
   print('beaver-ci started.');
 
   final requestUrl = Uri.parse(args[0]);
@@ -20,9 +20,8 @@ Future<Null >main(List<String> args) async {
   final beaverStore = await getBeaverStore(StorageServiceType.gCloud,
       config: {'cloud_project_name': 'beaver-ci', 'zone': 'us-central1-a'});
 
-  final firstPath = requestUrl.pathSegments.first;
   var response;
-  if (firstPath == 'api') {
+  if (_isApiRequest(requestUrl)) {
     initApiHandler(beaverStore);
     response = await _apiHandler(requestUrl.pathSegments.last, data);
   } else {
@@ -32,6 +31,9 @@ Future<Null >main(List<String> args) async {
 
   print('response: ${JSON.encode(response)}');
 }
+
+bool _isApiRequest(Uri requestUrl) =>
+    requestUrl.pathSegments.length == 3 && requestUrl.pathSegments[1] == 'api';
 
 Future _apiHandler(String api, Map<String, Object> data) async {
   var result;
