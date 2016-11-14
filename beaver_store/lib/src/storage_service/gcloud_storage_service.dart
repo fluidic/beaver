@@ -86,6 +86,7 @@ class GCloudStorageService extends Object
           ..number = buildNumber
           ..projectName = projectName;
     // TODO: consider serialization.
+    // FIXME: improve.
     buildModel
       ..status = result.status
       ..triggerPayload = UTF8.encode(JSON.encode(result.triggerPayload))
@@ -117,6 +118,7 @@ class GCloudStorageService extends Object
         JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
     final triggerPayload = JSON.decode(UTF8.decode(buildModel.triggerPayload))
         as Map<String, Object>;
+    // FIXME: improve.
     final taskInstance = buildModel.taskInstance != null
         ? JSON.decode(buildModel.taskInstance) as Map<String, Object>
         : null;
