@@ -10,17 +10,13 @@ import './cli_command/setup.dart';
 import './cli_command/test.dart';
 import './cli_command/upload.dart';
 
-CommandRunner getRunner() {
-  final runner = new BeaverCommandRunner('beaver', 'CLI for beaver CI.');
-  runner
-    ..addCommand(new CreateCommand())
-    ..addCommand(new DeleteCommand())
-    ..addCommand(new DescribeCommand())
-    ..addCommand(new GetResultsCommand())
-    ..addCommand(new ListCommand())
-    ..addCommand(new SetupCommand())
-    ..addCommand(new TestCommand())
-    ..addCommand(new UploadCommand());
-
-  return runner;
-}
+CommandRunner getRunner() =>
+    new BeaverCommandRunner('beaver', 'CLI for beaver CI.')
+      ..addCommand(new CreateCommand())
+      ..addCommand(new DeleteCommand())
+      ..addCommand(new DescribeCommand())
+      ..addCommand(new GetResultsCommand())
+      ..addCommand(new ListCommand())
+      ..addCommand(new SetupCommand())
+      ..addCommand(new TestCommand())
+      ..addCommand(new UploadCommand());
