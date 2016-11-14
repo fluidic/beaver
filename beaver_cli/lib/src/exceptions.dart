@@ -7,5 +7,6 @@ class ApplicationException implements Exception {
 
   ApplicationException(this.message);
 
+  @override
   String toString() => message;
 }
