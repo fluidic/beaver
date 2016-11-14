@@ -10,7 +10,7 @@ class DockerTask extends Task {
   final List<String> args;
 
   DockerTask(this.args);
-  DockerTask.fromArgs(List<String> args) : args = args;
+  DockerTask.fromArgs(this.args);
 
   @override
   Future<Null> execute(Context context) async {
