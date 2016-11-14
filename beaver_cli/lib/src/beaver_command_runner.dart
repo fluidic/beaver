@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
+import './exceptions.dart';
 import './exit_codes.dart' as exit_codes;
 import './io.dart';
 import './version.dart';
@@ -46,11 +47,23 @@ class BeaverCommandRunner extends CommandRunner {
       print('$version');
       return;
     }
-    await super.runCommand(options);
 
-    // Explicitly exit on success to ensure that any dangling dart:io handles
-    // don't cause the process to never terminate.
-    await flushThenExit(exit_codes.success);
+    try {
+      await super.runCommand(options);
+
+      // Explicitly exit on success to ensure that any dangling dart:io handles
+      // don't cause the process to never terminate.
+      await flushThenExit(exit_codes.success);
+    } catch (error) {
+      print(error);
+
+      if (!isUserFacingException(error)) {
+        print('''
+This is an unexpected error. Please file an issue on
+https://github.com/fluidic/beaver/issues
+''');
+      }
+    }
   }
 
   void _printCandidateCommands(String command) {
