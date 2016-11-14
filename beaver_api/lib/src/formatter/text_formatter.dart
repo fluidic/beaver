@@ -15,11 +15,13 @@ class TextFormatter implements Formatter {
     final items = {
       "Build Number": result.buildNumber.toString(),
       "Status": result.status,
-      "Task Status": result.taskRunResult.toJson()['status'],
+      "Task Status": result.taskRunResult != null
+          ? result.taskRunResult.toJson()['status']
+          : null,
       "Trigger Name": result.trigger.name,
-      "Trigger Event": result.parsedTrigger.event,
-      "Trigger URL": result.parsedTrigger.url,
-      "Log": result.taskRunResult.log,
+      "Trigger Event": result.parsedTrigger?.event,
+      "Trigger URL": result.parsedTrigger?.url,
+      "Log": result.taskRunResult?.log,
     };
     final longestKeyLength = items.keys.fold(0, (num max, String keyString) {
       return keyString.length > max ? keyString.length : max;

@@ -54,19 +54,23 @@ class HtmlFormatter implements Formatter {
         builder.text(result.status);
       });
       builder.element('td', nest: () {
-        builder.text(result.taskRunResult.toJson()['status']);
+        if (result.taskRunResult != null) {
+          builder.text(result.taskRunResult.toJson()['status']);
+        } else {
+          builder.text('');
+        }
       });
       builder.element('td', nest: () {
         builder.text(result.trigger.name);
       });
       builder.element('td', nest: () {
-        builder.text(result.parsedTrigger.event);
+        builder.text(result.parsedTrigger?.event);
       });
       builder.element('td', nest: () {
-        builder.text(result.parsedTrigger.url);
+        builder.text(result.parsedTrigger?.url);
       });
       builder.element('td', nest: () {
-        builder.text(result.taskRunResult.log);
+        builder.text(result.taskRunResult?.log);
       });
     });
   }
