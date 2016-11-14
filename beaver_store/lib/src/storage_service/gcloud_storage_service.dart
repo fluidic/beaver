@@ -92,11 +92,16 @@ class GCloudStorageService extends Object
       ..triggerHeaders = JSON.encode(result.triggerHeaders)
       ..parsedTriggerEvent = result.parsedTriggerEvent
       ..parsedTriggerUrl = result.parsedTriggerUrl
-      ..taskInstance = JSON.encode(result.taskInstance)
+      ..taskInstance =
+          result.taskInstance != null ? JSON.encode(result.taskInstance) : null
       ..taskStatus = result.taskStatus
       ..taskConfigCloudType = result.taskConfigCloudType
-      ..taskConfigCloudSettings = JSON.encode(result.taskConfigCloudSettings)
-      ..taskLog = UTF8.encode(result.taskLog);
+      ..taskConfigCloudSettings = result.taskConfigCloudSettings != null
+          ? JSON.encode(result.taskConfigCloudSettings)
+          : null
+      ..taskLog = result.taskConfigCloudSettings != null
+          ? UTF8.encode(result.taskLog)
+          : null;
     await db.commit(inserts: [buildModel]);
     return true;
   }
@@ -107,15 +112,18 @@ class GCloudStorageService extends Object
     if (buildModel == null) {
       throw new NullThrownError();
     }
-
     final triggerHeaders =
         JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
     final triggerPayload = JSON.decode(UTF8.decode(buildModel.triggerPayload))
         as Map<String, Object>;
-    final taskInstance =
-        JSON.decode(buildModel.taskInstance) as Map<String, Object>;
-    final taskConfigCloudSettings =
-        JSON.decode(buildModel.taskConfigCloudSettings) as Map<String, Object>;
+    final taskInstance = buildModel.taskInstance != null
+        ? JSON.decode(buildModel.taskInstance) as Map<String, Object>
+        : null;
+    final taskConfigCloudSettings = buildModel.taskConfigCloudSettings != null
+        ? JSON.decode(buildModel.taskConfigCloudSettings) as Map<String, Object>
+        : null;
+    final taskLog =
+        buildModel.taskLog != null ? UTF8.decode(buildModel.taskLog) : null;
     return new TriggerResult.fromGCloud(
         projectName,
         buildNumber,
@@ -129,7 +137,7 @@ class GCloudStorageService extends Object
         buildModel.taskStatus,
         buildModel.taskConfigCloudType,
         taskConfigCloudSettings,
-        UTF8.decode(buildModel.taskLog));
+        taskLog);
   }
 
   @override
