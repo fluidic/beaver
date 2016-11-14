@@ -9,6 +9,7 @@ import 'package:beaver_task/beaver_task.dart' as beaver_task;
 import 'package:beaver_task/beaver_task_runner.dart';
 
 import './base.dart';
+import './status.dart';
 
 class TaskInstanceRunner {
   final Context _context;
@@ -20,7 +21,7 @@ class TaskInstanceRunner {
   Future<TaskRunResult> run() async {
     _context.logger.fine('TaskInstanceRunner started.');
 
-    final jsonTask = _createJson(_tasks, _context.parsedTrigger);
+    final jsonTask = _createJson(_context, _tasks, _context.parsedTrigger);
     _context.logger.fine('Task: $jsonTask');
 
     final config = new beaver_task.Config(_context.cloudInfo.type, {
@@ -34,7 +35,12 @@ class TaskInstanceRunner {
       'build_number': _context.buildNumber.toString(),
       'site_id': _context.cloudInfo.siteId
     });
-    return await runBeaver(jsonTask, config, newVM: _newVM);
+    try {
+      return await runBeaver(jsonTask, config, newVM: _newVM);
+    } catch (e) {
+      setStatus(_context, 600, value: [e.toString()]);
+      throw e;
+    }
   }
 }
 
@@ -65,16 +71,21 @@ Map<String, Object> _createJsonForTask(
   return {'name': taskInstance['name'], 'args': resultArgs};
 }
 
-String _createJson(
-    List<Map<String, Object>> taskInstances, ParsedTrigger parsedTrigger) {
-  final taskList = [];
-  taskInstances.forEach((taskInstance) {
-    taskList.add(_createJsonForTask(taskInstance, parsedTrigger));
-  });
+String _createJson(Context context, List<Map<String, Object>> taskInstances,
+    ParsedTrigger parsedTrigger) {
+  try {
+    final taskList = [];
+    taskInstances.forEach((taskInstance) {
+      taskList.add(_createJsonForTask(taskInstance, parsedTrigger));
+    });
 
-  if (taskList.length == 1) {
-    return JSON.encode(taskList[0]);
-  } else {
-    return JSON.encode({'name': 'seq', 'args': taskList});
+    if (taskList.length == 1) {
+      return JSON.encode(taskList[0]);
+    } else {
+      return JSON.encode({'name': 'seq', 'args': taskList});
+    }
+  } catch (e) {
+    setStatus(context, 500, value: [e.toString()]);
+    throw e;
   }
 }

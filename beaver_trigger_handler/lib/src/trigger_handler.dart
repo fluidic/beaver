@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:beaver_store/beaver_store.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
 import 'package:logging/logging.dart';
-import 'package:sprintf/sprintf.dart';
 import 'package:yaml/yaml.dart';
 
 import './base.dart';
@@ -40,7 +39,7 @@ Future<Map<String, Object>> _getTriggerConfig(
       project.config['triggers'] as List<Map<String, Object>>;
   final triggerConfig = triggerConfigs.firstWhere(
       (triggerConfig) => triggerConfig['name'] == triggerName, orElse: () {
-    _setStatus(context, 400, value: [triggerName]);
+    setStatus(context, 400, value: [triggerName]);
     throw new Exception(context.status);
   });
   context.logger.info('Trigger Configuration: $triggerConfig');
@@ -53,7 +52,7 @@ void _checkTriggerAndTriggerConfig(Context context,
     Map<String, Object> triggerConfig, ParsedTrigger parsedTrigger) {
   final url = triggerConfig['url'];
   if (url != null && url != parsedTrigger.url) {
-    _setStatus(context, 401);
+    setStatus(context, 401);
     throw new Exception(context.status);
   }
 
@@ -64,17 +63,9 @@ void _checkTriggerAndTriggerConfig(Context context,
         return;
       }
     }
-    _setStatus(context, 402);
+    setStatus(context, 402);
     throw new Exception(context.status);
   }
-}
-
-void _setStatus(Context context, int statusCode, {List<dynamic> value}) {
-  var message = status[statusCode];
-  if (value != null) {
-    message = sprintf(message, value);
-  }
-  context.status = statusCode.toString() + ': ' + message;
 }
 
 List<Map<String, Object>> _getTaskInstances(
@@ -103,7 +94,7 @@ Future<Null> _saveSuccessResult(
 
 Future<Null> _saveFailureResult(Context context, String errorString) async {
   if (context.status == null) {
-    _setStatus(context, 999, value: [errorString]);
+    setStatus(context, 999, value: [errorString]);
   }
   await context.beaverStore.saveResult(context.project.name,
       context.buildNumber, context.status, context.trigger,
@@ -133,7 +124,7 @@ Future<Null> _triggerHandler(Context context, Trigger trigger, Project project,
 Future<Project> _getProject(Context context, String projectName) async {
   final project = await context.beaverStore.getProject(projectName);
   if (project == null) {
-    _setStatus(context, 300, value: [projectName]);
+    setStatus(context, 300, value: [projectName]);
     throw new Exception(context.status);
   }
   context.logger.info('Project: $project');
@@ -169,7 +160,7 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
     return buildNumber;
   } catch (e) {
     if (context.status == null) {
-      _setStatus(context, 999, value: [e.toString()]);
+      setStatus(context, 999, value: [e.toString()]);
     }
     context.logger.shout(context.status);
     throw new Exception(context.status);
