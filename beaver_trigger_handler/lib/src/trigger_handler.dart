@@ -76,6 +76,7 @@ List<Map<String, Object>> _getTaskInstances(
 
 Future<TaskRunResult> _runTasks(
     Context context, List<Map<String, Object>> tasks, bool newVM) async {
+  context.logger.finest('_runTasks is started.');
   final taskInstanceRunner = new TaskInstanceRunner(context, tasks, newVM);
   final result = await taskInstanceRunner.run();
   context.logger.info('TaskRunResult: $result');
@@ -84,6 +85,7 @@ Future<TaskRunResult> _runTasks(
 
 Future<Null> _saveSuccessResult(
     Context context, TaskRunResult taskRunResult) async {
+  context.logger.finest('_saveSuccessResult is started.');
   await context.beaverStore.saveResult(
       context.project.name, context.buildNumber, '0: success', context.trigger,
       parsedTrigger: context.parsedTrigger,
@@ -93,6 +95,7 @@ Future<Null> _saveSuccessResult(
 }
 
 Future<Null> _saveFailureResult(Context context, String errorString) async {
+  context.logger.finest('_saveFailureResult is started.');
   if (context.status == null) {
     setStatus(context, 999, value: [errorString]);
   }
