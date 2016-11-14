@@ -50,15 +50,12 @@ class BeaverStore {
   }
 
   Future<Null> saveResult(
-      String id,
-      int buildNumber,
-      String status,
-      Trigger trigger,
+      String id, int buildNumber, String status, Trigger trigger,
       {ParsedTrigger parsedTrigger,
       Map<String, Object> taskInstance,
       TaskRunResult taskRunResult}) async {
-    final result = new TriggerResult.fromTriggerHandler(id, buildNumber, status,
-        trigger, parsedTrigger, taskInstance, taskRunResult);
+    final result = new TriggerResult(id, buildNumber, status, trigger,
+        parsedTrigger, taskInstance, taskRunResult);
     await _storageService.saveResult(id, buildNumber, result);
   }
 

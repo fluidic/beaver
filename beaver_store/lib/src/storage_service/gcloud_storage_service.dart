@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
+import 'package:beaver_task/beaver_task_runner.dart';
+import 'package:beaver_trigger_handler/beaver_trigger.dart';
 import 'package:gcloud/datastore.dart' as datastore;
 import 'package:gcloud/db.dart';
 
@@ -85,25 +87,12 @@ class GCloudStorageService extends Object
         await _queryBuildModel(projectName, buildNumber) ?? new BeaverBuild()
           ..number = buildNumber
           ..projectName = projectName;
-    // TODO: consider serialization.
-    // FIXME: improve.
     buildModel
       ..status = result.status
-      ..triggerPayload = UTF8.encode(JSON.encode(result.triggerPayload))
-      ..triggerName = result.triggerName
-      ..triggerHeaders = JSON.encode(result.triggerHeaders)
-      ..parsedTriggerEvent = result.parsedTriggerEvent
-      ..parsedTriggerUrl = result.parsedTriggerUrl
-      ..taskInstance =
-          result.taskInstance != null ? JSON.encode(result.taskInstance) : null
-      ..taskStatus = result.taskStatus
-      ..taskConfigCloudType = result.taskConfigCloudType
-      ..taskConfigCloudSettings = result.taskConfigCloudSettings != null
-          ? JSON.encode(result.taskConfigCloudSettings)
-          : null
-      ..taskLog = result.taskLog != null
-          ? UTF8.encode(result.taskLog)
-          : null;
+      ..trigger = UTF8.encode(JSON.encode(result.trigger.toJson()))
+      ..parsedTrigger = UTF8.encode(JSON.encode(result.parsedTrigger.toJson()))
+      ..triggerConfig = UTF8.encode(JSON.encode(result.triggerConfig))
+      ..taskRunResult = UTF8.encode(JSON.encode(result.taskRunResult.toJson()));
     await db.commit(inserts: [buildModel]);
     return true;
   }
@@ -114,33 +103,15 @@ class GCloudStorageService extends Object
     if (buildModel == null) {
       throw new NullThrownError();
     }
-    final triggerHeaders =
-        JSON.decode(buildModel.triggerHeaders) as Map<String, String>;
-    final triggerPayload = JSON.decode(UTF8.decode(buildModel.triggerPayload))
+    final trigger = new Trigger.fromJson(UTF8.decode(buildModel.trigger));
+    final parsedTrigger =
+        new ParsedTrigger.fromJson(UTF8.decode(buildModel.parsedTrigger));
+    final triggerConfig = JSON.decode(UTF8.decode(buildModel.triggerConfig))
         as Map<String, Object>;
-    // FIXME: improve.
-    final taskInstance = buildModel.taskInstance != null
-        ? JSON.decode(buildModel.taskInstance) as Map<String, Object>
-        : null;
-    final taskConfigCloudSettings = buildModel.taskConfigCloudSettings != null
-        ? JSON.decode(buildModel.taskConfigCloudSettings) as Map<String, Object>
-        : null;
-    final taskLog =
-        buildModel.taskLog != null ? UTF8.decode(buildModel.taskLog) : null;
-    return new TriggerResult.fromGCloud(
-        projectName,
-        buildNumber,
-        buildModel.status,
-        buildModel.triggerName,
-        triggerHeaders,
-        triggerPayload,
-        buildModel.parsedTriggerEvent,
-        buildModel.parsedTriggerUrl,
-        taskInstance,
-        buildModel.taskStatus,
-        buildModel.taskConfigCloudType,
-        taskConfigCloudSettings,
-        taskLog);
+    final taskRunResult =
+        new TaskRunResult.fromJson(UTF8.decode(buildModel.taskRunResult));
+    return new TriggerResult(projectName, buildNumber, buildModel.status,
+        trigger, parsedTrigger, triggerConfig, taskRunResult);
   }
 
   @override

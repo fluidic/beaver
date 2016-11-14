@@ -12,32 +12,14 @@ class BeaverBuild extends Model {
   String status;
 
   @BlobProperty()
-  List<int> triggerPayload;
-
-  @StringProperty()
-  String triggerName;
-
-  @StringProperty()
-  String triggerHeaders;
-
-  @StringProperty()
-  String parsedTriggerEvent;
-
-  @StringProperty()
-  String parsedTriggerUrl;
-
-  @StringProperty()
-  String taskInstance;
-
-  @StringProperty()
-  String taskStatus;
-
-  @StringProperty()
-  String taskConfigCloudType;
-
-  @StringProperty()
-  String taskConfigCloudSettings;
+  List<int> trigger;
 
   @BlobProperty()
-  List<int> taskLog;
+  List<int> parsedTrigger;
+
+  @BlobProperty()
+  List<int> triggerConfig;
+
+  @BlobProperty()
+  List<int> taskRunResult;
 }
