@@ -135,9 +135,25 @@ class ParsedTrigger {
     buffer
       ..writeln('event: $event')
       ..writeln('url: $url')
-      ..writeln('data: $payload');
+      ..writeln('payload: $payload');
     return buffer.toString();
   }
+
+  factory ParsedTrigger.fromJson(json) {
+    if (json is String) {
+      json = JSON.decode(json);
+    }
+    if (json is! Map) {
+      throw new ArgumentError('json must be a Map or a String encoding a Map.');
+    }
+
+    final event = json['event'];
+    final url = json['url'];
+    final payload = json['payload'] as Map<String, Object>;
+    return new ParsedTrigger(event, url, payload);
+  }
+
+  Map toJson() => {'event': event, 'url': url, 'payload': payload};
 }
 
 class _TriggerData extends LanguageParsers {
