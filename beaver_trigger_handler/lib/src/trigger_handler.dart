@@ -89,7 +89,7 @@ Future<Null> _saveSuccessResult(
   await context.beaverStore.saveResult(
       context.project.name, context.buildNumber, '0: success', context.trigger,
       parsedTrigger: context.parsedTrigger,
-      taskInstance: context.triggerConfig,
+      triggerConfig: context.triggerConfig,
       taskRunResult: taskRunResult);
   context.logger.info('Result is saved.');
 }
@@ -102,7 +102,7 @@ Future<Null> _saveFailureResult(Context context, String errorString) async {
   await context.beaverStore.saveResult(context.project.name,
       context.buildNumber, context.status, context.trigger,
       parsedTrigger: context.parsedTrigger,
-      taskInstance: context.triggerConfig);
+      triggerConfig: context.triggerConfig);
   context.logger.shout(context.status);
 }
 
