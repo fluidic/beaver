@@ -86,8 +86,13 @@ Future<TaskRunResult> _runTasks(
 Future<Null> _saveSuccessResult(
     Context context, TaskRunResult taskRunResult) async {
   context.logger.finest('_saveSuccessResult is started.');
-  await context.beaverStore.saveResult(
-      context.project.name, context.buildNumber, '0: success', context.trigger,
+  if (taskRunResult.status != TaskStatus.success) {
+    setStatus(context, 601);
+  } else {
+    setStatus(context, 0);
+  }
+  await context.beaverStore.saveResult(context.project.name,
+      context.buildNumber, context.status, context.trigger,
       parsedTrigger: context.parsedTrigger,
       triggerConfig: context.triggerConfig,
       taskRunResult: taskRunResult);

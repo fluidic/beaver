@@ -22,6 +22,7 @@ final Map<int, String> status = {
 
   // 600 ~ 699: runBeaver related
   600 /* TASK_CANNOT_BE_RUN */ : 'Task cannot be run.: %s',
+  601 /* TASK_FAILURE */ : 'Task fails.',
 
   999: 'Unknown Error: %s'
 };
