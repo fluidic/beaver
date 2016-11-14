@@ -154,7 +154,7 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
 
     final cloudInfo = new CloudInfo.fromUrl(requestUrl);
     context.cloudInfo = cloudInfo;
-    final trigger = new Trigger(requestUrl, headers, payload);
+    final trigger = new Trigger.fromRequest(requestUrl, headers, payload);
     context.trigger = trigger;
     final project = await _getProject(context, trigger.projectName);
     final buildNumber = await _getBuildNumber(context, trigger.projectName);

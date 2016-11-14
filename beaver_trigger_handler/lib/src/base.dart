@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:beaver_store/beaver_store.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:parsers/parsers.dart';
@@ -24,10 +26,37 @@ class Trigger {
   final Map<String, String> headers;
   final Map<String, Object> payload;
 
-  Trigger(Uri requestUrl, this.headers, this.payload)
-      : name = requestUrl.pathSegments.last,
-        projectName =
-            requestUrl.pathSegments[requestUrl.pathSegments.length - 2];
+  Trigger._internal(this.name, this.projectName, this.headers, this.payload);
+
+  factory Trigger.fromRequest(Uri requestUrl, Map<String, String> headers,
+      Map<String, Object> payload) {
+    final name = requestUrl.pathSegments.last;
+    final projectName =
+        requestUrl.pathSegments[requestUrl.pathSegments.length - 2];
+    return new Trigger._internal(name, projectName, headers, payload);
+  }
+
+  factory Trigger.fromJson(json) {
+    if (json is String) {
+      json = JSON.decode(json);
+    }
+    if (json is! Map) {
+      throw new ArgumentError('json must be a Map or a String encoding a Map.');
+    }
+
+    final name = json['name'];
+    final projectName = json['project_name'];
+    final headers = json['headers'] as Map<String, String>;
+    final payload = json['payload'] as Map<String, Object>;
+    return new Trigger._internal(name, projectName, headers, payload);
+  }
+
+  Map toJson() => {
+        'name': name,
+        'project_name': projectName,
+        'headers': headers,
+        'payload': payload
+      };
 }
 
 abstract class TriggerParser {
