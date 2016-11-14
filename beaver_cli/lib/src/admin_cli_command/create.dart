@@ -8,6 +8,7 @@ import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import '../exit_codes.dart' as exit_codes;
+import '../exceptions.dart';
 
 final gcloudCli = new CommandWrapper('gcloud');
 final _gsutil = new CommandWrapper('gsutil');
@@ -36,7 +37,7 @@ class CreateCommand extends Command {
     CommandResult result = await _sshKeygen
         .run(['-t', 'rsa', '-f', _sshKeyPath, '-C', username, '-N', '']);
     if (result.exitCode != exit_codes.success) {
-      throw new Exception('Fail to create ssh key');
+      throw new ApplicationException('Fail to create ssh key');
     }
 
     final contents = await readTextFile(_sshPublicKeyPath);
