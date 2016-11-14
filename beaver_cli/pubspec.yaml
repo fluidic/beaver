@@ -16,6 +16,7 @@ dependencies:
     path: ../beaver_utils
   command_wrapper: ^0.2.0
   path: '>=1.3.9 <1.4.0'
+  pub_semver: '^1.3.0'
   yaml: '>=2.1.10 <2.2.0'
 
 dev_dependencies:

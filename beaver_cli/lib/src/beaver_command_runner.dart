@@ -4,6 +4,8 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:edit_distance/edit_distance.dart';
 
+import './version.dart';
+
 class BeaverCommandRunner extends CommandRunner {
   @override
   String get usageFooter =>
@@ -11,7 +13,10 @@ class BeaverCommandRunner extends CommandRunner {
       'for detailed documentation';
 
   BeaverCommandRunner(String executableName, String description)
-      : super(executableName, description);
+      : super(executableName, description) {
+    argParser.addFlag('version',
+        negatable: false, help: 'Print beaver version');
+  }
 
   @override
   Future run(Iterable<String> args) {
@@ -38,5 +43,14 @@ class BeaverCommandRunner extends CommandRunner {
     }
 
     return new Future.sync(() => runCommand(argResults));
+  }
+
+  @override
+  Future runCommand(ArgResults options) async {
+    if (options['version']) {
+      print('$version');
+      return;
+    }
+    await super.runCommand(options);
   }
 }
