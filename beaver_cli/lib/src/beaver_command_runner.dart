@@ -25,22 +25,7 @@ class BeaverCommandRunner extends CommandRunner {
     ArgResults argResults = parse(args);
 
     if (argResults.command == null && argResults.rest.isNotEmpty) {
-      final command = argResults.rest[0];
-      print('$command is not a beaver cli_command. See \'beaver help\'.');
-
-      StringDistance d = new Levenshtein();
-      final candidates =
-          commands.keys.where((key) => d.distance(command, key) <= 2);
-      if (candidates.isNotEmpty) {
-        if (candidates.length == 1) {
-          print('\nDid you mean this?');
-        } else {
-          print('\nDid you mean one of these?');
-        }
-        for (final candidate in candidates) {
-          print('\t$candidate');
-        }
-      }
+      _printCandidateCommands(argResults.rest[0]);
       return;
     }
 
@@ -59,5 +44,22 @@ class BeaverCommandRunner extends CommandRunner {
     // don't cause the process to never terminate.
     await flushThenExit(exit_codes.success);
   }
-}
 
+  void _printCandidateCommands(String command) {
+    print('$command is not a beaver cli_command. See \'beaver help\'.');
+
+    StringDistance d = new Levenshtein();
+    final candidates =
+    commands.keys.where((key) => d.distance(command, key) <= 2);
+    if (candidates.isNotEmpty) {
+      if (candidates.length == 1) {
+        print('\nDid you mean this?');
+      } else {
+        print('\nDid you mean one of these?');
+      }
+      for (final candidate in candidates) {
+        print('\t$candidate');
+      }
+    }
+  }
+}
