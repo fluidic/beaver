@@ -31,7 +31,7 @@ Future<HttpClientResponse> _sendgridEmail(String apiKey, String to, String from,
           .postUrl(Uri.parse('https://api.sendgrid.com/v3/mail/send')))
         ..headers.contentType =
             new ContentType('application', 'json', charset: 'utf-8')
-        ..headers.set(HttpHeaders.AUTHORIZATION, 'Bearer ${apiKey}')
+        ..headers.set(HttpHeaders.AUTHORIZATION, 'Bearer $apiKey')
         ..write(requestBody))
       .close();
   client.close();
