@@ -22,14 +22,22 @@ class BeaverCommandRunner extends CommandRunner {
 
   @override
   Future run(Iterable<String> args) async {
-    ArgResults argResults = parse(args);
+    ArgResults options;
 
-    if (argResults.command == null && argResults.rest.isNotEmpty) {
-      _printCandidateCommands(argResults.rest[0]);
+    try {
+      options = parse(args);
+    } on UsageException catch (error) {
+      // FIXME: Introduce a function to log exception.
+      print(error);
+      await flushThenExit(exit_codes.usage);
+    }
+
+    if (options.command == null && options.rest.isNotEmpty) {
+      _printCandidateCommands(options.rest[0]);
       return;
     }
 
-    await runCommand(argResults);
+    await runCommand(options);
   }
 
   @override
@@ -50,7 +58,7 @@ class BeaverCommandRunner extends CommandRunner {
 
     StringDistance d = new Levenshtein();
     final candidates =
-    commands.keys.where((key) => d.distance(command, key) <= 2);
+        commands.keys.where((key) => d.distance(command, key) <= 2);
     if (candidates.isNotEmpty) {
       if (candidates.length == 1) {
         print('\nDid you mean this?');
