@@ -14,10 +14,10 @@ class DeleteCommand extends HttpCommand {
   @override
   String get api => '/api/delete';
 
-  String projectName;
-
   @override
   Future<Null> run() async {
+    String projectName;
+
     if (argResults.rest.length == 1) {
       projectName = argResults.rest[0];
     } else {

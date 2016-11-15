@@ -25,12 +25,12 @@ class UploadCommand extends HttpCommand {
   @override
   String get api => '/api/upload';
 
-  String projectName;
-
   static const String _indent = '    ';
 
   @override
   Future<Null> run() async {
+    String projectName;
+
     if (argResults.rest.length == 1) {
       projectName = argResults.rest[0];
     } else {
