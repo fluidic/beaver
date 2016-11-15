@@ -10,7 +10,7 @@ import 'package:yaml/yaml.dart';
 import '../exit_codes.dart' as exit_codes;
 import '../exceptions.dart';
 
-final gcloudCli = new CommandWrapper('gcloud');
+final _gcloudCli = new CommandWrapper('gcloud');
 final _gsutil = new CommandWrapper('gsutil');
 final _sshKeygen = new CommandWrapper('ssh-keygen');
 
@@ -30,7 +30,7 @@ class CreateCommand extends Command {
         help: 'The cloud project ID to use for setting up beaver CI');
   }
 
-  Future<Null> generateSshKeyIfNotExist() async {
+  Future<Null> _generateSshKeyIfNotExist() async {
     if (await new File(_sshKeyPath).exists()) return;
 
     const username = 'beaver';
@@ -46,7 +46,7 @@ class CreateCommand extends Command {
     await writeTextFile(_sshPublicKeyPath, '$username:$contents');
   }
 
-  Future<Null> uploadSshKey(String project, String siteId) async {
+  Future<Null> _uploadSshKey(String project, String siteId) async {
     final bucketUrl = 'gs://beaver-$siteId';
     CommandResult result = await _gsutil.run(['ls']);
     if (!result.stdout.contains(bucketUrl)) {
@@ -56,10 +56,10 @@ class CreateCommand extends Command {
   }
 
   /// Deploys the function to gcloud and returns the trigger URL.
-  Future<String> deploy(String project, String siteId) async {
+  Future<String> _deploy(String project, String siteId) async {
     final functionName = 'beaver-functions-$siteId';
     final url = 'https://source.developers.google.com/p/$project/r/default';
-    await gcloudCli.run([
+    await _gcloudCli.run([
       'alpha',
       'functions',
       'deploy',
@@ -75,7 +75,7 @@ class CreateCommand extends Command {
       '--trigger-http'
     ]);
     CommandResult result =
-        await gcloudCli.run(['alpha', 'functions', 'describe', functionName]);
+        await _gcloudCli.run(['alpha', 'functions', 'describe', functionName]);
     final desc = loadYaml(result.stdout.join('\n'));
     return desc['httpsTrigger']['url'];
   }
@@ -92,13 +92,13 @@ class CreateCommand extends Command {
 
     await createFileIfNotExist(beaverAdminConfigPath);
     final config = await readYamlFile(beaverAdminConfigPath);
-    String endpoint = await deploy(project, siteId);
+    String endpoint = await _deploy(project, siteId);
     config['sites'] ??= [];
     config['sites']
         .add({'site_id': siteId, 'project': project, 'endpoint': endpoint});
 
-    await generateSshKeyIfNotExist();
-    await uploadSshKey(project, siteId);
+    await _generateSshKeyIfNotExist();
+    await _uploadSshKey(project, siteId);
 
     await writeYamlFile(beaverAdminConfigPath, config);
   }
