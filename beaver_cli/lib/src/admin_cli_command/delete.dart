@@ -7,7 +7,7 @@ import 'package:command_wrapper/command_wrapper.dart';
 
 import '../exit_codes.dart' as exit_codes;
 
-final _gcloudCli = new CommandWrapper('gcloud');
+final _gcloud = new CommandWrapper('gcloud');
 
 class DeleteCommand extends Command {
   @override
@@ -18,7 +18,7 @@ class DeleteCommand extends Command {
 
   Future<Null> _deleteFunction(String siteId) async {
     final functionName = 'beaver-functions-$siteId';
-    await _gcloudCli
+    await _gcloud
         .run(['alpha', 'functions', 'delete', functionName], stdin: ['y']);
   }
 

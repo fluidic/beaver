@@ -10,7 +10,7 @@ import 'package:yaml/yaml.dart';
 import '../exit_codes.dart' as exit_codes;
 import '../exceptions.dart';
 
-final _gcloudCli = new CommandWrapper('gcloud');
+final _gcloud = new CommandWrapper('gcloud');
 final _gsutil = new CommandWrapper('gsutil');
 final _sshKeygen = new CommandWrapper('ssh-keygen');
 
@@ -59,7 +59,7 @@ class CreateCommand extends Command {
   Future<String> _deploy(String project, String siteId) async {
     final functionName = 'beaver-functions-$siteId';
     final url = 'https://source.developers.google.com/p/$project/r/default';
-    await _gcloudCli.run([
+    await _gcloud.run([
       'alpha',
       'functions',
       'deploy',
@@ -75,7 +75,7 @@ class CreateCommand extends Command {
       '--trigger-http'
     ]);
     CommandResult result =
-        await _gcloudCli.run(['alpha', 'functions', 'describe', functionName]);
+        await _gcloud.run(['alpha', 'functions', 'describe', functionName]);
     final desc = loadYaml(result.stdout.join('\n'));
     return desc['httpsTrigger']['url'];
   }
