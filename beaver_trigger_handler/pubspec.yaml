@@ -10,6 +10,8 @@ environment:
 dependencies:
   beaver_dart_task:
     path: ../beaver_dart_task
+  beaver_docker_task:
+    path: ../beaver_docker_task
   beaver_gcloud_task:
     path: ../beaver_gcloud_task
   beaver_store:
