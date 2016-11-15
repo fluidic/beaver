@@ -40,7 +40,7 @@ class CloudInfo {
             scheme: requestUrl.scheme,
             host: requestUrl.host,
             port: requestUrl.port);
-        return new CloudInfo._internal(url, cloudType, 'us-central1', projectName, '');
+        return new CloudInfo._internal(url, cloudType, 'us-central1', projectName, type);
       case 'local':
         final url = new Uri(
             scheme: requestUrl.scheme,
@@ -48,7 +48,7 @@ class CloudInfo {
             port: requestUrl.port);
         // FIXME: Don't hardcode.
         return new CloudInfo._internal(
-            url, 'gcloud', 'us-central1', 'beaver-ci', '');
+            url, 'gcloud', 'us-central1', 'beaver-ci', type);
       default:
         throw new Exception('Not supported cloud type.');
     }
