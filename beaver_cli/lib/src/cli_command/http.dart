@@ -57,11 +57,11 @@ abstract class HttpCommand extends Command {
         abbr: 'j', defaultsTo: false, help: 'Print output as a JSON string.');
   }
 
-  Uri getApiUrl({String additionalPath: ''}) => new Uri(
+  Uri getApiUrl() => new Uri(
       scheme: secure ? 'https' : 'http',
       host: host,
       port: port,
-      path: '$pathPrefix$api$additionalPath');
+      path: '$pathPrefix$api');
 
   String _getServerUrlAsString() => new Uri(
           scheme: secure ? 'https' : 'http',
