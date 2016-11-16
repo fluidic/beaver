@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
 import 'package:beaver_task/beaver_task.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 import 'package:path/path.dart' as path;
 
@@ -16,13 +16,10 @@ class DartTask extends Task {
         this.dartPath = dartPath;
 
   factory DartTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addOption('process-working-dir', abbr: 'C')
-      ..addOption('dart-path', abbr: 'p');
-    final results = parser.parse(args);
-    return new DartTask(results.rest,
-        processWorkingDir: results['process-working-dir'],
-        dartPath: results['dart-path']);
+    final processWorkingDir = extractOption(args, '--process-working-dir');
+    final dartPath = extractOption(args, '--dart-path');
+    return new DartTask(args,
+        processWorkingDir: processWorkingDir, dartPath: dartPath);
   }
 
   @override

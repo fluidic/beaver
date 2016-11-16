@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
 import 'package:beaver_task/beaver_task.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 import 'package:path/path.dart' as path;
 
@@ -16,13 +16,10 @@ class PubTask extends Task {
         this.pubPath = pubPath;
 
   factory PubTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addOption('process-working-dir', abbr: 'C')
-      ..addOption('pub-path', abbr: 'p');
-    final results = parser.parse(args);
-    return new PubTask(results.rest,
-        processWorkingDir: results['process-working-dir'],
-        pubPath: results['pub-path']);
+    final processWorkingDir = extractOption(args, '--process-working-dir');
+    final pubPath = extractOption(args, '--pub-path');
+    return new PubTask(args,
+        processWorkingDir: processWorkingDir, pubPath: pubPath);
   }
 
   @override

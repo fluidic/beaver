@@ -8,9 +8,10 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
-  args: '>=0.13.6 <0.14.0'
   beaver_task:
     path: ../beaver_task
+  beaver_utils:
+    path: ../beaver_utils
   command_wrapper : ^0.2.0
 
 dev_dependencies:
