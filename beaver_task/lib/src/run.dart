@@ -13,6 +13,7 @@ import './annotation.dart';
 import './base.dart';
 import './gcloud_context.dart';
 import './logger.dart';
+import './server.dart' as server;
 import './task.dart';
 
 enum TaskStatus { success, failure, internalError }
@@ -145,7 +146,7 @@ Future _prepareBeaverTaskServer(
 
 Future<TaskRunResult> _requestRunBeaver(
     String remoteAddr, taskJson, Config config) async {
-  Uri endpoint = Uri.parse('http://$remoteAddr:8080/run');
+  Uri endpoint = Uri.parse('http://$remoteAddr:${server.port}/run');
   if (taskJson is String) {
     taskJson = JSON.decode(taskJson);
   }

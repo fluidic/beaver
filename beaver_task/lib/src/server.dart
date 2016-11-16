@@ -9,10 +9,12 @@ import 'package:shelf_route/shelf_route.dart';
 import 'package:beaver_task/beaver_task.dart';
 import 'package:beaver_task/beaver_task_runner.dart';
 
+const port = 8080;
+
 void serve() {
   var myRouter = router()..post('/run', _handleRun);
 
-  io.serve(myRouter.handler, InternetAddress.ANY_IP_V4, 8080).then((server) {
+  io.serve(myRouter.handler, InternetAddress.ANY_IP_V4, port).then((server) {
     print('Serving at http://${server.address.host}:${server.port}');
   });
 }
