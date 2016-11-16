@@ -6,5 +6,6 @@ export 'src/config.dart';
 export 'src/io.dart';
 export 'src/iterables.dart';
 export 'src/mirrors.dart';
+export 'src/option.dart';
 export 'src/unique.dart';
 export 'src/yaml.dart';
