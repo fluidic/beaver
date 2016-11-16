@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 
 import './post_task.dart';
 import '../annotation.dart';
@@ -16,11 +16,8 @@ class TriggerTask extends Task {
       : this.projectName = projectName;
 
   factory TriggerTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addOption('project-name', abbr: 'C');
-    final results = parser.parse(args);
-    return new TriggerTask(results.rest[0],
-        projectName: results['project-name']);
+    final projectName = extractOption(args, '--project-name');
+    return new TriggerTask(args[0], projectName: projectName);
   }
 
   @override

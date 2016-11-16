@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
@@ -24,12 +24,9 @@ class DeleteTask extends Task {
         recursive = recursive;
 
   factory DeleteTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addFlag('force', defaultsTo: true, abbr: 'f')
-      ..addFlag('recursive', defaultsTo: true, abbr: 'r');
-    final results = parser.parse(args);
-    return new DeleteTask(results.rest,
-        force: results['force'], recursive: results['recursive']);
+    final force = extractFlag(args, '--force', defaultsTo: true);
+    final recursive = extractFlag(args, '--recursive', defaultsTo: true);
+    return new DeleteTask(args, force: force, recursive: recursive);
   }
 
   @override

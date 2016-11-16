@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   archive: '>=1.0.24 <1.1.0'
-  args: '>=0.13.5 <0.14.0'
   beaver_dart_task:
     path: ../beaver_dart_task
   beaver_gcloud:

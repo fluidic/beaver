@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:git/git.dart';
 
 import '../annotation.dart';
@@ -16,11 +16,8 @@ class GitTask extends Task {
       : this.processWorkingDir = processWorkingDir;
 
   factory GitTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addOption('process-working-dir', abbr: 'C');
-    final results = parser.parse(args);
-    return new GitTask(results.rest,
-        processWorkingDir: results['process-working-dir']);
+    final processWorkingDir = extractOption(args, '--process-working-dir');
+    return new GitTask(args, processWorkingDir: processWorkingDir);
   }
 
   @override

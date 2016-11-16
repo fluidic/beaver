@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
@@ -19,10 +19,8 @@ class TouchTask extends Task {
   TouchTask(this.paths, {create: true}) : create = create;
 
   factory TouchTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addFlag('create', defaultsTo: true);
-    final results = parser.parse(args);
-    return new TouchTask(results.rest, create: results['create']);
+    final create = extractFlag(args, '--create', defaultsTo: true);
+    return new TouchTask(args, create: create);
   }
 
   @override
