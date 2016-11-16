@@ -145,7 +145,7 @@ Future _prepareBeaverTaskServer(
 
 Future<TaskRunResult> _requestRunBeaver(
     String remoteAddr, taskJson, Config config) async {
-  Uri endpoint = new Uri.http(remoteAddr, '/run');
+  Uri endpoint = Uri.parse('http://$remoteAddr:8080/run');
   if (taskJson is String) {
     taskJson = JSON.decode(taskJson);
   }
