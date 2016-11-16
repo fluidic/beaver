@@ -4,8 +4,6 @@ import 'package:beaver_task/beaver_task.dart';
 import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 
-final docker = new CommandWrapper('docker');
-
 @TaskClass('docker')
 class DockerTask extends Task {
   final List<String> args;
@@ -21,7 +19,9 @@ class DockerTask extends Task {
 
   @override
   Future<Null> execute(Context context) async {
-    final result = await docker.run(args, processWorkingDir: processWorkingDir);
+    final bash = new CommandWrapper('bash');
+    final result = await bash.run(['-c', 'docker ' + args.join(' ')],
+        processWorkingDir: processWorkingDir);
     for (final line in result.stdout) {
       context.logger.info(line);
     }
