@@ -31,7 +31,7 @@ class InstallDockerTask extends Task {
       final repo = 'deb https://apt.dockerproject.org/repo debian-jessie main';
       await _runCommand(context, bash, [
         '-c',
-        'echo "echo $repo > /etc/apt/sources.list.d/dock.listg" | sudo bash'
+        'echo "echo $repo > /etc/apt/sources.list.d/docker.list" | sudo bash'
       ]);
 
       await _runCommand(context, bash, ['-c', 'sudo apt-get update']);
