@@ -13,9 +13,11 @@ class CloudInfo {
     var type;
     if (requestUrl.host.contains('cloudfunctions.net')) {
       type = 'gcf';
-    } if (requestUrl.host.contains('appspot.com')) {
+    } else if (requestUrl.host.contains('appspot.com')) {
       type = 'gae';
-    }else {
+    } else if (requestUrl.host.contains('appspot-preview.com')) {
+      type = 'gae-preview';
+    } else {
       type = 'local';
     }
 
@@ -32,7 +34,8 @@ class CloudInfo {
             port: requestUrl.port,
             path: requestUrl.pathSegments.first);
         final siteId = requestUrl.pathSegments.first.split('-')[2];
-        return new CloudInfo._internal(url, cloudType, region, projectName, siteId);
+        return new CloudInfo._internal(
+            url, cloudType, region, projectName, siteId);
       case 'gae':
         final cloudType = 'gcloud';
         final projectName = requestUrl.host.split('.')[0];
@@ -40,7 +43,19 @@ class CloudInfo {
             scheme: requestUrl.scheme,
             host: requestUrl.host,
             port: requestUrl.port);
-        return new CloudInfo._internal(url, cloudType, 'us-central1', projectName, type);
+        return new CloudInfo._internal(
+            url, cloudType, 'us-central1', projectName, type);
+      case 'gae-preview':
+        final cloudType = 'gcloud';
+        final exp = new RegExp(r'^([^-]+[-][^-]+)[-](.*)\..+\..+$');
+        final match = exp.firstMatch(requestUrl.host);
+        final projectName = match.group(2);
+        final url = new Uri(
+            scheme: requestUrl.scheme,
+            host: requestUrl.host,
+            port: requestUrl.port);
+        return new CloudInfo._internal(
+            url, cloudType, 'us-central1', projectName, type);
       case 'local':
         final url = new Uri(
             scheme: requestUrl.scheme,
