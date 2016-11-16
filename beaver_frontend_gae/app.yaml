@@ -7,3 +7,5 @@ resources:
   cpu: 4
   memory_gb: 15
   disk_size_gb: 16
+health_check:
+  enable_health_check: false
