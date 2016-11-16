@@ -45,10 +45,11 @@ class InstallDockerTask extends Task {
   }
 
   Future<bool> _isDebian() async {
-    final uname = new CommandWrapper('uname');
+    // FIXME: When using uname directly, it returns nothing.
+    final bash = new CommandWrapper('bash');
 
-    final result = await uname.run(['-a']);
-    if (result.stdout.contains('Debian')) {
+    final result = await bash.run(['-c', 'uname -a']);
+    if (result.stdout.join(' ').contains('Debian')) {
       return true;
     }
     return false;
