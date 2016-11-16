@@ -190,6 +190,11 @@ Future<TaskRunResult> runBeaver(json, Config config,
     CreateVMResult vm = await context.createVM(sshPublicKey: sshKey);
     final remoteAddr = vm.networkIPs.first;
     await _prepareBeaverTaskServer(context, remoteAddr);
+
+    // FIXME: Adjust the delay.
+    // Wait a few seconds until the task server is up and running.
+    new Future.delayed(new Duration(seconds: 5));
+
     TaskRunResult result = await _requestRunBeaver(remoteAddr, json, config);
     await context.deleteVM(vm.name);
     return result;
