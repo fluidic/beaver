@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:args/args.dart';
 import 'package:beaver_task/beaver_task.dart';
+import 'package:beaver_utils/beaver_utils.dart';
 import 'package:command_wrapper/command_wrapper.dart';
 
 final docker = new CommandWrapper('docker');
@@ -15,11 +15,8 @@ class DockerTask extends Task {
       : this.processWorkingDir = processWorkingDir;
 
   factory DockerTask.fromArgs(List<String> args) {
-    final parser = new ArgParser(allowTrailingOptions: true)
-      ..addOption('process-working-dir', abbr: 'C');
-    final results = parser.parse(args);
-    return new DockerTask(results.rest,
-        processWorkingDir: results['process-working-dir']);
+    final processWorkingDir = extractOption(args, '--process-working-dir');
+    return new DockerTask(args, processWorkingDir: processWorkingDir);
   }
 
   @override
