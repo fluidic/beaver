@@ -16,28 +16,8 @@ class InstallDockerTask extends Task {
       // FIXME: To use sudo.
       final bash = new CommandWrapper('bash');
       await _runCommand(context, bash, ['-c', 'sudo apt-get update']);
-      await _runCommand(context, bash,
-          ['-c', 'sudo apt-get install apt-transport-https ca-certificates']);
-
-      final aptKey = new CommandWrapper('apt-key');
-      await _runCommand(context, aptKey, [
-        'adv',
-        '--keyserver',
-        'hkp://p80.pool.sks-keyservers.net:80',
-        '--recv-keys',
-        '58118E89F3A912897C070ADBF76221572C52609D'
-      ]);
-
-      final repo = 'deb https://apt.dockerproject.org/repo debian-jessie main';
-      await _runCommand(context, bash, [
-        '-c',
-        'echo "echo $repo > /etc/apt/sources.list.d/docker.list" | sudo bash'
-      ]);
-
-      await _runCommand(context, bash, ['-c', 'sudo apt-get update']);
       await _runCommand(
-          context, bash, ['-c', 'sudo apt-get install docker-engine']);
-      await _runCommand(context, bash, ['-c', 'sudo service docker start']);
+          context, bash, ['-c', 'sudo apt-get install -y docker.io']);
     } else {
       // FIXME: Support the other Linux, Windows and Mac.
       throw new UnimplementedError();
