@@ -20,7 +20,7 @@ class DockerTask extends Task {
   @override
   Future<Null> execute(Context context) async {
     final bash = new CommandWrapper('bash');
-    final result = await bash.run(['-c', 'docker ' + args.join(' ')],
+    final result = await bash.run(['-c', 'sudo docker ' + args.join(' ')],
         processWorkingDir: processWorkingDir);
     for (final line in result.stdout) {
       context.logger.info(line);
