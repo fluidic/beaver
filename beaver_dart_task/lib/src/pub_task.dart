@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:beaver_task/beaver_task.dart';
 import 'package:beaver_utils/beaver_utils.dart';
@@ -24,7 +25,12 @@ class PubTask extends Task {
 
   @override
   Future<Null> execute(Context context) async {
-    var pubCommand = pub;
+    var pubCommand;
+    if (Platform.isLinux) {
+      pubCommand = new CommandWrapper('/usr/lib/dart/bin/pub');
+    } else {
+      pubCommand = pub;
+    }
     if (pubPath != null) {
       pubCommand = new CommandWrapper(path.absolute(pubPath));
     }
