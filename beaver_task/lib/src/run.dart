@@ -124,7 +124,10 @@ Future _prepareBeaverTaskServer(
   String host = 'beaver@$remoteAddr';
   await _ssh.run([
     '-T',
-    '-oStrictHostKeyChecking=no',
+    '-o',
+    'StrictHostKeyChecking=no',
+    '-o',
+    'UserKnownHostsFile=/dev/null',
     '-i',
     sshKeyPath,
     host
