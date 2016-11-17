@@ -25,24 +25,29 @@ Future<shelf.Response> _handleRun(shelf.Request request) async {
   Map<String, dynamic> params;
   try {
     params = JSON.decode(body) as Map<String, dynamic>;
-  } on FormatException {
-    return new shelf.Response(400);
+  } on FormatException catch (e) {
+    return new shelf.Response(400, body: e.toString());
   }
 
   final task = params['task'];
   final configJson = params['config'];
   if (task == null || configJson == null) {
-    return new shelf.Response(400);
+    return new shelf.Response(400, body: 'task or configJson is missing');
   }
 
   var config;
   try {
     config = new Config.fromJson(configJson);
   } catch (e) {
-    return new shelf.Response(400);
+    return new shelf.Response(400, body: e.toString());
   }
-  final result = await runBeaver(task, config);
-  final jsonResponse = JSON.encode(result);
+
+  var jsonResponse;
+  try {
+    jsonResponse = JSON.encode(await runBeaver(task, config));
+  } catch (e) {
+    return new shelf.Response(500, body: e.toString());
+  }
 
   return new shelf.Response.ok(jsonResponse,
       headers: {'content-type': 'application/json'});

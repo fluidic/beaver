@@ -158,7 +158,7 @@ Future<TaskRunResult> _requestRunBeaver(
   http.Response response = await http.post(endpoint,
       headers: {'content-type': 'application/json'}, body: JSON.encode(body));
   if (response.statusCode != 200) {
-    throw new Exception('Fail to request $endpoint');
+    throw new Exception('Fail to run task: ${response.body}');
   }
   final resultJson = JSON.decode(response.body);
   return new TaskRunResult.fromJson(resultJson);
