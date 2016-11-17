@@ -150,8 +150,8 @@ Future<int> _getBuildNumber(Context context, String projectName) async {
   return buildNumber;
 }
 
-Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
-    Map<String, Object> payload) async {
+Future<Map<String, Object>> triggerHandler(Uri requestUrl,
+    Map<String, String> headers, Map<String, Object> payload) async {
   final context = await _createContext();
 
   try {
@@ -167,7 +167,10 @@ Future<int> triggerHandler(Uri requestUrl, Map<String, String> headers,
     // Do the job in background
     _triggerHandler(context, trigger, project, buildNumber, cloudInfo);
 
-    return buildNumber;
+    return {
+      'build_number': buildNumber.toString(),
+      'project_name': trigger.projectName
+    };
   } catch (e) {
     if (context.status == null) {
       setStatus(context, 999, value: [e.toString()]);

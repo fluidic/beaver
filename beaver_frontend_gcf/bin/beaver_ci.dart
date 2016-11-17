@@ -52,8 +52,8 @@ Future _triggerHandler(Uri requestUrl, Map<String, String> headers,
     Map<String, Object> data) async {
   var result;
   try {
-    final buildNumber = await triggerHandler(requestUrl, headers, data);
-    result = {'status': 'success', 'build_number': buildNumber};
+    final ret = await triggerHandler(requestUrl, headers, data);
+    result = {'status': 'success'}..addAll(ret);
   } catch (e) {
     print(e);
     result = {'status': 'failure', 'reason': e.toString()};

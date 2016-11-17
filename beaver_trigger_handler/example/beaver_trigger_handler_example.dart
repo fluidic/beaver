@@ -52,9 +52,8 @@ Future<String> handler(HttpRequest request) async {
 
   var resp;
   try {
-    final buildNumber =
-        await triggerHandler(request.requestedUri, headers, json);
-    resp = {'status': 'success', 'build_number': buildNumber};
+    final result = await triggerHandler(request.requestedUri, headers, json);
+    resp = {'status': 'success'}..addAll(result);
   } catch (e) {
     resp = {'status': 'failure', 'reason': e.toString()};
   }

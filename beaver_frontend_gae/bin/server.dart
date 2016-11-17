@@ -49,9 +49,9 @@ Future _triggerHandler(shelf.Request request) async {
 
   var responseBody;
   try {
-    final buildNumber =
+    final ret =
         await triggerHandler(request.requestedUri, request.headers, json);
-    responseBody = {'status': 'success', 'build_number': buildNumber};
+    responseBody = {'status': 'success'}..addAll(ret);
   } catch (e) {
     responseBody = {'status': 'failure', 'reason': e.toString()};
   }
