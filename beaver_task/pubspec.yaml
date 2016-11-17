@@ -36,4 +36,6 @@ dependencies:
   yaml: '>=2.1.10 <2.2.0'
 
 dev_dependencies:
+  beaver_docker_task:
+    path: ../beaver_docker_task
   test: '>=0.12.0 <0.13.0'
