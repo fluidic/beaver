@@ -23,6 +23,7 @@ class MailTask extends Task {
     Task is triggerred.
     Project Name: ${context.config.buildInfo['project_name']}
     Trigger Name: ${context.config.buildInfo['trigger_name']}
+    Build Number: ${context.config.buildInfo['build_number']}
     Task Log: ${context.logger.toString()}
     ''';
 
