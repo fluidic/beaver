@@ -135,7 +135,7 @@ abstract class GCloudMixin implements GCloud {
     do {
       await new Future.delayed(new Duration(seconds: 1));
       instance = await compute.instances.get(_project, _zone, name);
-    } while (instance.status == 'PROVISIONING');
+    } while (instance.status == 'PROVISIONING' || instance.status == 'STAGING');
 
     List<String> networkIPs =
         instance.networkInterfaces.map((ni) => ni.networkIP);
