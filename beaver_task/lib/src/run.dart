@@ -193,7 +193,7 @@ Future<TaskRunResult> runBeaver(json, Config config,
 
     // FIXME: Adjust the delay.
     // Wait a few seconds until the task server is up and running.
-    new Future.delayed(new Duration(seconds: 5));
+    await new Future.delayed(new Duration(seconds: 5));
 
     TaskRunResult result = await _requestRunBeaver(remoteAddr, json, config);
     await context.deleteVM(vm.name);
