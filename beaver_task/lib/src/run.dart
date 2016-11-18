@@ -11,6 +11,7 @@ import 'package:logging/logging.dart';
 
 import './annotation.dart';
 import './base.dart';
+import './exception.dart';
 import './gcloud_context.dart';
 import './logger.dart';
 import './server.dart' as server;

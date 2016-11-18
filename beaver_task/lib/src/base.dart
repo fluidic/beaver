@@ -3,19 +3,6 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 
-// An exception class for exceptions that are intended to be seen by the user.
-//
-// These exceptions won't have any debugging information printed when they're
-// thrown.
-class TaskException implements Exception {
-  final String message;
-
-  TaskException(this.message);
-
-  @override
-  String toString() => message;
-}
-
 abstract class Context {
   Config get config;
   Logger get logger;

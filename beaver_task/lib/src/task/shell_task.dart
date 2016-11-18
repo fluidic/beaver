@@ -3,6 +3,7 @@ import 'dart:io';
 
 import '../annotation.dart';
 import '../base.dart';
+import '../exception.dart';
 import '../task.dart';
 
 class ShellException extends TaskException {

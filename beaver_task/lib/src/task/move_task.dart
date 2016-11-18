@@ -5,6 +5,7 @@ import 'package:file_helper/file_helper.dart' as file_helper;
 
 import '../annotation.dart';
 import '../base.dart';
+import '../exception.dart';
 import '../task.dart';
 
 /// Moves files or directories into the directory.

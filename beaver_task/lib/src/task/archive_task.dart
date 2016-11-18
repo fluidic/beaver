@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 
 import '../annotation.dart';
 import '../base.dart';
+import '../exception.dart';
 import '../task.dart';
 
 /// Unzip a GZip file.

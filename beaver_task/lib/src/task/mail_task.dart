@@ -4,6 +4,7 @@ import 'package:beaver_gcloud_task/beaver_gcloud_task.dart';
 
 import '../annotation.dart';
 import '../base.dart';
+import '../exception.dart';
 import '../task.dart';
 
 @TaskClass('mail')
