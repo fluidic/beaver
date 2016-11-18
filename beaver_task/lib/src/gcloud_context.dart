@@ -26,13 +26,13 @@ class GCloudContext extends GCloudBase implements Context {
   static Future<GCloudContext> create(Config config) async {
     final logger = new BeaverLogger();
     final partMap = await _createContextPartMap(config);
-    final context = new GCloudContext(config, logger, partMap);
+    final context = new GCloudContext._internal(config, logger, partMap);
     await context.setUp();
 
     return context;
   }
 
-  GCloudContext(this._config, this._logger, this._partMap);
+  GCloudContext._internal(this._config, this._logger, this._partMap);
 
   Future<Null> setUp() => super.init(
       _config.cloudSettings['project_name'], _config.cloudSettings['zone']);
