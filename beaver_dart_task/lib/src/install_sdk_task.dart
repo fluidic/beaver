@@ -37,5 +37,7 @@ class InstallDartSdkTask extends Task {
     // Refer: https://github.com/dart-lang/sdk/issues/15078
     final cmd = new CommandWrapper('bash');
     await cmd.run(['-c', 'chmod +x dart-sdk/bin/*']);
+
+    context.logger.info('sdk is installed in dart-sdk.');
   }
 }

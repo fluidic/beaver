@@ -32,6 +32,7 @@ class DownloadTask extends Task {
     await response.pipe(file.openWrite());
     httpClient.close();
 
+    context.logger.info('$src is downloaded successfully.');
     return file;
   }
 
