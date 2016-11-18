@@ -176,6 +176,13 @@ Future<String> _readSshPublicKey(GCloudContext context) {
 
 Future<TaskRunResult> runBeaver(json, Config config,
     {bool newVM: false}) async {
+  if (json == null) {
+    throw new ArgumentError('json is required.');
+  }
+  if (config == null) {
+    throw new ArgumentError('config is required.');
+  }
+
   // Turn on all logging levels.
   Logger.root.level = Level.ALL;
 

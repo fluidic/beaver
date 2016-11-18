@@ -158,6 +158,10 @@ abstract class GCloudMixin implements GCloud {
 
   @override
   Future<DeleteVMResult> deleteVM(String instanceName) async {
+    if (instanceName == null) {
+      throw new ArgumentError('instanceName is required.');
+    }
+
     Operation op =
         await compute.instances.delete(_project, _zone, instanceName);
     DeleteVMStatus status =
