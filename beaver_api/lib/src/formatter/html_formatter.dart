@@ -32,8 +32,10 @@ class HtmlFormatter implements Formatter {
           'Status',
           'Task Status',
           'Trigger Name',
+          'Trigger Type',
           'Trigger Event',
           'Trigger URL',
+          'newVM',
           'Log',
         ];
         columns.forEach((columnName) {
@@ -64,10 +66,16 @@ class HtmlFormatter implements Formatter {
         builder.text(result.trigger.name);
       });
       builder.element('td', nest: () {
+        builder.text(result.triggerConfig['type']);
+      });
+      builder.element('td', nest: () {
         builder.text(result.parsedTrigger?.event);
       });
       builder.element('td', nest: () {
         builder.text(result.parsedTrigger?.url);
+      });
+      builder.element('td', nest: () {
+        builder.text(result.triggerConfig['newVM']);
       });
       builder.element('td', nest: () {
         builder.text(result.taskRunResult?.log);

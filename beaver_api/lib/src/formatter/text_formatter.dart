@@ -19,8 +19,10 @@ class TextFormatter implements Formatter {
           ? result.taskRunResult.toJson()['status']
           : null,
       "Trigger Name": result.trigger.name,
+      "Trigger Type": result.triggerConfig['type'],
       "Trigger Event": result.parsedTrigger?.event,
       "Trigger URL": result.parsedTrigger?.url,
+      "newVM": result.triggerConfig['newVM'],
       "Log": result.taskRunResult?.log,
     };
     final longestKeyLength = items.keys.fold(0, (num max, String keyString) {
