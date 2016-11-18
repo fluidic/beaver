@@ -48,6 +48,7 @@ class GCloudStorageUploadTask extends Task {
     await file.openRead().pipe(bucket.write(objectName));
 
     final objectInfo = await bucket.info(objectName);
+    context.logger.info('Uploaded: ${objectInfo.downloadLink}');
     return objectInfo.downloadLink;
   }
 
