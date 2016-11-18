@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:mirrors';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
 import 'package:beaver_utils/beaver_utils.dart';
@@ -9,11 +8,9 @@ import 'package:command_wrapper/command_wrapper.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
-import './annotation.dart';
 import './base.dart';
 import './exception.dart';
 import './gcloud_context.dart';
-import './logger.dart';
 import './server.dart' as server;
 import './task.dart';
 
@@ -207,36 +204,6 @@ class TaskRunResult {
   TaskRunResult._internal(this.config, this.status, this.log);
 }
 
-void _dumpClassMap(String prefix, Map<String, ClassMirror> taskClassMap) {
-  print(prefix);
-  taskClassMap.forEach((name, cm) {
-    print('  $name -> ${cm.qualifiedName}');
-  });
-}
-
-Future<Map<String, ContextPart>> _createContextPartMap(Config config) async {
-  Map<String, ClassMirror> contextPartClassMap =
-      queryNameClassMapByAnnotation(ContextPartClass);
-  _dumpClassMap('List of ContextPart classes:', contextPartClassMap);
-
-  final partMap = {};
-  contextPartClassMap.forEach((String name, ClassMirror contextParClass) {
-    partMap[name] = newInstance('', contextParClass, []);
-  });
-  await Future
-      .wait(partMap.values.map((ContextPart part) => part.setUp(config)));
-  return partMap;
-}
-
-Future<GCloudContext> _createGCloudContext(Config config) async {
-  final logger = new BeaverLogger();
-  final partMap = await _createContextPartMap(config);
-  final context = new GCloudContext(config, logger, partMap);
-  await context.setUp();
-
-  return context;
-}
-
 Future<TaskRunResult> runBeaver(json, Config config,
     {bool newVM: false}) async {
   if (json == null) {
@@ -252,7 +219,7 @@ Future<TaskRunResult> runBeaver(json, Config config,
   GCloudContext context;
   switch (config.cloudType) {
     case 'gcloud':
-      context = await _createGCloudContext(config);
+      context = await GCloudContext.create(config);
       break;
     default:
       throw new ArgumentError('Unknown cloud_type ${config.cloudType}');
