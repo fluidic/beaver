@@ -137,29 +137,34 @@ class _RemoteTaskRunner extends _TaskRunner {
     }
 
     String host = 'beaver@$_host';
-    return _ssh.run([
-      '-T',
-      '-o',
-      'StrictHostKeyChecking=no',
-      '-o',
-      'UserKnownHostsFile=/dev/null',
-      '-i',
-      sshKeyPath,
-      host
-    ], stdin: [
-      'EOF',
-      'sudo apt-get update',
-      'sudo apt-get -y install apt-transport-https',
-      "sudo sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | tac | apt-key add -'",
-      "sudo sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'",
-      'sudo apt-get update',
-      'sudo apt-get -y --force-yes install dart',
-      'sudo apt-get -y install git',
-      'git clone https://github.com/fluidic/beaver',
-      'cd beaver/beaver_task',
-      '/usr/lib/dart/bin/pub get',
-      "sh -c 'nohup dart bin/beaver_task_server.dart > foo.out 2> foo.err < /dev/null &'"
-    ]);
+    // Retry a few times as connecting to the ssh server can fail due to
+    // timing issues.
+    return retry(
+        3,
+        new Duration(seconds: 1),
+        () => _ssh.run([
+              '-T',
+              '-o',
+              'StrictHostKeyChecking=no',
+              '-o',
+              'UserKnownHostsFile=/dev/null',
+              '-i',
+              sshKeyPath,
+              host
+            ], stdin: [
+              'EOF',
+              'sudo apt-get update',
+              'sudo apt-get -y install apt-transport-https',
+              "sudo sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | tac | apt-key add -'",
+              "sudo sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'",
+              'sudo apt-get update',
+              'sudo apt-get -y --force-yes install dart',
+              'sudo apt-get -y install git',
+              'git clone https://github.com/fluidic/beaver',
+              'cd beaver/beaver_task',
+              '/usr/lib/dart/bin/pub get',
+              "sh -c 'nohup dart bin/beaver_task_server.dart > foo.out 2> foo.err < /dev/null &'"
+            ]));
   }
 }
 
