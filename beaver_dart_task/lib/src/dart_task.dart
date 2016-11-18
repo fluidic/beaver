@@ -37,5 +37,6 @@ class DartTask extends Task {
     for (final line in result.stderr) {
       context.logger.shout(line);
     }
+    context.logger.info('dart $args : Done successfully.');
   }
 }
