@@ -22,6 +22,7 @@ Future<Null> main() async {
 }
 
 Future _apiHandler(shelf.Request request) async {
+  print(request);
   final api = request.url.pathSegments.last;
   final body = await request.readAsString();
   final json = body.isNotEmpty ? JSON.decode(body) : {};
@@ -39,6 +40,7 @@ Future _apiHandler(shelf.Request request) async {
 }
 
 Future _triggerHandler(shelf.Request request) async {
+  print(request);
   final body = await request.readAsString();
   Map<String, Object> json;
   if (body.isEmpty) {

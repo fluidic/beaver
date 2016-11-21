@@ -7,6 +7,7 @@ function isGCF(req) {
 }
 
 exports.beaver = function beaver(req, res) {
+    console.log(req);
     const child = spawn('./third_party/dart-linux-x64/dart',
         [
             'beaver_ci.dart.snapshot',
