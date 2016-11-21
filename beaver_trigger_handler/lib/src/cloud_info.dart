@@ -22,7 +22,7 @@ class CloudInfo {
     }
 
     switch (type) {
-      case 'gcloud':
+      case 'gcf':
         final cloudType = 'gcloud';
         final exp = new RegExp(r'^([^-]+[-][^-]+)[-](.*)\..+\..+$');
         final match = exp.firstMatch(requestUrl.host);
