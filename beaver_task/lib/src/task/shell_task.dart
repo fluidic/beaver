@@ -20,7 +20,7 @@ class ShellTask extends Task {
   ShellTask(this.executable, this.arguments);
 
   ShellTask.fromArgs(List<String> args)
-      : this(args.first, args.getRange(1, args.length));
+      : this(args.first, args.getRange(1, args.length).toList());
 
   @override
   Future<Null> execute(Context context) async {
