@@ -78,7 +78,7 @@ class _RemoteTaskRunner extends _TaskRunner {
     String sshKey = await _readSshPublicKey(gcloud);
     CreateVMResult vm = await gcloud.createVM(sshPublicKey: sshKey);
     _instanceName = vm.name;
-    _host = vm.networkIPs.first;
+    _host = vm.externalIP;
     await _prepareTaskServer(gcloud);
 
     // FIXME: Adjust the delay.
