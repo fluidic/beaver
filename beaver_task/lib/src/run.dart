@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:beaver_gcloud/beaver_gcloud.dart';
 import 'package:beaver_utils/beaver_utils.dart';
-import 'package:command_wrapper/command_wrapper.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
@@ -59,8 +58,6 @@ class _LocalTaskRunner extends _TaskRunner {
 }
 
 class _RemoteTaskRunner extends _TaskRunner {
-  static CommandWrapper _ssh = new CommandWrapper('ssh');
-
   String _instanceName;
 
   String _host;
@@ -133,38 +130,22 @@ class _RemoteTaskRunner extends _TaskRunner {
       final siteId = context.config.buildInfo['site_id'];
       final bucket = context.storage.bucket('beaver-$siteId');
       await sshKeyFile.openWrite().addStream(bucket.read('id_rsa'));
-      await chmod('0600', sshKeyFile);
     }
 
     String host = 'beaver@$_host';
-    // Retry a few times as connecting to the ssh server can fail due to
-    // timing issues.
-    return retry(
-        3,
-        new Duration(seconds: 1),
-        () => _ssh.run([
-              '-T',
-              '-o',
-              'StrictHostKeyChecking=no',
-              '-o',
-              'UserKnownHostsFile=/dev/null',
-              '-i',
-              sshKeyPath,
-              host
-            ], stdin: [
-              'EOF',
-              'sudo apt-get update',
-              'sudo apt-get -y install apt-transport-https',
-              "sudo sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | tac | apt-key add -'",
-              "sudo sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'",
-              'sudo apt-get update',
-              'sudo apt-get -y --force-yes install dart',
-              'sudo apt-get -y install git',
-              'git clone https://github.com/fluidic/beaver',
-              'cd beaver/beaver_task',
-              '/usr/lib/dart/bin/pub get',
-              "sh -c 'nohup dart bin/beaver_task_server.dart > foo.out 2> foo.err < /dev/null &'"
-            ]));
+
+    final client = new HttpClient();
+    final request = await client.getUrl(new Uri(
+        scheme: 'http',
+        host: 'localhost',
+        port: 8080,
+        path: '/ssh',
+        queryParameters: {'host': host}));
+    final response = await request.close();
+    client.close();
+    if (response.statusCode != 200) {
+      throw new Exception('SSH Request fails. ${response.statusCode}');
+    }
   }
 }
 
