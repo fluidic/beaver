@@ -115,15 +115,9 @@ function spawnSsh(host, callback) {
     });
     child.stdin.end();
 
-    child.stdout.on('data', (data) => {
-        data = String(data);
-        console.log(`ssh - stdout: ${data}`);
-    });
-
     var err;
     child.stderr.on('data', (data) => {
         data = String(data);
-        console.log(`ssh - stderr: ${data}`);
         if (data.includes('Connection timed out') || data.includes('Connection refused')) {
             err = data;
         }
