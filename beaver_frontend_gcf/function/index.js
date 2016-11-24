@@ -100,6 +100,10 @@ function spawnSsh(host, callback) {
         'StrictHostKeyChecking=no',
         '-o',
         'UserKnownHostsFile=/dev/null',
+        '-o',
+        'ConnectionAttempts=10',
+        '-o',
+        'ConnectTimeout=10',
         '-i',
         '/tmp/id_rsa',
         host
