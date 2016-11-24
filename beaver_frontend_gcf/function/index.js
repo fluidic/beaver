@@ -31,7 +31,12 @@ function spawnHttpServer() {
             return;
         }
 
-        spawnSsh(urlObj.query.host, function () {
+        spawnSsh(urlObj.query.host, function (err) {
+            if (err) {
+                res.writeHead(500);
+                res.end(err);
+                return;
+            }
             res.writeHead(200);
             res.end();
         });
@@ -109,13 +114,17 @@ function spawnSsh(host, callback) {
         console.log(`ssh - stdout: ${data}`);
     });
 
+    var err;
     child.stderr.on('data', (data) => {
         data = String(data);
         console.log(`ssh - stderr: ${data}`);
+        if (data.includes('Connection timed out') || data.includes('Connection refused')) {
+            err = data;
+        }
     });
 
     child.on('exit', (code) => {
         console.log(`ssh - child process exited with code ${code}`);
-        callback();
+        callback(err);
     });
 }

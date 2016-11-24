@@ -144,7 +144,8 @@ class _RemoteTaskRunner extends _TaskRunner {
     final response = await request.close();
     client.close();
     if (response.statusCode != 200) {
-      throw new Exception('SSH Request fails. ${response.statusCode}');
+      final msg = await response.transform(UTF8.decoder).join();
+      throw new Exception('SSH Request fails. ${response.statusCode} - $msg');
     }
   }
 }
