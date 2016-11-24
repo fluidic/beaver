@@ -7,14 +7,14 @@ const url = require('url');
 exports.beaver = function beaver(req, res) {
     console.log(req);
 
-    const server = spawnHttpServer();
-
-    const path = (isGCF(req) ? "/" + process.env.FUNCTION_NAME : "") + req.originalUrl;
-    const url = req.protocol + "://" + req.get('host') + path;
-    spawnDartVM(url, req.headers, req.body, function (response) {
-        res.send(response);
-    }, function () {
-        server.close(function () {});
+    spawnHttpServer(function (server) {
+        const path = (isGCF(req) ? "/" + process.env.FUNCTION_NAME : "") + req.originalUrl;
+        const url = req.protocol + "://" + req.get('host') + path;
+        spawnDartVM(url, req.headers, req.body, server.address().port, function (response) {
+            res.send(response);
+        }, function () {
+            server.close(function () {});
+        });
     });
 };
 
@@ -22,7 +22,7 @@ function isGCF(req) {
     return req.get('host').indexOf('cloudfunctions.net') !== -1;
 }
 
-function spawnHttpServer() {
+function spawnHttpServer(callback) {
     const server = http.createServer(function (req, res) {
         const urlObj = url.parse(req.url, true, false);
         if (urlObj.pathname != '/ssh') {
@@ -41,18 +41,20 @@ function spawnHttpServer() {
             res.end();
         });
     });
-    server.listen(8080);
-    return server;
+    server.listen(function () { callback(server); });
 }
 
-function spawnDartVM(url, headers, body, callback1, callback2) {
+function spawnDartVM(url, headers, body, localServerPort, callback1, callback2) {
     const child = spawn('./third_party/dart-linux-x64/dart',
         [
             'beaver_ci.dart.snapshot',
             url,
             JSON.stringify(headers),
-            JSON.stringify(body)
-        ]
+            JSON.stringify(body),
+            localServerPort
+        ], {
+            env: {LOCAL_SERVER_PORT: localServerPort}
+        }
     );
 
     const RESPONSE_PREFIX = 'response:';

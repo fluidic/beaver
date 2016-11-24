@@ -138,7 +138,8 @@ class _RemoteTaskRunner extends _TaskRunner {
     final request = await client.getUrl(new Uri(
         scheme: 'http',
         host: 'localhost',
-        port: 8080,
+        port:
+            int.parse(Platform.environment['LOCAL_SERVER_PORT']),
         path: '/ssh',
         queryParameters: {'host': host}));
     final response = await request.close();
