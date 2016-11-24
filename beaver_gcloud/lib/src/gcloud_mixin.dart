@@ -111,9 +111,9 @@ abstract class GCloudMixin implements GCloud {
       ],
       "networkInterfaces": [
         {
-          "network": "projects/beaver-ci/global/networks/default",
+          "network": "projects/beaver-ci/global/networks/beaver-worker",
           "subnetwork":
-              "projects/beaver-ci/regions/us-central1/subnetworks/default",
+              "projects/beaver-ci/regions/us-central1/subnetworks/beaver-worker",
           "accessConfigs": [
             {"name": "External NAT", "type": "ONE_TO_ONE_NAT"}
           ]
