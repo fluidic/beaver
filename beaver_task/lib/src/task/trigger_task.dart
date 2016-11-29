@@ -29,6 +29,7 @@ class TriggerTask extends Task {
           : context.config.buildInfo['project_name'],
       triggerName
     ];
+    context.logger.info(url.join('/'));
     final post = new PostTask(url.join('/'), {});
     final response = await post.execute(context);
     context.logger.info(response.body.toString());
