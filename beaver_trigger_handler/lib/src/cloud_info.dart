@@ -29,9 +29,9 @@ class CloudInfo {
         final region = match.group(1);
         final projectName = match.group(2);
         final url = new Uri(
-            scheme: requestUrl.scheme,
+            // FIXME: Don't hardcode.
+            scheme: 'https',
             host: requestUrl.host,
-            port: requestUrl.port,
             path: requestUrl.pathSegments.first);
         final siteId = requestUrl.pathSegments.first.split('-')[2];
         return new CloudInfo._internal(
